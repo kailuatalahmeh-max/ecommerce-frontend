@@ -6,6 +6,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 export const useAdminStore = create((set, get) => ({
   ordersData: [],
   analyticsData: null,
+  analyticsLoading: false,
 
   getOrdersData: () => {
     axios
@@ -65,6 +66,8 @@ export const useAdminStore = create((set, get) => ({
       .finally(() => setLoading(false));
   },
   getAnalyticsData: () => {
+    set({ analyticsLoading: true });
+
     axios
       .get(`${apiUrl}/api/admin/analytics`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -77,6 +80,9 @@ export const useAdminStore = create((set, get) => ({
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
         toast.error(serverErrorMessage || "حدث خطأ ما");
+      })
+      .finally(() => {
+        set({ analyticsLoading: false });
       });
   },
 

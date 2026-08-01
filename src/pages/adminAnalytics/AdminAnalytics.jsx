@@ -2,12 +2,14 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "../../context/useAdminStore";
 import styles from "./AdminAnalytics.module.css";
+import Loading from "../../components/loading/Loading";
 
 export default function AdminAnalytics() {
   const navigate = useNavigate();
 
   const getAnalyticsData = useAdminStore((state) => state.getAnalyticsData);
   const analyticsData = useAdminStore((state) => state.analyticsData);
+  const analyticsLoading = useAdminStore((state) => state.analyticsLoading);
 
   useEffect(() => {
     getAnalyticsData();
@@ -28,6 +30,10 @@ export default function AdminAnalytics() {
   const topProduct = analyticsData?.topProduct || null;
   const lowStockItems = analyticsData?.lowStockItems || [];
   const topRegions = analyticsData?.topRegions || [];
+
+  if (analyticsLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className={styles.adminPage}>
@@ -74,26 +80,34 @@ export default function AdminAnalytics() {
           <div className={styles.statusList}>
             <div className={styles.statusRow}>
               <span>⏳ قيد الانتظار</span>
-              <span className={styles.badgePending}>{ordersByStatus.Pending}</span>
+              <span className={styles.badgePending}>
+                {ordersByStatus.Pending}
+              </span>
             </div>
             <div className={styles.statusRow}>
               <span>✅ مقبول</span>
-              <span className={styles.badgeAccepted}>{ordersByStatus.Accepted}</span>
+              <span className={styles.badgeAccepted}>
+                {ordersByStatus.Accepted}
+              </span>
             </div>
             <div className={styles.statusRow}>
               <span>🚚 تم التوصيل</span>
-              <span className={styles.badgeDelivered}>{ordersByStatus.Delivered}</span>
+              <span className={styles.badgeDelivered}>
+                {ordersByStatus.Delivered}
+              </span>
             </div>
             <div className={styles.statusRow}>
               <span>❌ ملغى</span>
-              <span className={styles.badgeCancelled}>{ordersByStatus.Cancelled}</span>
+              <span className={styles.badgeCancelled}>
+                {ordersByStatus.Cancelled}
+              </span>
             </div>
           </div>
         </div>
 
         <div className={styles.panelCard}>
           <h2 className={styles.panelTitle}>تحليل المنتجات</h2>
-          
+
           <div className={styles.topProductBox}>
             <span className={styles.subLabel}>🔥 الأكثر مبيعاً:</span>
             {topProduct ? (
@@ -108,7 +122,9 @@ export default function AdminAnalytics() {
           <hr className={styles.divider} />
 
           <div className={styles.lowStockBox}>
-            <span className={styles.subLabel}>⚠️ تنبيهات المخزون (أقل من 5):</span>
+            <span className={styles.subLabel}>
+              ⚠️ تنبيهات المخزون (أقل من 5):
+            </span>
             {lowStockItems.length === 0 ? (
               <p className={styles.successText}>جميع المنتجات بفرة جيدة</p>
             ) : (
@@ -136,7 +152,9 @@ export default function AdminAnalytics() {
             <ul className={styles.regionList}>
               {topRegions.map((reg, index) => (
                 <li key={reg._id || index} className={styles.regionRow}>
-                  <span>{index + 1}. {reg._id}</span>
+                  <span>
+                    {index + 1}. {reg._id}
+                  </span>
                   <span className={styles.regionCount}>{reg.count} طلبات</span>
                 </li>
               ))}
