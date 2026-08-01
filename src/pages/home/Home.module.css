@@ -1,0 +1,212 @@
+.bodyPage {
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(
+    circle at top right,
+    #fdfbfb 0%,
+    #ebedee 100%
+  ); 
+  padding-bottom: 50px;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    sans-serif;
+}
+
+.logoutBtn {
+  position: absolute;
+  top: 24px;
+  left: 24px; 
+  padding: 8px 16px;
+  background-color: #fee2e2; 
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* تنسيقات عامة للصفحة والعناوين */
+.titlePage {
+  text-align: center;
+  color: #1e293b; /* لون كحلي غامق مطفأ بدل الأسود الصريح */
+  padding-top: 40px;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.hrAnderTitle {
+  width: 120px; /* عرض ثابت وأنيق للخط بدل الـ 50% الكبيرة */
+  border: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #3b82f6,
+    #8b5cf6
+  ); /* تدرج عصري براندي (أزرق وبنفسجي) */
+  border-radius: 10px;
+  margin: 15px auto 40px auto;
+}
+
+/* الحاوية الرئيسية */
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1280px; /* مساحة أوسع ومريحة للعين */
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 32px;
+  flex-direction: row-reverse;
+}
+
+/* قسم المنتجات (اليمين) */
+.itemLinks {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px); /* تأثير الزجاج الضبابي الفخم */
+  padding: 28px;
+  border-radius: 24px; /* زوايا أنعم */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+/* تخصيص السكرول بار لقسم المنتجات ليكون أنيقاً */
+.itemLinks::-webkit-scrollbar {
+  width: 6px;
+}
+.itemLinks::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+/* القسم المركزي (اليسار) */
+.CentralMainContent {
+  flex: 1.1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(241, 245, 249, 0.8);
+}
+
+/* قسم أيقونة المتجر */
+.welcomeIcon img {
+  max-width: 130px; /* حجم أصغر وأكثر تناسقاً */
+  height: auto;
+  border-radius: 24px; /* زوايا منحنية متناسقة مع الكروت بدل الدائرة الكاملة */
+  object-fit: cover;
+  border: 4px solid #f8fafc;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+}
+.welcomeIcon img:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+/* حاوية الأزرار المرنة - هنا تكمن السهولة القصوى للإضافة */
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* مسافة ثابتة بين الأزرار */
+  width: 100%;
+  max-width: 320px; /* توحيد عرض الأزرار تلقائياً */
+}
+
+/* الهيكل الموحد لجميع الأزرار الديناميكية */
+.btnDynamic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 16px; /* زوايا مودرن متناسقة مع الهوية الجديدة */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.btnDynamic:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* تخصيص الألوان الجديدة الفخمة لكل زر (ألوان هادئة ومريحة للعين): */
+
+/* 1. زر السلة (المضاف حديثاً) */
+.btnCart {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+.btnCart:hover {
+  background-color: #e2e8f0;
+}
+
+/* 2. زر لوحة التحكم */
+.btnAdmin {
+  background-color: #0f172a; /* كحلي ملكي غامق جداً */
+  color: #ffffff;
+}
+.btnAdmin:hover {
+  background-color: #1e293b;
+}
+
+/* 3. زر التثبيت */
+.btnDownload {
+  background: linear-gradient(
+    135deg,
+    #3b82f6 0%,
+    #1d4ed8 100%
+  ); /* أزرق براندي متدرج */
+  color: white;
+}
+.btnDownload:hover {
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* 4. زر الطلبات السابقة */
+.btnRequests {
+  background-color: #fff;
+  color: #ef4444; /* أحمر ناعم Modern */
+  border: 1px solid #fee2e2;
+}
+.btnRequests:hover {
+  background-color: #fef2f2;
+}
+
+/* التجاوب مع الشاشات */
+@media (max-width: 992px) {
+  .mainContent {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .itemLinks,
+  .CentralMainContent {
+    width: 100%;
+    max-height: none;
+  }
+  .actionButtons {
+    max-width: 100%; /* تأخذ العرض الكامل على الموبايل لشكل مريح للضغط */
+  }
+}

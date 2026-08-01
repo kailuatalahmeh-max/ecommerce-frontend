@@ -1,0 +1,175 @@
+/* الحاوية الرئيسية للمسار */
+.managementContainer {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  direction: rtl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* الهيدر العلوي لعنوان الصفحة */
+.managementHeader {
+  margin-bottom: 32px;
+}
+
+.managementHeader h2 {
+  margin: 0 0 8px 0;
+  color: #0f172a;
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+
+.managementHeader p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* تقسيم المحتوى لعمودين متجاوبين */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; /* نموذج الإدخال أكبر من قسم الإرشادات */
+  gap: 28px;
+  align-items: start;
+}
+
+/* كارت حماية وتصميم النماذج */
+.formCard,
+.infoCard {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+.formCard h3,
+.infoCard h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.15rem;
+  color: #1e293b;
+  font-weight: 600;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+/* تركيبة الحقول والـ Form */
+.adminForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.inputGroup span {
+  font-size: 0.9rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.inputGroup input,
+.inputGroup select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #333;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* عند التركيز على المدخلات */
+.inputGroup input:focus,
+.inputGroup select:focus {
+  border-color: #3b82f6;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* زر إرسال تفعيل الحساب */
+.submitBtn {
+  width: 100%;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  margin-top: 8px;
+}
+
+.submitBtn:hover {
+  background-color: #2563eb;
+}
+
+.submitBtn:active {
+  transform: scale(0.99);
+}
+
+.submitBtn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* تخصيص قائمة الإرشادات الأمنية */
+.infoCard {
+  background-color: #fffbeb; /* تلوين خفيف بلون دافئ تحذيري */
+  border-color: #fde68a;
+}
+
+.infoCard h3 {
+  color: #b45309;
+  border-bottom-color: #fef3c7;
+}
+
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.infoList li {
+  font-size: 0.9rem;
+  color: #78350f;
+  line-height: 1.6;
+  position: relative;
+  padding-right: 18px;
+}
+
+/* إضافة نقطة مخصصة قبل عناصر القائمة الإرشادية */
+.infoList li::before {
+  content: "•";
+  color: #d97706;
+  font-weight: bold;
+  font-size: 1.2rem;
+  position: absolute;
+  right: 0;
+  top: -2px;
+}
+
+/* التجاوب مع شاشات الهواتف والتابلت */
+@media (max-width: 968px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

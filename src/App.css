@@ -1,0 +1,115 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  color: black;
+  word-break: break-word;
+  line-height: 1;
+}
+
+a {
+  font-size: 26px;
+  font-family: sans-serif;
+  text-decoration: none;
+  color: white;
+}
+a:hover {
+  color: blue;
+  transition: all 0.3s;
+}
+
+/* ==========================================================================
+   أزرار التطبيق العامة (Global Buttons)
+   ========================================================================== */
+
+/* الزر الأساسي المشترك */
+.btn-global {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  min-width: 160px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  border: 1px solid transparent;
+  transition: all 0.25s ease-in-out;
+}
+
+/* حركة التمرير والضغط العامة */
+.btn-global:hover {
+  transform: translateY(-2px);
+}
+
+.btn-global:active {
+  transform: translateY(1px);
+}
+
+/* -----------------------------------------
+   أنواع الأزرار حسب اللون (Button Themes)
+   ----------------------------------------- */
+
+/* 1. الزر الأزرق الرئيسي (Primary) */
+.btn-primary {
+  background-color: #3498db;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.15);
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background-color: #2980b9;
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* 2. الزر الأخضر (Success) - ممتاز للتثبيت أو التأكيد */
+.btn-success {
+  background-color: #2ecc71;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(46, 204, 113, 0.15);
+  cursor: pointer;
+}
+.btn-success:hover {
+  background-color: #27ae60;
+  box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3);
+}
+
+/* 3. الزر الأحمر (Danger) - ممتاز للطلبات السابقة أو الإلغاء */
+.btn-danger {
+  background-color: #e74c3c;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(231, 76, 60, 0.15);
+  cursor: pointer;
+}
+.btn-danger:hover {
+  background-color: #c0392b;
+  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
+}
+
+.btn-global:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* تعطيل hover بالكامل */
+.btn-global:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* override لكل الأنواع */
+.btn-primary:disabled,
+.btn-success:disabled,
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(20%);
+}

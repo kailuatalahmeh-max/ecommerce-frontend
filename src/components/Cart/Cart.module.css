@@ -1,0 +1,353 @@
+/* الحاوية الخلفية للمودال بالكامل (البوب أب الفاخر) */
+.bodyPage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(13, 14, 18, 0.8); /* تعتيم خلفي متناسق */
+  backdrop-filter: blur(8px); /* تأثير زجاجي ضبابي للخلفية */
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* جسم المودال الأبيض/المظلم المنبثق */
+.modalBody {
+  background: #1a1c23; /* لون البطاقة المظلمة الفاخر */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow-y: auto; /* إضافة سكرول داخلي مرن عند زيادة المنتجات */
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.05);
+  animation: modalAppear 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalAppear {
+  from {
+    transform: translateY(20px) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* زر إغلاق المودال العلوي */
+.closeModal {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.closeModal:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  transform: rotate(90deg);
+}
+
+/* عنوان السلة */
+.CartTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+/* الحاوية الرئيسية لكل منتج داخل السلة */
+.mainCart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.mainCart:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+/* تفاصيل المنتج (الصورة والنصوص) */
+.itemDetails {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.itemImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  background-color: #0d0e12;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.itemNameAndPrice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.itemName {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.itemPrice {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #38bdf8;
+  margin: 0;
+}
+
+/* صندوق الملاحظات التابع للمنتج */
+.textArea {
+  width: 100%;
+  min-height: 40px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  resize: vertical;
+  margin-top: 0.5rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.textArea:focus {
+  border-color: #6366f1;
+}
+
+/* إدارة المنتج (العداد والحذف) */
+.itemManagement {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+/* متحكم العداد الخاص بالكمية */
+.quantitySelector {
+  display: flex;
+  align-items: center;
+  background: #0d0e12;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.2rem;
+}
+
+.globalBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.globalBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.quantity {
+  margin: 0;
+  padding: 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* زر حذف المنتج المفرد */
+.drobFromCart {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.drobFromCart:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  transform: scale(1.05);
+}
+
+/* الخطوط الفاصلة الاحترافية */
+.hr {
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 1.5rem 0;
+}
+
+/* قسم الفوتر الفرعي (تفاصيل السلة والمجموع) */
+.footerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.CartDetails {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spanQuantity {
+  font-weight: 700;
+  color: #fff;
+}
+
+.CartDetails .spanQuantity:last-of-type {
+  color: #38bdf8;
+  font-size: 1.15rem;
+  margin-left: 0.5rem;
+}
+
+/* زر مسح السلة بالكامل */
+.deleteAllBtn {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteAllBtn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
+}
+
+/* أزرار الإجراءات النهائية في الأسفل */
+.btnFooter {
+  display: flex;
+  gap: 1rem;
+}
+
+.addOtherItemsBtn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addOtherItemsBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.completingYourOrderBtn {
+  flex: 1;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+.completingYourOrderBtn:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+}
+
+/* تخصيص السكرول الداخلي للمودال بشكل ناعم وعصري */
+.modalBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modalBody::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.modalBody::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* التجاوب والتوافق التام مع الشاشات الصغيرة للموبايل */
+@media (max-width: 500px) {
+  .modalBody {
+    padding: 1.5rem 1rem;
+  }
+
+  .mainCart {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .itemManagement {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 0.75rem;
+  }
+
+  .btnFooter {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

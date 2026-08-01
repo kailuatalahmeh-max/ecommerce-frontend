@@ -1,0 +1,148 @@
+/* حاوية الكارت الرئيسية - تحولت إلى Flex أفقياً */
+.itemCard {
+  display: flex;
+  flex-direction: row; /* عرض العناصر أفقياً */
+  align-items: center;
+  background-color: #a8815a;
+  border-radius: 12px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.02),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: 110px; /* ارتفاع ثابت ومستطيل */
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  border: 1px solid #e2e8f0;
+  padding-left: 16px; /* مسافة من اليسار عند الأزرار */
+}
+
+/* تأثير التمرير */
+.itemCard:hover {
+  transform: translateX(-4px); /* إزاحة خفيفة لليمين/اليسار */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* حاوية الصورة المستطيلة */
+.imageWrapper {
+  width: 140px; /* عرض ثابت للصورة */
+  min-width: 140px;
+  height: 100%;
+  background-color: #f8fafc;
+  overflow: hidden;
+  border-left: 1px solid #e2e8f0; /* فاصل بين الصورة والنص */
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* تفاصيل المنتج */
+.itemInfo {
+  padding: 12px 20px;
+  min-width: 400px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+/* تحويل النص إلى نقاط إذا تجاوز مساحته السطر الواحد */
+.itemInfo h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 600;
+  white-space: nowrap; /* إجبار النص على البقاء في سطر واحد */
+  overflow: hidden;
+  text-overflow: ellipsis; /* ظهور النقاط ... */
+}
+
+.itemPrice {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* منطقة الأزرار - أصبحت على اليسار بالكامل */
+.cardActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0;
+}
+
+/* زر الحذف والتعديل بتصميم أنيق ومناسب للمستطيل */
+.deleteBtn,
+.editBtn {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.deleteBtn {
+  color: #ef4444;
+}
+
+.deleteBtn:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  margin: 3px;
+}
+
+.deleteBtn:active {
+  transform: scale(0.97);
+}
+
+.editBtn {
+  color: #2196f3;
+}
+
+.editBtn:hover {
+  background-color: #2196f3;
+  color: #ffffff;
+  border-color: #2196f3;
+  margin: 3px;
+}
+
+.editBtn:active {
+  transform: scale(0.97);
+}
+
+/* التجاوب مع الشاشات الصغيرة جداً */
+@media (max-width: 480px) {
+  .itemCard {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+    gap: 12px;
+  }
+  .imageWrapper {
+    width: 100%;
+    height: 150px;
+    border-left: none;
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+  .itemInfo {
+    padding: 0;
+    text-align: center;
+  }
+  .cardActions {
+    width: 100%;
+  }
+}

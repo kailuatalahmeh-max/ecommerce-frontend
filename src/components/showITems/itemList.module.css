@@ -1,0 +1,46 @@
+.itemCard {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+
+  /* التعديل هنا: توزيع العناصر على الأطراف بدلاً من flex-end */
+  justify-content: space-between;
+
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s ease-in-out;
+  color: #4a5568;
+}
+
+.itemCard img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.itemCard span {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: inherit;
+  /* حذفنا الـ line-height: 40px لأنه كان يسبب مشاكل بالمحاذاة، والـ align-items تتكفل بالتوسط */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right; /* لضمان محاذاة النص لليمين */
+}
+
+/* تأثير الـ Hover الراقي */
+.itemCard:hover {
+  background: #f7fafc;
+  border-color: #3498db;
+  color: #3498db;
+  transform: translateX(
+    -4px
+  ); /* حركة تفاعلية ناعمة لليزار قليلاً بما أن المنيو على اليمين! */
+  box-shadow: 0 4px 6px -1px rgba(52, 152, 219, 0.08);
+}

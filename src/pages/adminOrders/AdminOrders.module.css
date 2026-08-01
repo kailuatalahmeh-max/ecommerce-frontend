@@ -1,0 +1,313 @@
+/* AdminOrders.module.css */
+
+.adminPage {
+  padding: 2rem;
+  background-color: #0f172a; /* خلفية داكنة وعميقة Slate 900 */
+  min-height: 100vh;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #f8fafc;
+  direction: rtl;
+}
+
+/* Header */
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.titlePage {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.subTitle {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 0.35rem;
+}
+
+.btnBack {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btnBack:hover {
+  background-color: #334155;
+  border-color: #475569;
+}
+
+/* Stats Section */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: #1e293b; /* بطاقات داكنة Slate 800 */
+  padding: 1.2rem;
+  border-radius: 0.75rem;
+  border: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.statTitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-top: 0.3rem;
+  color: #ffffff;
+}
+
+/* حدود ملونة عميقة ومشبّعة */
+.pendingBorder {
+  border-right: 5px solid #d97706;
+}
+.acceptedBorder {
+  border-right: 5px solid #2563eb;
+}
+.deliveredBorder {
+  border-right: 5px solid #059669;
+}
+.cancelledBorder {
+  border-right: 5px solid #ef4444;
+}
+
+/* Controls Section */
+.controlsSection {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 260px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  background-color: #1e293b;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput::placeholder {
+  color: #64748b;
+}
+
+.searchInput:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.selectWrapper {
+  min-width: 200px;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  background-color: #1e293b;
+  color: #ffffff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.select:focus {
+  border-color: #6366f1;
+}
+
+/* Orders List */
+.mainSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.orderCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.85rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.customerName {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.customerInfo {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  margin-left: 1.25rem;
+  margin-top: 0.4rem;
+}
+
+.orderMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.orderDate {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ألوان حالات عميقة وغنية جداً (Rich Deep Badges) */
+.statusSelect {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Deep Yellow / Amber */
+.pending {
+  background-color: #78350f;
+  color: #fef3c7;
+  border: 1px solid #b45309;
+}
+
+/* Deep Blue */
+.accepted {
+  background-color: #1e3a8a;
+  color: #dbeafe;
+  border: 1px solid #1d4ed8;
+}
+
+/* Deep Emerald Green */
+.delivered {
+  background-color: #064e3b;
+  color: #a7f3d0;
+  border: 1px solid #047857;
+}
+
+/* Deep Crimson / Rose */
+.cancelled {
+  background-color: #881337;
+  color: #ffe4e6;
+  border: 1px solid #be123c;
+}
+
+/* Items List */
+.itemsTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.itemsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  background-color: #0f172a; /* حاوية العناصر أغمق لزيادة التباين */
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1e293b;
+  font-size: 0.9rem;
+}
+
+.itemName {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.itemQty {
+  color: #94a3b8;
+}
+
+.itemPrice {
+  font-weight: 700;
+  color: #38bdf8; /* لون أزرق سماوي مضيء للسعر */
+}
+
+/* Card Footer */
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #334155;
+}
+
+.totalLabel {
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.totalPrice {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #4ade80; /* إجمالي السعر بلون أخضر نيون متوهج */
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem;
+  color: #64748b;
+  background: #1e293b;
+  border-radius: 0.85rem;
+  border: 1px dashed #334155;
+  font-size: 1.1rem;
+}

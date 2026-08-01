@@ -1,0 +1,82 @@
+/* الحاوية الرئيسية لملء الشاشة وتوسيط المحتوى */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  direction: rtl; /* لدعم اللغة العربية */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* صندوق المحتوى الإرشادي */
+.content {
+  text-align: center;
+  max-width: 500px;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* رقم الخطأ 404 */
+.title {
+  font-size: 6rem;
+  margin: 0;
+  font-weight: 900;
+  color: #ff4a5a;
+  line-height: 1;
+}
+
+/* العنوان الفرعي */
+.subtitle {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin: 20px 0 10px 0;
+}
+
+/* النص التوضيحي */
+.text {
+  font-size: 1rem;
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* زر التوجيه للرئيسية */
+.btn {
+  display: inline-block;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #3182ce;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* تأثيرات حركة الزر */
+.btn:hover {
+  background-color: #2b6cb0;
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* التجاوب مع الهواتف والشاشات الصغيرة */
+@media (max-width: 480px) {
+  .title {
+    font-size: 4.5rem;
+  }
+  .subtitle {
+    font-size: 1.4rem;
+  }
+  .content {
+    padding: 30px 20px;
+  }
+}

@@ -1,0 +1,308 @@
+/* AdminAnalytics.module.css */
+
+/* Container الرئيسي للصفحة */
+.adminPage {
+  padding: 2rem;
+  background-color: #0f172a; /* Slate 900 */
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #f8fafc;
+  direction: rtl;
+}
+
+/* Header Section */
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.titlePage {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.subTitle {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 0.35rem;
+}
+
+.btnBack {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btnBack:hover {
+  background-color: #334155;
+  border-color: #475569;
+}
+
+/* 1. KPI Cards Grid */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.kpiCard {
+  background: #1e293b; /* Slate 800 */
+  padding: 1.4rem;
+  border-radius: 0.75rem;
+  border: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
+.kpiLabel {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.kpiValue {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* حدود ملونة عميقة ومشبّعة للبطاقات */
+.revenueBorder {
+  border-right: 5px solid #059669; /* أخضر نيون عميق للمبيعات */
+}
+
+.ordersBorder {
+  border-right: 5px solid #2563eb; /* أزرق عميق للطلبات */
+}
+
+.itemsBorder {
+  border-right: 5px solid #9333ea; /* بنفسجي ملكي للمنتجات */
+}
+
+.cartsBorder {
+  border-right: 5px solid #d97706; /* برتقالي دافئ للسلات */
+}
+
+/* 2. Middle Section Grid */
+.middleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.panelCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.85rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
+.panelTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 0.75rem;
+  letter-spacing: -0.3px;
+}
+
+/* قائمة حالات الطلبات */
+.statusList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #0f172a; /* Slate 900 لزيادة التباين */
+  border: 1px solid #1e293b;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #f1f5f9;
+}
+
+/* Badges بتصميم الـ Dark Rich Badges */
+.badgePending,
+.badgeAccepted,
+.badgeDelivered,
+.badgeCancelled {
+  padding: 0.35rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Deep Amber */
+.badgePending {
+  background-color: #78350f;
+  color: #fef3c7;
+  border: 1px solid #b45309;
+}
+
+/* Deep Blue */
+.badgeAccepted {
+  background-color: #1e3a8a;
+  color: #dbeafe;
+  border: 1px solid #1d4ed8;
+}
+
+/* Deep Emerald */
+.badgeDelivered {
+  background-color: #064e3b;
+  color: #a7f3d0;
+  border: 1px solid #047857;
+}
+
+/* Deep Rose */
+.badgeCancelled {
+  background-color: #881337;
+  color: #ffe4e6;
+  border: 1px solid #be123c;
+}
+
+/* قسم المنتجات والمخزون */
+.topProductBox,
+.lowStockBox {
+  margin-bottom: 1.25rem;
+}
+
+.subLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.topProductName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #38bdf8; /* أزرق سماوي متوهج */
+  background-color: #0f172a;
+  padding: 0.8rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1e293b;
+  margin: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px dashed #334155;
+  margin: 1.25rem 0;
+}
+
+.lowStockList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lowStockRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 0.6rem 0.85rem;
+  background-color: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 0.5rem;
+  color: #cbd5e1;
+}
+
+.stockAlert {
+  color: #f87171; /* أحمر نيون للتنبيه */
+  font-weight: 700;
+}
+
+/* 3. Bottom Section (المناطق) */
+.bottomSection {
+  margin-top: 1rem;
+}
+
+.regionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.8rem;
+}
+
+.regionRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: #0f172a;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: 1px solid #1e293b;
+  color: #f1f5f9;
+}
+
+.regionCount {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+/* النصوص المساعدة (Empty / Success) */
+.emptyText {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.successText {
+  font-size: 0.85rem;
+  color: #4ade80; /* أخضر نيون للمؤشرات الإيجابية */
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .adminPage {
+    padding: 1rem;
+  }
+
+  .headerSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .middleGrid {
+    grid-template-columns: 1fr;
+  }
+}
