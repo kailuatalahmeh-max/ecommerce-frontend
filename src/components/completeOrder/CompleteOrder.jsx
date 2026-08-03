@@ -41,7 +41,7 @@ export default function CompleteOrder({
         setItemsData: setItemsData,
       });
     } else if (purchaseType === "cart") {
-      setCartPurchaseData({ purchaseDetails: formData, itemId: itemId });
+      setCartPurchaseData({ purchaseDetails: formData });
     }
     onClose();
   }

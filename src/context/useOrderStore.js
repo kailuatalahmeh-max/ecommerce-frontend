@@ -1,7 +1,8 @@
-import axios from "axios";
 import { create } from "zustand";
-import { useAuthStore } from "./useAuthStore";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { useAuthStore } from "./useAuthStore";
+import { useCartStore } from "./useCartStore";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -50,25 +51,24 @@ export const useOrderStore = create((set) => ({
       });
   },
 
-  setCartPurchaseData: ({ purchaseDetails, itemId }) => {
-    if (!purchaseDetails || !itemId) {
+  setCartPurchaseData: ({ purchaseDetails }) => {
+    if (!purchaseDetails) {
       toast.error("يرجى التأكد من تعبئة البيانات بشكل صحيح");
       return;
     }
 
     const guestId = localStorage.getItem("guestId");
 
-    const finalItemIds = Array.isArray(itemId) ? itemId : [itemId];
-
     axios
       .post(`${apiUrl}/api/cart-purchase/set-data/${guestId}`, {
         purchaseDetails: purchaseDetails,
-        itemId: finalItemIds,
       })
       .then((response) => {
         toast.success(
           response?.data?.message || "تم الشراء! العناصر موجودة في صفحة طلباتي",
         );
+
+        useCartStore.getState().clearCartLocal();
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;

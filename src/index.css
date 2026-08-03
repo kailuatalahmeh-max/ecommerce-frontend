@@ -77,3 +77,23 @@ body {
   padding: 0;
   margin: 0;
 }
+
+/* index.css - أضف في النهاية */
+
+/* ===== منع التمرير عند فتح المودال ===== */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* ===== ضمان ظهور المودالات فوق كل شيء ===== */
+.modal-overlay,
+.modal-container,
+[class*="bodyPage"]:has([class*="modalBody"]) {
+  z-index: 999999 !important;
+}
+
+/* ===== إصلاح مشكلة الـ z-index في بعض المتصفحات ===== */
+.modal-root {
+  position: relative;
+  z-index: 999999;
+}

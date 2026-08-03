@@ -15,6 +15,12 @@ export default function Home() {
   const logout = useAuthStore((state) => state.logout);
   const [openCart, setOpenCart] = useState(false);
   const [openPhoneCheck, setOpenPhoneCheck] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredItems =
+    itemsData?.filter((item) =>
+      item.itemName.toLowerCase().includes(searchTerm.toLowerCase().trim()),
+    ) || [];
 
   function onClose() {
     setOpenCart(false);
@@ -41,14 +47,15 @@ export default function Home() {
 
       <h1 className={styles.titlePage}>Welcome to Talahmeh tools</h1>
       <hr className={styles.hrAnderTitle} />
+      <input
+        type="text"
+        placeholder="🔍 ابحث عن منتج..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className={styles.searchInput}
+      />
 
       <div className={styles.mainContent}>
-        <div className={styles.itemLinks}>
-          {itemsData &&
-            itemsData.length > 0 &&
-            itemsData.map((item) => <ItemList key={item._id} {...item} />)}
-        </div>
-
         <div className={styles.CentralMainContent}>
           <div className={styles.welcomeIcon}>
             <img
@@ -104,6 +111,14 @@ export default function Home() {
             </Link>
           </div>
         </div>
+      </div>
+      <div className={styles.itemLinks}>
+        {filteredItems ? (
+          filteredItems.length > 0 &&
+          filteredItems.map((item) => <ItemList key={item._id} {...item} />)
+        ) : (
+          <p className={styles.noResults}>لا توجد نتائج مطابقة لبحثك</p>
+        )}
       </div>
     </div>
   );

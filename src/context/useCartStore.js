@@ -80,7 +80,7 @@ export const useCartStore = create((set, get) => ({
         guestId,
       })
       .then((response) => {
-        const newData = response?.data?.data?.items;
+        const newData = response?.data?.data?.items || [];
 
         set({ cartData: newData });
       })
@@ -97,7 +97,7 @@ export const useCartStore = create((set, get) => ({
         guestId: guestId,
       })
       .then((response) => {
-        const newData = response?.data?.data?.items;
+        const newData = response?.data?.data?.items || [];
         set({ cartData: newData });
       })
       .catch((error) => {
@@ -119,6 +119,8 @@ export const useCartStore = create((set, get) => ({
         toast.error(errMessage);
       });
   },
+
+  clearCartLocal: () => set({ cartData: [] }),
 
   totalPrice: () => {
     const items = get().cartData;

@@ -1,46 +1,310 @@
+/* itemList.module.css */
+
+/* ===== بطاقة المنتج ===== */
 .itemCard {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  flex-direction: row-reverse;
-
-  /* التعديل هنا: توزيع العناصر على الأطراف بدلاً من flex-end */
-  justify-content: space-between;
-
-  padding: 10px 14px;
-  background: #ffffff;
-  border: 1px solid #edf2f7;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: all 0.25s ease-in-out;
-  color: #4a5568;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  min-height: 180px;
+  width: 100%;
 }
 
+/* ===== شريط علوي ===== */
+.itemCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.itemCard:hover::before {
+  opacity: 1;
+}
+
+/* ===== ظل داخلي ===== */
+.itemCard::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.itemCard:hover::after {
+  opacity: 1;
+}
+
+/* ===== صورة المنتج ===== */
 .itemCard img {
-  width: 44px;
-  height: 44px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  width: 80%;
+  height: 60%;
+  object-fit: contain;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+  padding: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
-.itemCard span {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: inherit;
-  /* حذفنا الـ line-height: 40px لأنه كان يسبب مشاكل بالمحاذاة، والـ align-items تتكفل بالتوسط */
+.itemCard:hover img {
+  transform: scale(1.05);
+  border-color: #667eea;
+}
+
+/* ===== اسم المنتج ===== */
+.itemName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+  transition: color 0.3s ease;
+  text-align: center;
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: right; /* لضمان محاذاة النص لليمين */
+  padding: 0 0.25rem;
+  position: relative;
+  z-index: 1;
 }
 
-/* تأثير الـ Hover الراقي */
+.itemCard:hover .itemName {
+  color: #667eea;
+}
+
+/* ===== سعر المنتج ===== */
+.itemPrice {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== حالة المخزون ===== */
+.stockBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.04);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  text-align: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* ===== حالات المخزون ===== */
+.stockBadge.outOfStock {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  animation: pulseStock 2s ease-in-out infinite;
+}
+
+.stockBadge.lowStock {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.stockBadge.inStock {
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+}
+
+@keyframes pulseStock {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ===== تأثير Hover ===== */
 .itemCard:hover {
-  background: #f7fafc;
-  border-color: #3498db;
-  color: #3498db;
-  transform: translateX(
-    -4px
-  ); /* حركة تفاعلية ناعمة لليزار قليلاً بما أن المنيو على اليمين! */
-  box-shadow: 0 4px 6px -1px rgba(52, 152, 219, 0.08);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+/* ===== حالة عدم وجود صورة ===== */
+.itemCard img[src=""] {
+  display: none;
+}
+
+.itemCard:not(:has(img[src])) .itemName::before {
+  content: '🛠️';
+  display: block;
+  font-size: 40px;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== تحسينات للشاشات ===== */
+@media (min-width: 1400px) {
+  .itemCard {
+    min-height: 220px;
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+
+  .itemCard img {
+    width: 75%;
+    height: 55%;
+  }
+
+  .itemName {
+    font-size: 17px;
+  }
+
+  .itemPrice {
+    font-size: 20px;
+  }
+
+  .stockBadge {
+    font-size: 12px;
+    padding: 4px 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .itemCard {
+    min-height: 200px;
+    padding: 0.9rem;
+  }
+
+  .itemCard img {
+    width: 75%;
+    height: 55%;
+  }
+
+  .itemName {
+    font-size: 14px;
+  }
+
+  .itemPrice {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 640px) {
+  .itemCard {
+    min-height: 160px;
+    padding: 0.75rem;
+    border-radius: 12px;
+  }
+
+  .itemCard img {
+    width: 70%;
+    height: 50%;
+    padding: 0.3rem;
+  }
+
+  .itemName {
+    font-size: 13px;
+  }
+
+  .itemPrice {
+    font-size: 15px;
+  }
+
+  .stockBadge {
+    font-size: 10px;
+    padding: 2px 10px;
+    top: 8px;
+    right: 8px;
+  }
+}
+
+@media (max-width: 380px) {
+  .itemCard {
+    min-height: 140px;
+    padding: 0.6rem;
+  }
+
+  .itemCard img {
+    width: 65%;
+    height: 45%;
+  }
+
+  .itemName {
+    font-size: 12px;
+  }
+
+  .itemPrice {
+    font-size: 14px;
+  }
+
+  .stockBadge {
+    font-size: 9px;
+    padding: 2px 8px;
+    top: 6px;
+    right: 6px;
+  }
+}
+
+/* ===== دعم الوضع المظلم ===== */
+@media (prefers-color-scheme: dark) {
+  .itemCard {
+    background: rgba(26, 32, 44, 0.95);
+    border-color: rgba(74, 85, 104, 0.3);
+  }
+
+  .itemName {
+    color: #e2e8f0;
+  }
+
+  .itemCard:hover {
+    border-color: #667eea;
+  }
+
+  .itemCard:hover .itemName {
+    color: #a8b5ff;
+  }
+
+  .itemCard img {
+    background: rgba(45, 55, 72, 0.5);
+  }
+
+  .stockBadge {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .stockBadge.outOfStock {
+    color: #fc8181;
+    background: rgba(220, 38, 38, 0.15);
+  }
+
+  .stockBadge.lowStock {
+    color: #fc8181;
+    background: rgba(220, 38, 38, 0.12);
+  }
+
+  .stockBadge.inStock {
+    color: #68d391;
+    background: rgba(22, 163, 74, 0.15);
+  }
 }

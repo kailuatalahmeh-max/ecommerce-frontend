@@ -4,6 +4,7 @@ import styles from "./ViewItemDetails.module.css";
 import { useParams } from "react-router-dom";
 import { useCartStore } from "../../context/useCartStore";
 import CompleteOrder from "../../components/completeOrder/CompleteOrder";
+import toast from "react-hot-toast";
 export default function ViewItemDetails() {
   const { id } = useParams();
   const { itemsData } = useContext(ItemContext);
@@ -12,8 +13,6 @@ export default function ViewItemDetails() {
 
   const [quantity, setQuantity] = useState(1);
   const [openCompleted, setOpenCompleted] = useState(false);
-
-  const totalPrice = thisItem ? Number(quantity) * thisItem.itemPrice : 0;
 
   if (!itemsData || itemsData.length === 0) {
     return (
@@ -31,8 +30,24 @@ export default function ViewItemDetails() {
     );
   }
 
+  const totalPrice = thisItem ? Number(quantity) * thisItem.itemPrice : 0;
+  const isOutOfStock = thisItem?.itemQuantity === 0;
+
   function handleAddToCart() {
+    if (isOutOfStock || quantity <= 0 || quantity > thisItem.itemQuantity) {
+      toast.error("الكمية المطلوبة غير متوفرة");
+      return;
+    }
+
     addToCart(thisItem, quantity);
+  }
+
+  function handleBuyNow() {
+    if (isOutOfStock || quantity <= 0 || quantity > thisItem.itemQuantity) {
+      toast.error("الكمية المطلوبة غير متوفرة");
+      return;
+    }
+    setOpenCompleted(true);
   }
 
   function onClose() {
@@ -65,10 +80,9 @@ export default function ViewItemDetails() {
           <div className={styles.priceSection}>
             <p className={styles.priceWord}>Price:</p>
             <span className={styles.lastPrice}>{thisItem.itemPrice}$</span>
-            
-             <p className={styles.priceWord}>total Price:</p>
-            <span className={styles.lastPrice}>{totalPrice}$</span>
-            
+
+            <p className={styles.priceWord}>total Price:</p>
+            <span className={styles.lastPrice}>{totalPrice.toFixed(2)}$</span>
           </div>
 
           <p className={styles.p_availableQuantity}>
@@ -117,15 +131,17 @@ export default function ViewItemDetails() {
             </label>
             <div className={styles.actionsContainer}>
               <button
+                disabled={isOutOfStock}
                 type="button"
                 className="btn-success btn-global"
                 onClick={() => {
-                  setOpenCompleted(true);
+                  handleBuyNow();
                 }}
               >
-                Buy this item
+                {isOutOfStock ? "Out of stock" : "Buy this item"}
               </button>
               <button
+                disabled={isOutOfStock}
                 type="button"
                 onClick={() => {
                   handleAddToCart();
