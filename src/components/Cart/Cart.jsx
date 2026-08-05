@@ -23,15 +23,6 @@ export default function Cart({ onClose }) {
   return (
     <Portal>
       <div className={styles.bodyPage} onClick={onClose}>
-        {openCompleted && (
-          <CompleteOrder
-            onClose={handleClose}
-            itemId={itemsId}
-            purchaseType={"cart"}
-          >
-            {" "}
-          </CompleteOrder>
-        )}
         <div className={styles.modalBody} onClick={(e) => e.stopPropagation()}>
           <button type="button" className={styles.closeModal} onClick={onClose}>
             ❌
@@ -158,6 +149,15 @@ export default function Cart({ onClose }) {
             </button>
           </div>
         </div>
+        {openCompleted && (
+          <CompleteOrder
+            onClose={handleClose}
+            itemId={itemsId}
+            purchaseType={"cart"}
+          >
+            {" "}
+          </CompleteOrder>
+        )}
       </div>
     </Portal>
   );

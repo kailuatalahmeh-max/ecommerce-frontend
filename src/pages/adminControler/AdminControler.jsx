@@ -64,7 +64,6 @@ export default function AdminControler() {
         <nav className={styles.sidebarNav}>
           <Link to="/admin/analytics">📊 الإحصائيات العامة</Link>
           <Link to="/admin/management">👤 أنشاء حساب أدمن</Link>
-          <Link to="/admin/control-items">📦 إدارة المنتجات</Link>
           <Link to="/admin/control-items/add">➕ إضافة منتج جديد</Link>
           <Link to="/admin/orders-management">📜 طلبات الشراء</Link>
         </nav>

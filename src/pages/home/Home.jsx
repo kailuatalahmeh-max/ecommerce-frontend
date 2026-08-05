@@ -102,13 +102,6 @@ export default function Home() {
             >
               🎁 My Orders
             </button>
-
-            <Link
-              to="#"
-              className={`${styles.btnDynamic} ${styles.btnRequests}`}
-            >
-              📋 My previous orders
-            </Link>
           </div>
         </div>
       </div>
