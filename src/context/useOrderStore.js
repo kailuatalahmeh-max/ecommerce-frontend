@@ -93,7 +93,7 @@ export const useOrderStore = create((set) => ({
         navigate("/my-orders");
       })
       .catch((err) => {
-        toast.error(err.response?.message || "فشل احضار البيانات");
+        toast.error(err.response?.data.message || "فشل احضار البيانات");
       });
   },
 
