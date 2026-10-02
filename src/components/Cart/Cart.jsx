@@ -1,9 +1,10 @@
 import styles from "./Cart.module.css";
-import { useCartStore } from "../../context/useCartStore";
 import { useState } from "react";
+import { useCartStore } from "../../context/useCartStore";
 
 import CompleteOrder from "../completeOrder/CompleteOrder";
 import Portal from "../Portal/Portal";
+import CartItem from "./CartItem";
 
 export default function Cart({ onClose }) {
   const cartData = useCartStore((state) => state.cartData);
@@ -28,7 +29,7 @@ export default function Cart({ onClose }) {
             ❌
           </button>
           <h2 className={styles.CartTitle}>Shopping Cart🛒</h2>
-          {cartData.length === 0 ? (
+          {cartData?.length === 0 ? (
             <main className={styles.MainContainerCart}>
               <h2 className={styles.CartEmptyMessage}>
                 Your cart is empty 🛒{" "}
@@ -49,62 +50,15 @@ export default function Cart({ onClose }) {
               </button>
             </main>
           ) : (
-            cartData.map((item) => {
-              return (
-                <main key={item._id} className={styles.mainCart}>
-                  <div className={styles.itemDetails}>
-                    <img
-                      className={styles.itemImage}
-                      src={item.itemId?.imageURL}
-                      alt="صورة المنتج"
-                    />
-                    <div className={styles.itemNameAndPrice}>
-                      <p className={styles.itemName}>{item.itemId?.itemName}</p>
-                      <p className={styles.itemPrice}>
-                        Price:
-                        {" " + item.itemId?.itemPrice}$
-                      </p>
-                      <textarea
-                        className={styles.textArea}
-                        placeholder="Write your note"
-                      ></textarea>
-                    </div>
-                  </div>
-                  <div className={styles.itemManagement}>
-                    <div className={styles.quantitySelector}>
-                      <button
-                        type="button"
-                        className={styles.globalBtn}
-                        onClick={() => {
-                          reducingQuantity(item._id);
-                        }}
-                      >
-                        -
-                      </button>
-                      <p className={styles.quantity}>{item.quantity} </p>
-                      <button
-                        type="button"
-                        className={styles.globalBtn}
-                        onClick={() => {
-                          addQuantity(item._id);
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.drobFromCart}
-                      onClick={() => {
-                        deleteItem(item._id);
-                      }}
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </main>
-              );
-            })
+            cartData.map((item) => (
+              <CartItem
+                key={item._id}
+                item={item}
+                onReduce={() => reducingQuantity(item._id)}
+                onAdd={() => addQuantity(item._id)}
+                onDelete={() => deleteItem(item._id)}
+              />
+            ))
           )}
 
           <hr className={styles.hr} />
@@ -143,7 +97,7 @@ export default function Cart({ onClose }) {
               onClick={() => {
                 setOpenCompleted(true);
               }}
-              disabled={cartData.length === 0}
+              disabled={cartData?.length === 0}
             >
               Completing your order{" "}
             </button>

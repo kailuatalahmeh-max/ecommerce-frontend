@@ -20,9 +20,9 @@ export default function AdminOrders() {
   const filteredOrders = ordersData?.filter((order) => {
     const matchesStatus = statusFilter ? order.status === statusFilter : true;
     const matchesSearch =
-      order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.phoneNumber.includes(searchTerm) ||
-      order.region.toLowerCase().includes(searchTerm.toLowerCase());
+      order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.phoneNumber?.includes(searchTerm) ||
+      order.region?.toLowerCase().includes(searchTerm.toLowerCase());
 
     return matchesStatus && matchesSearch;
   });

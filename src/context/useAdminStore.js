@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosAdmin from "../utils/axiosAdmin";
 import toast from "react-hot-toast";
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -8,11 +8,72 @@ export const useAdminStore = create((set, get) => ({
   analyticsData: null,
   analyticsLoading: false,
 
-  getOrdersData: () => {
-    axios
-      .get(`${apiUrl}/api/admin-control/orders`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  addItem: ({ formInputData, setFormInputData, setItemsData }) => {
+    const images = (formInputData.images || [])
+      .map((img) => ({
+        imageURL: String(img.imageURL || "").trim(),
+      }))
+      .filter((img) => img.imageURL.length > 0);
+
+    axiosAdmin
+      .post(`${apiUrl}/api/addItem`, {
+        imageURL: images[0]?.imageURL || "",
+        images: images,
+        itemName: formInputData.itemName.trim(),
+        itemPrice: Number(formInputData.itemPrice),
+        itemQuantity: Number(formInputData.itemQuantity),
       })
+      .then((response) => {
+        toast.success("تم أضافة العنصر بنجاح!", {
+          style: { color: "green" },
+        });
+        const newProductFromServer = response.data?.data;
+        setFormInputData({
+          images: [{ imageURL: "" }],
+          itemName: "",
+          itemPrice: "",
+          itemQuantity: "",
+        });
+        setItemsData((p) => [...p, newProductFromServer]);
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message);
+      });
+  },
+
+  editItem: ({ id, itemEditing, setItemsData, onClose }) => {
+    const images = (itemEditing.images || [])
+      .map((img) => ({
+        imageURL: String(img.imageURL || "").trim(),
+      }))
+      .filter((img) => img.imageURL.length > 0);
+
+    axiosAdmin
+      .put(`${apiUrl}/api/item/edit/${id}`, {
+        imageURL: images[0]?.imageURL || "",
+        images: images,
+        itemName: itemEditing.itemName.trim(),
+        itemPrice: Number(itemEditing.itemPrice),
+        itemQuantity: Number(itemEditing.itemQuantity),
+      })
+      .then((response) => {
+        const updatedItem = response.data?.data;
+        setItemsData((prev) =>
+          prev.map((i) => (i._id === id ? updatedItem : i)),
+        );
+        toast.success("تم التعديل بنجاح");
+        onClose();
+      })
+      .catch((err) => {
+        const errorMessage =
+          err.response?.data?.message || "فشل التعديل يرجى المحاولة لاحقاً!";
+        toast.error(errorMessage);
+      });
+  },
+
+  getOrdersData: () => {
+    axiosAdmin
+      .get(`${apiUrl}/api/admin-control/orders`)
       .then((response) => {
         const data = response.data?.data;
         set({ ordersData: data });
@@ -24,17 +85,11 @@ export const useAdminStore = create((set, get) => ({
   },
 
   updateOrderStatus: ({ orderId, status }) => {
-    axios
-      .patch(
-        `${apiUrl}/api/admin-control/order-edit-status`,
-        {
-          orderId: orderId,
-          status: status,
-        },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        },
-      )
+    axiosAdmin
+      .patch(`${apiUrl}/api/admin-control/order-edit-status`, {
+        orderId: orderId,
+        status: status,
+      })
       .then(() => {
         const updatedOrders = get().ordersData.map((order) =>
           order._id === orderId ? { ...order, status: status } : order,
@@ -52,10 +107,8 @@ export const useAdminStore = create((set, get) => ({
   },
 
   createAdminAccount: ({ setFormData, formData, setLoading }) => {
-    axios
-      .post(`${apiUrl}/api/admin/create-new-admin`, formData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
+    axiosAdmin
+      .post(`${apiUrl}/api/admin/create-new-admin`, formData)
       .then((res) => {
         toast.success(res.data.message || "تم إنشاء حساب الإدارة بنجاح!");
         setFormData({ fullName: "", email: "", password: "", role: "admin" });
@@ -68,10 +121,8 @@ export const useAdminStore = create((set, get) => ({
   getAnalyticsData: () => {
     set({ analyticsLoading: true });
 
-    axios
-      .get(`${apiUrl}/api/admin/analytics`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
+    axiosAdmin
+      .get(`${apiUrl}/api/admin/analytics`)
       .then((response) => {
         const data = response.data?.data;
 
@@ -88,12 +139,8 @@ export const useAdminStore = create((set, get) => ({
 
   handleDeleteItem: ({ id, setItemsData, itemsData }) => {
     if (window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-      axios
-        .delete(`${apiUrl}/api/deleteItem/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+      axiosAdmin
+        .delete(`${apiUrl}/api/deleteItem/${id}`)
         .then(() => {
           const items = itemsData.filter((item) => item._id !== id);
           setItemsData(items);

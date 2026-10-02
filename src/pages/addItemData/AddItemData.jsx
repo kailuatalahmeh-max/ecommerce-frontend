@@ -1,20 +1,22 @@
 import { useState } from "react";
 import styles from "./AddItemData.module.css";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ItemContext } from "../../context/ItemContext";
 import { useAuthStore } from "../../context/useAuthStore";
+import { useAdminStore } from "../../context/useAdminStore";
 
+import { cleanUrl } from "../../utils/urlHelpers";
+import { MAX_IMAGES_PER_ITEM } from "../../utils/constants";
 export default function AddItemData() {
   const { setItemsData } = useContext(ItemContext);
   const { role } = useAuthStore();
+  const addItem = useAdminStore((state) => state.addItem);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
   /*----STATES---- */
   const [formInputData, setFormInputData] = useState({
-    imageURL: "",
+    images: [{ imageURL: "" }],
     itemName: "",
     itemPrice: "",
     itemQuantity: "",
@@ -23,6 +25,35 @@ export default function AddItemData() {
   /*<----STATES----> */
 
   /*----handleFunction---- */
+
+  function handleAddImageField() {
+    if (formInputData.images.length >= MAX_IMAGES_PER_ITEM) {
+      toast.error(`لا يمكن إضافة أكثر من ${MAX_IMAGES_PER_ITEM} صور`);
+      return;
+    }
+    setFormInputData((prev) => ({
+      ...prev,
+      images: [...prev.images, { imageURL: "" }],
+    }));
+  }
+
+  function handleRemoveImageField(index) {
+    setFormInputData((prev) => {
+      const updatedImages = prev.images.filter((_, i) => i !== index);
+      return { ...prev, images: updatedImages };
+    });
+  }
+
+  function handleImageChange(index, value) {
+    const cleaned = cleanUrl(value);
+    setFormInputData((prev) => {
+      const updatedImages = prev.images.map((img, i) =>
+        i === index ? { ...img, imageURL: cleaned } : img,
+      );
+      return { ...prev, images: updatedImages };
+    });
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -38,40 +69,26 @@ export default function AddItemData() {
     if (!confirmAdd) {
       return;
     }
+    const cleanedImages = formInputData.images
+      .map((img) => ({ imageURL: cleanUrl(img.imageURL) }))
+      .filter((img) => img.imageURL.length > 0);
 
+    if (cleanedImages.length === 0) {
+      toast.error("يرجى إضافة رابط صورة واحد على الأقل");
+      return;
+    }
 
-    axios
-      .post(
-        `${apiUrl}/addItem`,
-        {
-          imageURL: formInputData.imageURL.trim(),
-          itemName: formInputData.itemName.trim(),
-          itemPrice: Number(formInputData.itemPrice),
-          itemQuantity: Number(formInputData.itemQuantity),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      )
-      .then((response) => {
-        toast.success("تم أضافة العنصر بنجاح!", {
-          style: { color: "green" },
-        });
-        const newProductFromServer = response.data?.data;
-        setFormInputData({
-          imageURL: "",
-          itemName: "",
-          itemPrice: "",
-          itemQuantity: "",
-        });
+    const finalData = {
+      ...formInputData,
+      images: cleanedImages,
+      imageURL: cleanedImages[0].imageURL,
+    };
 
-        setItemsData((p) => [...p, newProductFromServer]);
-      })
-      .catch((err) => {
-        toast.error(err.response?.data?.message);
-      });
+    addItem({
+      formInputData: finalData,
+      setFormInputData: setFormInputData,
+      setItemsData: setItemsData,
+    });
   }
   /*<----handleFunction----> */
 
@@ -85,20 +102,36 @@ export default function AddItemData() {
       >
         <h2 className={styles.formTitle}>أدخل معلومات الأداة</h2>
         <hr className={styles.hrAnderFormTitle} />
-        <label className={styles.labelImageLink}>
-          image link:
-          <input
-            type="text"
-            placeholder="رابط صورة المنتج"
-            className={styles.input}
-            value={formInputData.imageURL}
-            onChange={(e) => {
-              setFormInputData((p) => {
-                return { ...p, imageURL: e.target.value };
-              });
-            }}
-          />
-        </label>
+        <div className={styles.imagesSection}>
+          <label className={styles.labelImageLink}>روابط الصور:</label>
+          {formInputData.images.map((img, index) => (
+            <div key={index} className={styles.imageInputRow}>
+              <input
+                type="text"
+                placeholder={`رابط الصورة ${index + 1}`}
+                className={styles.input}
+                value={img.imageURL}
+                onChange={(e) => handleImageChange(index, e.target.value)}
+              />
+              {formInputData.images.length > 1 && (
+                <button
+                  type="button"
+                  className={styles.removeImageBtn}
+                  onClick={() => handleRemoveImageField(index)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            className={styles.addImageBtn}
+            onClick={handleAddImageField}
+          >
+            ➕ إضافة صورة
+          </button>
+        </div>
         <label>
           item name:
           <input

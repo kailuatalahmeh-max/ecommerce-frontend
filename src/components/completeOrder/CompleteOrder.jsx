@@ -8,6 +8,30 @@ const countryCode = [
   { value: "+972", label: "Israel" },
 ];
 
+const regions = [
+  { value: "hebron", label: "الخليل" },
+  { value: "dura", label: "دورا" },
+  { value: "al-fawwar", label: "الفوار" },
+  { value: "bani-naim", label: "بني نعيم" },
+  { value: "yatta", label: "يطا" },
+  { value: "halhul", label: "حلحول" },
+  { value: "beit-ummur", label: "بيت أمر" },
+  { value: "al-dhaheriyeh", label: "الظاهرية" },
+  { value: "as-samu", label: "السموع" },
+  { value: "sa-ir", label: "سعير" },
+  { value: "surif", label: "صوريف" },
+  { value: "tarqumiyah", label: "ترقوميا" },
+  { value: "idhna", label: "إذنا" },
+  { value: "beit-kahil", label: "بيت كاحل" },
+  { value: "beit-awwa", label: "بيت عوا" },
+  { value: "al-arrub", label: "مخيم العروب" },
+  { value: "kharas", label: "خاراس" },
+  { value: "nuba", label: "نوبا" },
+  { value: "ash-shuyukh", label: "الشيوخ" },
+  { value: "taffuh", label: "تفوح" },
+  { value: "deir-sammit", label: "دير سامت" },
+];
+
 export default function CompleteOrder({
   onClose,
   itemId,
@@ -24,6 +48,7 @@ export default function CompleteOrder({
 
   const { setItemsData } = useContext(ItemContext);
 
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     countryCode: "+970",
@@ -31,19 +56,26 @@ export default function CompleteOrder({
     region: "",
   });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (purchaseType === "direct") {
-      setDirectPurchaseData({
-        purchaseDetails: formData,
-        itemId: itemId,
-        quantity: quantity,
-        setItemsData: setItemsData,
-      });
-    } else if (purchaseType === "cart") {
-      setCartPurchaseData({ purchaseDetails: formData });
+    try {
+      setSubmitting(true);
+      if (purchaseType === "direct") {
+        await setDirectPurchaseData({
+          purchaseDetails: formData,
+          itemId: itemId,
+          quantity: quantity,
+          setItemsData: setItemsData,
+        });
+      } else if (purchaseType === "cart") {
+        await setCartPurchaseData({ purchaseDetails: formData });
+      }
+      onClose();
+    } catch {
+      // تم التعامل مع الخطأ في المخزن
+    } finally {
+      setSubmitting(false);
     }
-    onClose();
   }
   return (
     <div
@@ -119,16 +151,27 @@ export default function CompleteOrder({
         </label>
         <label className={styles.label}>
           Region:{" "}
-          <input
+          <select
             className={styles.input}
-            type="text"
             required
-            placeholder="The area where you want to receive the delivery"
             value={formData.region}
-            onChange={(e) => {
-              setFormData((p) => ({ ...p, region: e.target.value }));
-            }}
-          />
+            onChange={(e) =>
+              setFormData((p) => ({ ...p, region: e.target.value }))
+            }
+          >
+            <option value="" disabled>
+              select region
+            </option>
+            {regions.map((r) => (
+              <option
+                key={r.value}
+                value={r.value}
+                className={styles.selectRegion}
+              >
+                {r.label}
+              </option>
+            ))}
+          </select>
         </label>
 
         {totalPrice && (
@@ -143,10 +186,13 @@ export default function CompleteOrder({
           type="submit"
           className={styles.btnSubmit}
           disabled={
-            !formData.fullName || !formData.phoneNumber || !formData.region
+            !formData.fullName.trim() ||
+            !formData.phoneNumber.trim() ||
+            !formData.region.trim() ||
+            submitting
           }
         >
-          completion{" "}
+          {submitting ? "جاري الإرسال..." : "completion"}
         </button>
       </form>
     </div>

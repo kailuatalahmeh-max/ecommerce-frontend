@@ -1,13 +1,11 @@
 import styles from "./AdminItemCard.module.css";
+import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
 
 export default function AdminItemCard({ item, onDelete, openEditing }) {
   return (
     <div className={styles.itemCard}>
       <div className={styles.imageWrapper}>
-        <img
-          src={item.imageURL || "https://via.placeholder.com/150"}
-          alt={item.itemName}
-        />
+        <img src={getFirstImageUrl(item)} alt={item.itemName} />
       </div>
 
       <div className={styles.itemInfo}>

@@ -21,17 +21,26 @@ export default function AdminControler() {
   const [isServerOnline, setIsServerOnline] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     axios
-      .get(`${apiUrl}/health`)
+      .get(`${apiUrl}/health`, {
+        signal: controller.signal,
+      })
       .then(() => {
         setServerStatus("الخادم متصل");
-
         setIsServerOnline(true);
       })
-      .catch(() => {
+      .catch((err) => {
+        if (axios.isCancel(err)) return;
+
         setServerStatus("الخادم غير متصل");
         setIsServerOnline(false);
       });
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   /*<---- HANDLE FUNCTIONS ----> */

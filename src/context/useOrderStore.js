@@ -1,13 +1,11 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAuthStore } from "./useAuthStore";
 import { useCartStore } from "./useCartStore";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const useOrderStore = create((set) => ({
-  purchaseStatisticsData: [],
+export const useOrderStore = create((set, get) => ({
   myPastOrderDetails: [],
   myOrderData: [],
 
@@ -22,7 +20,7 @@ export const useOrderStore = create((set) => ({
       return;
     }
 
-    axios
+    return axios
       .post(`${apiUrl}/api/direct-purchase/set-data`, {
         purchaseDetails: purchaseDetails,
         itemId: itemId,
@@ -35,13 +33,15 @@ export const useOrderStore = create((set) => ({
         const itemQuantityUpdated =
           response.data?.data?.updatedItem?.itemQuantity;
 
-        setItemsData((prev) =>
-          prev.map((item) =>
-            item._id === itemId
-              ? { ...item, itemQuantity: itemQuantityUpdated }
-              : item,
-          ),
-        );
+        if (itemQuantityUpdated !== undefined) {
+          setItemsData((prev) =>
+            prev.map((item) =>
+              item._id === itemId
+                ? { ...item, itemQuantity: itemQuantityUpdated }
+                : item,
+            ),
+          );
+        }
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
@@ -59,7 +59,7 @@ export const useOrderStore = create((set) => ({
 
     const guestId = localStorage.getItem("guestId");
 
-    axios
+    return axios
       .post(`${apiUrl}/api/cart-purchase/set-data/${guestId}`, {
         purchaseDetails: purchaseDetails,
       })
@@ -78,47 +78,49 @@ export const useOrderStore = create((set) => ({
       });
   },
 
-  getMyOrder: ({ phoneNumber, navigate }) => {
-    axios
-      .get(`${apiUrl}/api/order/get-my-orders`, {
-        params: { phoneNumber: phoneNumber },
-      })
+  verifyGuestPhone: ({ phoneNumber }) => {
+    return axios
+      .post(`${apiUrl}/api/guest/verify`, { phoneNumber: phoneNumber })
       .then((response) => {
-        const data = response.data?.data;
-        const userNumber = localStorage.getItem("userNumber");
-        if (!userNumber) {
-          localStorage.setItem("userNumber", data?.phoneNumber);
+        const token = response.data?.token;
+        if (token) {
+          localStorage.setItem("guestToken", token);
         }
-        set({ myOrderData: data });
-        navigate("/my-orders");
-      })
-      .catch((err) => {
-        toast.error(err.response?.data.message || "فشل احضار البيانات");
+        return token;
       });
   },
 
-  getStatisticsData: () => {
-    const role = useAuthStore.getState().role;
-
-    if (!role) {
-      return;
+  fetchOrdersByToken: () => {
+    const token = localStorage.getItem("guestToken");
+    if (!token) {
+      return Promise.reject(new Error("no token"));
     }
-    axios
-      .get(`${apiUrl}/api/get/statistics-data`, {
+
+    return axios
+      .get(`${apiUrl}/api/guest/orders`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "x-guest-token": token,
         },
       })
       .then((response) => {
-        set({
-          purchaseStatisticsData: response?.data?.data,
-        });
-      })
-      .catch((err) => {
-        const serverErrorMessage = err.response?.data?.message;
-        toast.error(
-          serverErrorMessage || "فشل إتمام عملية الشراء، حاول مجدداً",
-        );
+        const data = response.data?.data || [];
+        set({ myOrderData: data });
+        return data;
       });
+  },
+
+  getMyOrder: async ({ phoneNumber, navigate }) => {
+    try {
+      const token = localStorage.getItem("guestToken");
+
+      if (!token) {
+        await get().verifyGuestPhone({ phoneNumber: phoneNumber });
+      }
+
+      await get().fetchOrdersByToken();
+      navigate("/my-orders");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "فشل احضار البيانات");
+    }
   },
 }));

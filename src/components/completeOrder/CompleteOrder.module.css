@@ -1,4 +1,11 @@
-/* الخلفية المعتمة للمودال بالكامل مع تأثير الضباب */
+/* ===== BASE RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== الخلفية المعتمة للمودال ===== */
 .bodyPage {
   position: fixed;
   top: 0;
@@ -7,26 +14,36 @@
   height: 100vh;
   background-color: rgba(13, 14, 18, 0.85);
   backdrop-filter: blur(8px);
-  z-index: 9999999 !important; /* 🔥 أعلى */
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999999;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  /* منع التمرير خلف المودال */
+  overflow: hidden;
 }
 
-/* جسم الفورم (النموذج المنبثق) */
+/* ===== صندوق الفورم ===== */
 .formPage {
-  background: #1a1c23; /* نفس لون السلة المظلم الفاخر */
+  background: #1a1c23;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
   width: 100%;
   max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
   padding: 2.5rem 2rem;
   position: relative;
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.6),
-    0 0 40px rgba(99, 102, 241, 0.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.05);
   animation: formAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* منع أي تجاوز أفقي */
+  overflow-x: hidden;
+}
+
+/* ===== منع التمرير الأفقي لأي عنصر داخل الفورم ===== */
+.formPage * {
+  max-width: 100%;
 }
 
 @keyframes formAppear {
@@ -40,7 +57,7 @@
   }
 }
 
-/* زر إغلاق الفورم العلوي */
+/* ===== زر الإغلاق ===== */
 .closeModal {
   position: absolute;
   top: 1.25rem;
@@ -55,6 +72,11 @@
   justify-content: center;
   align-items: center;
   transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  line-height: 1;
+  /* منع الضغط على الزراير من التسبب بتحريك */
+  flex-shrink: 0;
 }
 
 .closeModal:hover {
@@ -63,7 +85,7 @@
   transform: rotate(90deg);
 }
 
-/* عنوان الفورم الرئيسي */
+/* ===== العنوان ===== */
 .titleForm {
   font-size: 1.5rem;
   font-weight: 800;
@@ -72,9 +94,10 @@
   color: #fff;
   letter-spacing: -0.5px;
   text-align: center;
+  word-break: break-word;
 }
 
-/* الخطوط الفاصلة النظيفة */
+/* ===== الخط الفاصل ===== */
 .hr {
   border: 0;
   height: 1px;
@@ -82,100 +105,129 @@
   margin: 1.5rem 0;
 }
 
-/* حاويات العناوين النصية (Labels) */
+/* ===== الـ Labels ===== */
 .label {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #94a3b8; /* رمادي خفيف لعناوين المدخلات */
+  color: #94a3b8;
   margin-bottom: 1.25rem;
+  width: 100%;
 }
 
 .label:last-of-type {
   margin-bottom: 0;
 }
 
-/* حقول الإدخال القياسية (الاسم والمنطقة) */
-.input {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
-  color: #fff;
-  font-size: 0.95rem;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.input::placeholder {
-  color: #4a5568;
-  font-size: 0.85rem;
-}
-
-/* الحاوية المشتركة لكود الدولة ورقم الهاتف */
-.phoneContainer {
-  display: flex;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-/* قائمة اختيار كود الدولة */
+/* ===== الحقول ===== */
+.input,
+.inputPhone,
 .selectSection {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 0.75rem 0.5rem;
-  color: #fff;
-  font-size: 0.9rem;
-  outline: none;
-  cursor: pointer;
-  width: 110px;
-  transition: all 0.2s ease;
-}
-
-.selectSection:focus {
-  border-color: #6366f1;
-}
-
-/* خيارات السيلكت الداخلي */
-.optionsSection {
-  background: #1a1c23;
-  color: #fff;
-}
-
-/* حقل إدخال رقم الهاتف المتناسق بجانب السيلكت */
-.inputPhone {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
   padding: 0.75rem 1rem;
   color: #fff;
   font-size: 0.95rem;
   outline: none;
   transition: all 0.2s ease;
+  width: 100%;
+  /* منع التمدد الزائد */
+  min-width: 0;
 }
 
-.inputPhone:focus {
+.input:focus,
+.inputPhone:focus,
+.selectSection:focus {
   border-color: #6366f1;
   box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
   background: rgba(0, 0, 0, 0.3);
 }
 
+.input::placeholder,
 .inputPhone::placeholder {
   color: #4a5568;
   font-size: 0.85rem;
 }
 
-/* زر إتمام الطلب النهائي */
+
+
+/* ===== حاوية رقم الهاتف ===== */
+.phoneContainer {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  /* منع الكسر */
+  flex-wrap: nowrap;
+}
+
+/* ===== السيلكت الخاص بكود الدولة ===== */
+.selectSection {
+  width: 110px;
+  flex-shrink: 0;
+  padding: 0.75rem 0.5rem;
+  cursor: pointer;
+  appearance: auto;
+}
+
+/* ===== خيارات المنطقة ===== */
+.selectRegion {
+  background: #1a1c23 !important;
+  color: #e2e8f0 !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+  border: none !important;
+}
+
+/* عند التحديد */
+.selectRegion:checked {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+/* عند المرور (في بعض المتصفحات) */
+.selectRegion:hover {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+}
+
+/* ===== حقل رقم الهاتف ===== */
+.inputPhone {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ===== خيارات السيلكت ===== */
+.optionsSection {
+  background: #1a1c23;
+  color: #fff;
+}
+
+/* ===== ملخص السعر ===== */
+.summaryBox {
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+
+.summaryBox strong {
+  color: #6366f1;
+  font-size: 1.1rem;
+}
+
+
+
+/* ===== زر الإرسال ===== */
 .btnSubmit {
   width: 100%;
   background: linear-gradient(135deg, #6366f1, #4f46e5);
@@ -197,7 +249,6 @@
   transform: translateY(-1px);
 }
 
-/* ستايل الزر بحالته المعطلة (عندما تكون الحقول فارغة) */
 .btnSubmit:disabled {
   background: rgba(255, 255, 255, 0.04);
   color: #4a5568;
@@ -207,18 +258,111 @@
   transform: none;
 }
 
-/* دعم شاشات الموبايل الحساسة لتفادي ضيق المساحة */
+/* ========================================= */
+/* ===== RESPONSIVE للهواتف ===== */
+/* ========================================= */
 @media (max-width: 480px) {
-  .formPage {
-    padding: 2rem 1.25rem;
+  .bodyPage {
+    padding: 0.75rem;
+    align-items: center;
   }
 
+  .formPage {
+    padding: 1.75rem 1.25rem;
+    border-radius: 20px;
+    max-height: 95vh;
+    /* تأكد إنه ما يخرج عن الشاشة */
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* العنوان يصغر شوي */
+  .titleForm {
+    font-size: 1.3rem;
+  }
+
+  /* زر الإغلاق يتصغر ويتحرك */
+  .closeModal {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+
+  /* تقليل الهوامش */
+  .label {
+    margin-bottom: 1rem;
+    gap: 0.4rem;
+  }
+
+  .hr {
+    margin: 1.25rem 0;
+  }
+
+  /* ===== الأهم: حاوية الهاتف تصير عامودية ===== */
   .phoneContainer {
     flex-direction: column;
     gap: 0.5rem;
   }
 
+  /* كود الدولة يأخذ عرض كامل */
   .selectSection {
     width: 100%;
+    flex-shrink: 1;
+  }
+
+  /* حقل الهاتف ياخذ عرض كامل */
+  .inputPhone {
+    width: 100%;
+    flex: none;
+  }
+
+  /* تصغير حجم الحقول عشان تتناسب */
+  .input,
+  .inputPhone,
+  .selectSection {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  /* ملخص السعر */
+  .summaryBox {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  /* الزر */
+  .btnSubmit {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* ===== للشاشات الصغيرة جداً (أقل من 360px) ===== */
+@media (max-width: 360px) {
+  .formPage {
+    padding: 1.25rem 0.9rem;
+  }
+
+  .titleForm {
+    font-size: 1.1rem;
+  }
+
+  .input,
+  .inputPhone,
+  .selectSection {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .closeModal {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+    top: 0.5rem;
+    right: 0.5rem;
   }
 }

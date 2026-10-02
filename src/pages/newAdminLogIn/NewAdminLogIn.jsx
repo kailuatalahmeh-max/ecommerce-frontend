@@ -8,6 +8,7 @@ import { useAuthStore } from "../../context/useAuthStore";
 
 export default function NewAdminLogIn() {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const login = useAuthStore((state) => state.login);
 
   const [adminData, setAdminData] = useState({
     email: "",
@@ -31,7 +32,7 @@ export default function NewAdminLogIn() {
     axios
       .post(`${apiUrl}/api/admin/logIn`, adminData)
       .then((response) => {
-        useAuthStore.getState().login(response.data.token);
+        login(response.data.token);
         navigate("/admin/control-items");
       })
       .catch((error) => {

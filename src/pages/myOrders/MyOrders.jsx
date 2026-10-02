@@ -10,21 +10,15 @@ export default function MyOrders() {
 
   const myOrderData = useOrderStore((state) => state.myOrderData);
 
-  let totalPrice = 0;
-  myOrderData?.map((order) => {
-    totalPrice += order.totalPrice;
-  });
-
   const filteredOrders = myOrderData?.filter((order) => {
     if (!statusFilter) return true;
 
     return order.status === statusFilter;
   });
 
-  const today = new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  let totalPrice = 0;
+  filteredOrders?.forEach((order) => {
+    totalPrice += order.totalPrice;
   });
 
   return (
@@ -48,13 +42,6 @@ export default function MyOrders() {
 
       <main className={styles.mainSection}>
         <div className={styles.orderCard}>
-          <div className={styles.cardHeader}>
-            <span className={styles.itemDate}>📅 {today}</span>
-            <span className={`${styles.statusBadge} ${styles.pending}`}>
-              Pending
-            </span>
-          </div>
-
           <div className={styles.cardBody}>
             <p className={styles.itemsTitle}>Items Summary</p>
             {filteredOrders?.map((order) => {
@@ -73,12 +60,14 @@ export default function MyOrders() {
                     })}
                   </span>
                   <span className={styles.spanStatus}>{order.status}</span>
-                  {order.items.map((item) => (
-                    <li key={item._id}>
-                      <span>{item.itemName}</span>
-                      <span>Qty: {item.quantity}</span>
-                    </li>
-                  ))}
+                  <ul>
+                    {order.items.map((item) => (
+                      <li key={item._id}>
+                        <span>{item.itemName}</span>
+                        <span>Qty: {item.quantity}</span>
+                      </li>
+                    ))}
+                  </ul>
                   <span>{order.totalPrice}$</span>
                 </div>
               );

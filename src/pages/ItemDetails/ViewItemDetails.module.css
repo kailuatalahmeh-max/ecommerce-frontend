@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
   padding: 50px 20px;
-  background-color: #fbf9f5; /* لون كريمي راقي يريح العين */
+  background-color: #fbf9f5;
   min-height: 92vh;
   direction: ltr;
   font-family:
@@ -85,11 +85,51 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   transition: all 0.25s ease;
   user-select: none;
+  z-index: 3;
 }
 
 .favorites:hover {
   transform: scale(1.12);
   background-color: #fff1f2;
+}
+
+/* ==========================================
+   🖼️ الصور المصغّرة
+   ========================================== */
+.thumbnailContainer {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.thumbnail {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  background-color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+  pointer-events: auto;
+}
+
+.thumbnail:hover {
+  transform: translateY(-4px);
+  border-color: #16a34a;
+}
+
+.activeThumb {
+  border-color: #16a34a;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.25);
 }
 
 /* ==========================================
@@ -111,13 +151,13 @@
 }
 
 /* ==========================================
-   💰 قسم الأسعار (ثابت، راقي بدون نبض مزعج)
+   💰 قسم الأسعار
    ========================================== */
 .priceSection {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: #f8fafc; /* خلفية ناعمة جداً وباردة */
+  background-color: #f8fafc;
   padding: 16px 20px;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
@@ -132,23 +172,21 @@
   margin: 0 0 2px 0;
 }
 
-/* سعر القطعة الواحدة - لون دافئ وناعم */
 .lastPrice {
   font-size: 1.35rem;
   font-weight: 700;
-  color: #334155; /* لون رمادي غامق مريح وراقي */
+  color: #334155;
   display: block;
 }
 
-/* إذا أردت إعطاء تمييز قوي ومستقل لإجمالي السعر */
 .priceSection .lastPrice:last-of-type {
   font-size: 1.7rem;
   font-weight: 800;
-  color: #0f5132; /* الأخضر الزيتي الفاخر ثابت بدون نبض */
+  color: #0f5132;
 }
 
 /* ==========================================
-   🏷️ كلاس اختياري في حال أردت إضافة خصم مستقبلاً
+   🏷️ خصم اختياري
    ========================================== */
 .oldPrice {
   text-decoration: line-through;
@@ -165,8 +203,9 @@
   padding: 2px 8px;
   border-radius: 6px;
   border: 1px solid #fecaca;
-  animation: pricePulse 2s infinite ease-in-out; /* النبض هنا فقط عند وجود خصم! */
+  animation: pricePulse 2s infinite ease-in-out;
 }
+
 /* ==========================================
    📊 الكمية المتوفرة
    ========================================== */
@@ -233,7 +272,6 @@
   box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
 }
 
-/* أزرار الشراء */
 .actionsContainer {
   display: flex;
   align-items: center;
@@ -265,7 +303,6 @@
   transform: translateY(0);
 }
 
-/* زر الشراء بتدرج متحرك */
 .actionsContainer :global(.btn-success) {
   background: linear-gradient(120deg, #1b5e20, #4caf50, #1b5e20);
   background-size: 200% 100%;
@@ -276,10 +313,21 @@
   animation: buttonPulse 3s infinite ease-in-out;
 }
 
-/* زر السلة الثانوي */
 .btnSecondary {
   background-color: #2563eb !important;
   color: #ffffff !important;
+}
+
+/* حالة تعطيل الأزرار */
+.actionsContainer :global(.btn-global):disabled,
+.actionsContainer :global(.btn-global)[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  animation: none;
+  background-image: none;
+  background-color: #9ca3af;
 }
 
 /* ==========================================
@@ -336,6 +384,11 @@
   .imageSection {
     width: 100%;
     min-height: 280px;
+  }
+
+  .thumbnail {
+    width: 48px;
+    height: 48px;
   }
 
   .actionsContainer {

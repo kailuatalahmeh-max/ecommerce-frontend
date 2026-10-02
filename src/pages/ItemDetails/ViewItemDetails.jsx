@@ -1,10 +1,14 @@
-import { useContext, useState } from "react";
-import { ItemContext } from "../../context/ItemContext";
 import styles from "./ViewItemDetails.module.css";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { ItemContext } from "../../context/ItemContext";
 import { useCartStore } from "../../context/useCartStore";
 import CompleteOrder from "../../components/completeOrder/CompleteOrder";
-import toast from "react-hot-toast";
+
+import { getAllImageUrls } from "../../utils/getFirstImageUrl";
+
+
 export default function ViewItemDetails() {
   const { id } = useParams();
   const { itemsData } = useContext(ItemContext);
@@ -13,8 +17,9 @@ export default function ViewItemDetails() {
 
   const [quantity, setQuantity] = useState(1);
   const [openCompleted, setOpenCompleted] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
 
-  if (!itemsData || itemsData.length === 0) {
+  if (!itemsData) {
     return (
       <div className={styles.bodyPage}>
         <p>Loading data center...</p>
@@ -32,6 +37,7 @@ export default function ViewItemDetails() {
 
   const totalPrice = thisItem ? Number(quantity) * thisItem.itemPrice : 0;
   const isOutOfStock = thisItem?.itemQuantity === 0;
+  const imageUrls = getAllImageUrls(thisItem);
 
   function handleAddToCart() {
     if (isOutOfStock || quantity <= 0 || quantity > thisItem.itemQuantity) {
@@ -69,10 +75,25 @@ export default function ViewItemDetails() {
         {" "}
         <div className={styles.imageSection}>
           <img
-            src={thisItem.imageURL}
+            src={imageUrls[selectedImage]}
             alt={thisItem.itemName}
             className={styles.imgItem}
           />
+          {imageUrls.length > 1 && (
+            <div className={styles.thumbnailContainer}>
+              {imageUrls.map((url, index) => (
+                <img
+                  key={url}
+                  src={url}
+                  alt={`${thisItem.itemName} - ${index + 1}`}
+                  className={`${styles.thumbnail} ${
+                    index === selectedImage ? styles.activeThumb : ""
+                  }`}
+                  onClick={() => setSelectedImage(index)}
+                />
+              ))}
+            </div>
+          )}
           <span className={styles.favorites}>❤️</span>
         </div>
         <div className={styles.itemDetails}>

@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
 import styles from "./itemList.module.css";
+import { Link } from "react-router-dom";
+
+import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
 
 export default function ItemList({
   _id,
   imageURL,
+  images,
   itemName,
   itemPrice,
   itemQuantity,
@@ -12,7 +15,7 @@ export default function ItemList({
 
   return (
     <Link to={`/itemDetails/${_id}`} className={styles.itemCard}>
-      <img src={imageURL} alt={itemName} />
+      <img src={getFirstImageUrl({ imageURL, images })} alt={itemName} />{" "}
       <span className={styles.itemName}>{itemName}</span>
       <span className={styles.itemPrice}>{itemPrice}$</span>
       <span

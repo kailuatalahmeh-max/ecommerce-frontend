@@ -126,7 +126,9 @@ export default function AdminAnalytics() {
               ⚠️ تنبيهات المخزون (أقل من 5):
             </span>
             {lowStockItems.length === 0 ? (
-              <p className={styles.successText}>جميع المنتجات بفرة جيدة</p>
+              <p className={styles.successText}>
+                جميع المنتجات متوفرة بكميات جيدة
+              </p>
             ) : (
               <ul className={styles.lowStockList}>
                 {lowStockItems.map((item) => (

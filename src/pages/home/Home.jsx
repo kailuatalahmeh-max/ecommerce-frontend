@@ -1,10 +1,12 @@
 import styles from "./Home.module.css";
+import { useNavigate } from "react-router-dom";
+
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ItemContext } from "../../context/ItemContext";
 import { useCartStore } from "../../context/useCartStore";
 import { useAuthStore } from "../../context/useAuthStore";
+import { useOrderStore } from "../../context/useOrderStore";
 import ItemList from "../../components/showITems/ItemList";
 import Cart from "../../components/Cart/Cart";
 import PhoneCheck from "../../components/phoneCheck/PhoneCheck";
@@ -13,6 +15,8 @@ export default function Home() {
   const { role } = useAuthStore();
   const cartData = useCartStore((state) => state.cartData);
   const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
+  const getMyOrder = useOrderStore((state) => state.getMyOrder);
   const [openCart, setOpenCart] = useState(false);
   const [openPhoneCheck, setOpenPhoneCheck] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,6 +32,15 @@ export default function Home() {
 
   function handleClosePhoneCheck() {
     setOpenPhoneCheck(false);
+  }
+
+  function handleMyOrders() {
+    const savedNumber = localStorage.getItem("userNumber");
+    if (savedNumber) {
+      getMyOrder({ phoneNumber: savedNumber, navigate: navigate });
+    } else {
+      setOpenPhoneCheck(true);
+    }
   }
   return (
     <div className={styles.bodyPage}>
@@ -97,7 +110,7 @@ export default function Home() {
             <button
               className={`${styles.btnDynamic} ${styles.btnRequests} btn-success`}
               onClick={() => {
-                setOpenPhoneCheck(true);
+                handleMyOrders();
               }}
             >
               🎁 My Orders
@@ -106,8 +119,7 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.itemLinks}>
-        {filteredItems ? (
-          filteredItems.length > 0 &&
+        {filteredItems.length > 0 ? (
           filteredItems.map((item) => <ItemList key={item._id} {...item} />)
         ) : (
           <p className={styles.noResults}>لا توجد نتائج مطابقة لبحثك</p>

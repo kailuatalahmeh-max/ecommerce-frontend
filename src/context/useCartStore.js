@@ -18,7 +18,7 @@ export const useCartStore = create((set, get) => ({
         set({ cartData: data });
       })
       .catch((err) => {
-        toast.error(err.response?.message || "فشل احضار البيانات");
+        toast.error(err.response?.data?.message || "فشل احضار البيانات");
       });
   },
 
@@ -39,8 +39,7 @@ export const useCartStore = create((set, get) => ({
     const guestId = localStorage.getItem("guestId");
 
     axios
-      .post(`${apiUrl}/api/cart/add`, {
-        guestId: guestId,
+      .post(`${apiUrl}/api/cart/add/${guestId}`, {
         itemId: thisItem._id,
         quantity: Number(quantity),
       })
@@ -58,13 +57,13 @@ export const useCartStore = create((set, get) => ({
   deleteItem: (id) => {
     const guestId = localStorage.getItem("guestId");
     axios
-      .delete(`${apiUrl}/api/cart/delete/${id}`, {
-        data: { guestId },
-      })
-      .then(() => {
-        const items = get().cartData.filter((item) => item._id !== id);
-        set({ cartData: items });
-        toast.success("تم الحذف بنجاح");
+      .delete(`${apiUrl}/api/cart/delete/${guestId}/${id}`)
+      .then((response) => {
+        const newData = response?.data?.data?.items || [];
+
+        set({ cartData: newData });
+
+        toast.success(response?.data?.message || "تم الحذف بنجاح");
       })
       .catch((error) => {
         const errMessage = error.response?.data?.message;
@@ -76,9 +75,7 @@ export const useCartStore = create((set, get) => ({
     const guestId = localStorage.getItem("guestId");
 
     axios
-      .post(`${apiUrl}/api/cart/add-quantity/${id}`, {
-        guestId,
-      })
+      .patch(`${apiUrl}/api/cart/add-quantity/${guestId}/${id}`)
       .then((response) => {
         const newData = response?.data?.data?.items || [];
 
@@ -93,9 +90,7 @@ export const useCartStore = create((set, get) => ({
   reducingQuantity: (id) => {
     const guestId = localStorage.getItem("guestId");
     axios
-      .patch(`${apiUrl}/api/cart/reducing-quantity/${id}`, {
-        guestId: guestId,
-      })
+      .patch(`${apiUrl}/api/cart/reducing-quantity/${guestId}/${id}`)
       .then((response) => {
         const newData = response?.data?.data?.items || [];
         set({ cartData: newData });
