@@ -1,20 +1,21 @@
 .bodyModel {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.6); /* خلفية معتمة */
+  inset: 0; /* بدلاً من top, left, width, height */
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overflow: hidden; /* يمنع أي محتوى داخلي من الخروج أو التمرير غير المخطط له */
+  touch-action: none; /* يمنع إيماءات اللمس الافتراضية من التسرب للخلفية */
 }
 
+/* إذا كان الفورم طويلاً وتخشى ألا يظهر كاملاً على الهواتف الصغيرة */
 .form {
   width: 90%;
-  max-width: 500px;
   max-width: 650px;
+  max-height: 90vh; /* ألا يتجاوز ارتفاع الشاشة */
+  overflow-y: auto; /* السماح بالتمرير داخل الفورم فقط إذا كان طويلاً جداً */
   background: #fff;
   padding: 32px;
   border-radius: 16px;

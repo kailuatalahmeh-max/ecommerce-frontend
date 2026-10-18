@@ -4,12 +4,15 @@ import toast from "react-hot-toast";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const useAdminStore = create((set, get) => ({
+  adminsData: [],
   ordersData: [],
   analyticsData: null,
   analyticsLoading: false,
 
   addItem: ({ formInputData, setFormInputData, setItemsData }) => {
-    const images = (formInputData.images || [])
+    const images = (
+      Array.isArray(formInputData.images) ? formInputData.images : []
+    )
       .map((img) => ({
         imageURL: String(img.imageURL || "").trim(),
       }))
@@ -17,7 +20,6 @@ export const useAdminStore = create((set, get) => ({
 
     axiosAdmin
       .post(`${apiUrl}/api/addItem`, {
-        imageURL: images[0]?.imageURL || "",
         images: images,
         itemName: formInputData.itemName.trim(),
         itemPrice: Number(formInputData.itemPrice),
@@ -42,7 +44,7 @@ export const useAdminStore = create((set, get) => ({
   },
 
   editItem: ({ id, itemEditing, setItemsData, onClose }) => {
-    const images = (itemEditing.images || [])
+    const images = (Array.isArray(itemEditing.images) ? itemEditing.images : [])
       .map((img) => ({
         imageURL: String(img.imageURL || "").trim(),
       }))
@@ -50,7 +52,6 @@ export const useAdminStore = create((set, get) => ({
 
     axiosAdmin
       .put(`${apiUrl}/api/item/edit/${id}`, {
-        imageURL: images[0]?.imageURL || "",
         images: images,
         itemName: itemEditing.itemName.trim(),
         itemPrice: Number(itemEditing.itemPrice),
@@ -69,6 +70,25 @@ export const useAdminStore = create((set, get) => ({
           err.response?.data?.message || "فشل التعديل يرجى المحاولة لاحقاً!";
         toast.error(errorMessage);
       });
+  },
+
+  handleDeleteItem: ({ id, setItemsData, itemsData }) => {
+    if (window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+      axiosAdmin
+        .delete(`${apiUrl}/api/deleteItem/${id}`)
+        .then(() => {
+          const items = itemsData.filter((item) => item._id !== id);
+          setItemsData(items);
+          toast.success("تم حذف العنصر بنجاح!", {
+            style: { color: "green" },
+          });
+        })
+        .catch((err) => {
+          const errorMessage =
+            err.response?.data?.message || "فشل الحذف، يرجى المحاولة لاحقاً!";
+          toast.error(errorMessage);
+        });
+    }
   },
 
   getOrdersData: () => {
@@ -137,22 +157,48 @@ export const useAdminStore = create((set, get) => ({
       });
   },
 
-  handleDeleteItem: ({ id, setItemsData, itemsData }) => {
-    if (window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-      axiosAdmin
-        .delete(`${apiUrl}/api/deleteItem/${id}`)
-        .then(() => {
-          const items = itemsData.filter((item) => item._id !== id);
-          setItemsData(items);
-          toast.success("تم حذف العنصر بنجاح!", {
-            style: { color: "green" },
-          });
-        })
-        .catch((err) => {
-          const errorMessage =
-            err.response?.data?.message || "فشل الحذف، يرجى المحاولة لاحقاً!";
-          toast.error(errorMessage);
-        });
-    }
+  getAdminsData: () => {
+    axiosAdmin
+      .get(`${apiUrl}/api/admin/get-admins`)
+      .then((response) => {
+        const data = response.data?.data;
+        set({ adminsData: data });
+      })
+      .catch((err) => {
+        const serverErrorMessage = err.response?.data?.message;
+        toast.error(serverErrorMessage || "حدث خطأ ما");
+      });
+  },
+
+  disableAdmin: ({ adminId }) => {
+    axiosAdmin
+      .put(`${apiUrl}/api/admin/disable-admin/${adminId}`)
+      .then(() => {
+        const updatedAdmins = get().adminsData.map((admin) =>
+          admin._id === adminId ? { ...admin, isActive: false } : admin,
+        );
+        set({ adminsData: updatedAdmins });
+        toast.success("تم تعطيل حساب الأدمن بنجاح");
+      })
+      .catch((err) => {
+        const serverErrorMessage = err.response?.data?.message;
+        toast.error(serverErrorMessage || "حدث خطأ ما");
+      });
+  },
+
+  enableAdmin: ({ adminId }) => {
+    axiosAdmin
+      .put(`${apiUrl}/api/admin/enable-admin/${adminId}`)
+      .then(() => {
+        const updatedAdmins = get().adminsData.map((admin) =>
+          admin._id === adminId ? { ...admin, isActive: true } : admin,
+        );
+        set({ adminsData: updatedAdmins });
+        toast.success("تم تفعيل حساب الأدمن بنجاح");
+      })
+      .catch((err) => {
+        const serverErrorMessage = err.response?.data?.message;
+        toast.error(serverErrorMessage || "حدث خطأ ما");
+      });
   },
 }));

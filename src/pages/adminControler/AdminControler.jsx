@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styles from "./adminConroler.module.css";
+import styles from "./AdminControler.module.css";
 import { useContext, useEffect, useState } from "react";
 import { ItemContext } from "../../context/ItemContext";
 import AdminItemCard from "../../components/adminItemCard/AdminItemCard";
@@ -73,6 +73,7 @@ export default function AdminControler() {
         <nav className={styles.sidebarNav}>
           <Link to="/admin/analytics">📊 الإحصائيات العامة</Link>
           <Link to="/admin/management">👤 أنشاء حساب أدمن</Link>
+          <Link to="/admin/admins-management">👥 إدارة حسابات الأدمن</Link>
           <Link to="/admin/control-items/add">➕ إضافة منتج جديد</Link>
           <Link to="/admin/orders-management">📜 طلبات الشراء</Link>
         </nav>

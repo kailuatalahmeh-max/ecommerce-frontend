@@ -1,7 +1,8 @@
+import "./App.css";
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
-import { ProtectedRoute } from "../Routes/ProtectedRoute";
+import { useCartStore } from "./context/useCartStore";
 import Home from "./pages/home/Home";
 import AddItemData from "./pages/addItemData/AddItemData";
 import ViewItemDetails from "./pages/ItemDetails/ViewItemDetails";
@@ -9,11 +10,11 @@ import AdminControler from "./pages/adminControler/AdminControler";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import AdminManagement from "./pages/adminManagement/AdminManagement";
 import NewAdminLogIn from "./pages/newAdminLogIn/NewAdminLogIn";
-import "./App.css";
-import { useCartStore } from "./context/useCartStore";
+import { SuperAdminManagement } from "./pages/superAdminManagement/SuperAdminManagement";
 import MyOrders from "./pages/myOrders/MyOrders";
 import AdminOrders from "./pages/adminOrders/AdminOrders";
 import AdminAnalytics from "./pages/adminAnalytics/AdminAnalytics";
+import { ProtectedRoute } from "../Routes/ProtectedRoute";
 
 function App() {
   const initGuestId = useCartStore((state) => state.initGuestId);
@@ -79,6 +80,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["super_admin"]}>
               <AdminManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/admins-management"
+          element={
+            <ProtectedRoute allowedRoles={["super_admin"]}>
+              <SuperAdminManagement />
             </ProtectedRoute>
           }
         />

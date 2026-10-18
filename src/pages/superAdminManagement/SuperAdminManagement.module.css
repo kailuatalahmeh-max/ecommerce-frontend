@@ -1,0 +1,533 @@
+/* ============================================
+   SuperAdminManagement.module.css
+   تصميم عصري متجاوب - يدعم RTL وجميع الأجهزة
+   ============================================ */
+
+/* ---------- الحاوية الرئيسية ---------- */
+.container {
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+  font-family:
+    "Segoe UI",
+    "Tahoma",
+    "Cairo",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  direction: rtl;
+  text-align: right;
+  box-sizing: border-box;
+}
+
+.container *,
+.container *::before,
+.container *::after {
+  box-sizing: border-box;
+}
+
+/* ---------- الهيدر ---------- */
+.header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(30, 58, 138, 0.25);
+  position: relative;
+  overflow: hidden;
+
+  /* جديد: لترتيب العنوان وزر العودة */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.15),
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- زر العودة للموقع الرئيسي ---------- */
+.sidebarFooter {
+  position: relative;
+  z-index: 1;
+}
+
+.backHomeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.backHomeBtn:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.backHomeBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.backHomeBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- غلاف الجدول ---------- */
+.tableWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* شريط تمرير أنيق */
+.tableWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.tableWrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 10px;
+}
+.tableWrapper::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ---------- الجدول ---------- */
+.table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.table thead {
+  background: #f8fafc;
+}
+
+.table th {
+  padding: 1.1rem 1rem;
+  text-align: right;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 1rem;
+  color: #475569;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- شارة الرتبة ---------- */
+.roleBadge {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  color: #6d28d9;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  border: 1px solid #c4b5fd;
+  text-transform: capitalize;
+}
+
+/* ---------- شارة الحالة ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+.active {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+/* ---------- الأزرار ---------- */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #fff;
+  background-color: #2563eb;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease,
+    opacity 0.2s ease;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+.btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn:not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* حالة التعطيل */
+.btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+  opacity: 0.75;
+  box-shadow: none;
+  transform: none;
+}
+
+/* زر التفعيل (أخضر) */
+.btnActivate {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+}
+
+.btnActivate:not(:disabled):hover {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.btnActivate:focus-visible {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4);
+}
+
+/* زر التعطيل (أحمر) */
+.btnDeactivate {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+}
+
+.btnDeactivate:not(:disabled):hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.btnDeactivate:focus-visible {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* ---------- لابتوب صغير ---------- */
+@media (max-width: 1024px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .table {
+    font-size: 0.9rem;
+  }
+  .table th,
+  .table td {
+    padding: 0.85rem 0.75rem;
+  }
+}
+
+/* ---------- تابلت ---------- */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+
+  .header {
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 1.2rem;
+    gap: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .backHomeBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  .tableWrapper {
+    border-radius: 12px;
+  }
+
+  .table {
+    min-width: 680px;
+    font-size: 0.85rem;
+  }
+
+  .table th {
+    padding: 0.85rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .table td {
+    padding: 0.85rem 0.6rem;
+  }
+
+  .btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .header {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    /* على الموبايل: العنوان وزر العودة تحت بعض */
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .sidebarFooter {
+    width: 100%;
+  }
+
+  .backHomeBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .tableWrapper {
+    border-radius: 10px;
+  }
+
+  .table {
+    min-width: 620px;
+    font-size: 0.8rem;
+  }
+
+  .table th {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .table td {
+    padding: 0.7rem 0.5rem;
+  }
+
+  .roleBadge,
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.65rem;
+  }
+
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    border-radius: 6px;
+  }
+}
+
+/* ---------- هواتف صغيرة جداً ---------- */
+@media (max-width: 360px) {
+  .title {
+    font-size: 1rem;
+  }
+  .table {
+    min-width: 560px;
+    font-size: 0.75rem;
+  }
+  .table th,
+  .table td {
+    padding: 0.6rem 0.4rem;
+  }
+  .backHomeBtn {
+    font-size: 0.78rem;
+  }
+}
+
+/* ---------- الوضع الليلي ---------- */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+
+  .tableWrapper {
+    background: #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .table thead {
+    background: #0f172a;
+  }
+
+  .table th {
+    color: #cbd5e1;
+    border-bottom-color: #334155;
+  }
+
+  .table td {
+    color: #cbd5e1;
+    border-bottom-color: #334155;
+  }
+
+  .table tbody tr:hover {
+    background-color: #334155;
+  }
+
+  .roleBadge {
+    background: linear-gradient(135deg, #4c1d95, #5b21b6);
+    color: #ddd6fe;
+    border-color: #7c3aed;
+  }
+
+  .active {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-color: #10b981;
+  }
+
+  .inactive {
+    background: #7f1d1d;
+    color: #fca5a5;
+    border-color: #ef4444;
+  }
+
+  .btn:disabled {
+    background-color: #334155;
+    color: #64748b;
+    border-color: #334155;
+  }
+
+  /* زر العودة في الوضع الليلي */
+  .backHomeBtn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .backHomeBtn:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+}
+
+/* ---------- تقليل الحركة ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .backHomeBtn,
+  .table tbody tr {
+    transition: none;
+  }
+  .btn:not(:disabled):hover,
+  .backHomeBtn:hover {
+    transform: none;
+  }
+}

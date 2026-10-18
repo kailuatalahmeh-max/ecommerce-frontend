@@ -14,22 +14,23 @@ export default function EditItemData({ onClose, item }) {
   const { role } = useAuthStore();
   const editItem = useAdminStore((state) => state.editItem);
 
-  // بناء الحالة من العنصر القادم
-  const [itemEditing, setItemEditing] = useState(() => {
-    const initialImages =
-      item.images && item.images.length > 0
-        ? item.images.map((img) => ({ imageURL: img.imageURL || "" }))
-        : item.imageURL
-          ? [{ imageURL: item.imageURL }]
-          : [{ imageURL: "" }];
+  function getInitialImages(item) {
+    return item.images?.length > 0
+      ? item.images.map((img) => ({ imageURL: img.imageURL || "" }))
+      : [{ imageURL: "" }];
+  }
 
+  function getInitialState(item) {
     return {
-      images: initialImages,
+      images: getInitialImages(item),
       itemName: item.itemName,
       itemPrice: item.itemPrice,
       itemQuantity: item.itemQuantity,
     };
-  });
+  }
+
+  // بناء الحالة من العنصر القادم
+  const [itemEditing, setItemEditing] = useState(() => getInitialState(item));
 
   function handleAddImageField() {
     if (itemEditing.images.length >= MAX_IMAGES_PER_ITEM) {
@@ -84,7 +85,6 @@ export default function EditItemData({ onClose, item }) {
     const finalItemEditing = {
       ...itemEditing,
       images: cleanedImages,
-      imageURL: cleanedImages[0].imageURL,
     };
 
     editItem({
@@ -204,21 +204,7 @@ export default function EditItemData({ onClose, item }) {
           <button
             type="button"
             className="btn-global btn-danger"
-            onClick={() => {
-              const originalImages =
-                item.images && item.images.length > 0
-                  ? item.images.map((img) => ({ imageURL: img.imageURL || "" }))
-                  : item.imageURL
-                    ? [{ imageURL: item.imageURL }]
-                    : [{ imageURL: "" }];
-
-              setItemEditing({
-                images: originalImages,
-                itemName: item.itemName,
-                itemPrice: item.itemPrice,
-                itemQuantity: item.itemQuantity,
-              });
-            }}
+            onClick={() => setItemEditing(getInitialState(item))}
           >
             مسح التعديلات
           </button>
