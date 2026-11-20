@@ -48,11 +48,11 @@ export default function Home() {
         </button>
       )}
 
-      <h1 className={styles.titlePage}>Welcome to Talahmeh tools</h1>
+      <h1 className={styles.titlePage}>Welcome to Talahmeh Phones</h1>
       <hr className={styles.hrAnderTitle} />
       <input
         type="text"
-        placeholder="🔍 ابحث عن منتج..."
+        placeholder="🔍 ابحث عن هاتف أو إكسسوار..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={styles.searchInput}

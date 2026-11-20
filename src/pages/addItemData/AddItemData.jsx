@@ -104,7 +104,7 @@ export default function AddItemData() {
           handleSubmit(e);
         }}
       >
-        <h2 className={styles.formTitle}>أدخل معلومات الأداة</h2>
+        <h2 className={styles.formTitle}>أدخل معلومات المنتج</h2>
         <hr className={styles.hrAnderFormTitle} />
         <div className={styles.imagesSection}>
           <label className={styles.labelImageLink}>روابط الصور:</label>
