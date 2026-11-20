@@ -98,6 +98,8 @@ The app runs at `http://localhost:5173` (Vite default).
 | `npm run lint`    | Check the code with ESLint           |
 
 > The backend must be running too. See the [backend README](../backend/README.md).
+>
+> ⚠️ The backend allows only one CORS origin: its `FRONTEND_URL`. For local work, set `FRONTEND_URL=http://localhost:5173` in `backend/.env`, or the browser will block the requests.
 
 ---
 
