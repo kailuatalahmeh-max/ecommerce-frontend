@@ -1,10 +1,7 @@
 /* طبقة الخلفية المعتمة للمودال التي تغطي كامل المتصفح */
 .page {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background-color: rgba(13, 14, 18, 0.75); /* أسود شفاف داكن */
   backdrop-filter: blur(8px); /* تأثير ضبابي شفاف زجاجي للوراء */
   -webkit-backdrop-filter: blur(8px);
@@ -179,8 +176,34 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  /* يفتح من أسفل الشاشة مثل السلة */
+  .page {
+    padding: 0;
+    align-items: flex-end;
+  }
+
   .form {
-    padding: 3rem 1.5rem 2rem 1.5rem;
+    max-width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: 24px 24px 0 0;
+    padding: 2rem 1.25rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    animation: sheetUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .subtitle {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }

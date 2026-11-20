@@ -73,3 +73,30 @@
 .btnsAction > * {
   flex: 1;
 }
+
+/* ===== الهاتف ===== */
+@media (max-width: 640px) {
+  .bodyModel {
+    align-items: flex-end;
+  }
+
+  .form {
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    padding: 20px 16px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    border-radius: 20px 20px 0 0;
+    gap: 14px;
+    touch-action: pan-y;
+  }
+
+  .formTitle {
+    font-size: 1.4rem;
+  }
+
+  .btnsAction {
+    flex-direction: column;
+    margin-top: 8px;
+  }
+}

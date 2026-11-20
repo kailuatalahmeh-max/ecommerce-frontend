@@ -76,6 +76,23 @@ button:disabled:hover {
 body {
   padding: 0;
   margin: 0;
+  /* منع التمرير الأفقي على الهاتف */
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ===== الهاتف ===== */
+@media (max-width: 640px) {
+  /* أقل من 16px يجعل iPhone يعمل zoom عند الكتابة */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 /* index.css - أضف في النهاية */

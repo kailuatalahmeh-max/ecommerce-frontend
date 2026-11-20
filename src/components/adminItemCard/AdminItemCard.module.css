@@ -42,7 +42,7 @@
 /* تفاصيل المنتج */
 .itemInfo {
   padding: 12px 20px;
-  min-width: 400px;
+  min-width: 0;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -124,7 +124,35 @@
 }
 
 /* التجاوب مع الشاشات الصغيرة جداً */
+@media (max-width: 640px) {
+  .cardActions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .deleteBtn,
+  .editBtn {
+    padding: 8px 12px;
+  }
+}
+
 @media (max-width: 480px) {
+  .cardActions {
+    flex-direction: row;
+  }
+
+  .deleteBtn,
+  .editBtn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+  }
+
+  .deleteBtn:hover,
+  .editBtn:hover {
+    margin: 0;
+  }
+
   .itemCard {
     flex-direction: column;
     height: auto;

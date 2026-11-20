@@ -210,10 +210,22 @@
   }
 }
 
+/* في الهاتف لا يوجد hover: لا نحرّك البطاقة بعد اللمس */
+@media (hover: none) {
+  .itemCard:hover {
+    transform: none;
+  }
+
+  .itemCard:active {
+    transform: scale(0.97);
+  }
+}
+
 @media (max-width: 640px) {
   .itemCard {
-    min-height: 160px;
+    min-height: 0;
     padding: 0.75rem;
+    padding-top: 1.9rem; /* مكان لشارة المخزون */
     border-radius: 12px;
   }
 
@@ -241,8 +253,9 @@
 
 @media (max-width: 380px) {
   .itemCard {
-    min-height: 140px;
+    min-height: 0;
     padding: 0.6rem;
+    padding-top: 1.7rem;
   }
 
   .itemCard img {

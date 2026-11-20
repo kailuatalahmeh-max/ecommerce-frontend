@@ -317,12 +317,70 @@
   color: #a855f7;
 }
 
+/* في الهاتف لا يوجد hover */
+@media (hover: none) {
+  .mainSection > .orderCard:hover {
+    transform: none;
+  }
+}
+
 /* دعم شاشات الموبايل الحساسة */
 @media (max-width: 600px) {
+  .myPage {
+    padding: 1.25rem 0.75rem;
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  }
+
+  .titlePage {
+    font-size: 1.6rem;
+  }
+
   .headerSection {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .selectWrapper {
+    width: 100%;
+  }
+
+  .mainSection {
+    gap: 1rem;
+  }
+
+  .mainSection > .orderCard {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .cardHeader {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cardBody .orderCard {
+    padding: 0.9rem;
+  }
+
+  /* اسم المنتج والكمية والسعر ينزلوا لسطر جديد إذا لم يكفِ المكان */
+  .cardBody .orderCard li {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    padding: 0.65rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .BtnBack {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1.3rem;
+  }
+
+  .footerSection {
+    margin-top: 2.5rem;
   }
 
   .select {

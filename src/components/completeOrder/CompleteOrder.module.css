@@ -8,10 +8,7 @@
 /* ===== الخلفية المعتمة للمودال ===== */
 .bodyPage {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background-color: rgba(13, 14, 18, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -261,33 +258,49 @@
 /* ========================================= */
 /* ===== RESPONSIVE للهواتف ===== */
 /* ========================================= */
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  /* الفورم يفتح من أسفل الشاشة مثل السلة */
   .bodyPage {
-    padding: 0.75rem;
-    align-items: center;
+    padding: 0;
+    align-items: flex-end;
   }
 
   .formPage {
     padding: 1.75rem 1.25rem;
-    border-radius: 20px;
-    max-height: 95vh;
-    /* تأكد إنه ما يخرج عن الشاشة */
+    padding-bottom: calc(1.75rem + env(safe-area-inset-bottom));
+    border-radius: 24px 24px 0 0;
+    max-height: 92vh;
+    max-height: 92dvh;
     width: 100%;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
+    animation: sheetUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
+}
 
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
   /* العنوان يصغر شوي */
   .titleForm {
     font-size: 1.3rem;
+    padding: 0 2.5rem;
   }
 
-  /* زر الإغلاق يتصغر ويتحرك */
+  /* زر الإغلاق يبقى كبير بما يكفي للمس */
   .closeModal {
-    top: 0.75rem;
-    right: 0.75rem;
-    width: 32px;
-    height: 32px;
-    font-size: 0.75rem;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 38px;
+    height: 38px;
+    font-size: 0.8rem;
   }
 
   /* تقليل الهوامش */
@@ -300,30 +313,19 @@
     margin: 1.25rem 0;
   }
 
-  /* ===== الأهم: حاوية الهاتف تصير عامودية ===== */
-  .phoneContainer {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  /* كود الدولة يأخذ عرض كامل */
+  /* كود الدولة ورقم الهاتف في نفس السطر */
   .selectSection {
-    width: 100%;
-    flex-shrink: 1;
+    width: 96px;
   }
 
-  /* حقل الهاتف ياخذ عرض كامل */
-  .inputPhone {
-    width: 100%;
-    flex: none;
-  }
-
-  /* تصغير حجم الحقول عشان تتناسب */
   .input,
   .inputPhone,
   .selectSection {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.9rem;
+    padding: 0.75rem 0.9rem;
+  }
+
+  .selectSection {
+    padding: 0.75rem 0.4rem;
   }
 
   /* ملخص السعر */
@@ -336,8 +338,8 @@
 
   /* الزر */
   .btnSubmit {
-    padding: 0.75rem;
-    font-size: 0.95rem;
+    padding: 0.9rem;
+    font-size: 1rem;
   }
 }
 
@@ -345,24 +347,21 @@
 @media (max-width: 360px) {
   .formPage {
     padding: 1.25rem 0.9rem;
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
   }
 
   .titleForm {
     font-size: 1.1rem;
   }
 
-  .input,
-  .inputPhone,
   .selectSection {
-    padding: 0.55rem 0.75rem;
-    font-size: 0.85rem;
+    width: 86px;
   }
 
   .closeModal {
-    width: 28px;
-    height: 28px;
-    font-size: 0.7rem;
-    top: 0.5rem;
-    right: 0.5rem;
+    width: 34px;
+    height: 34px;
+    top: 0.6rem;
+    right: 0.6rem;
   }
 }

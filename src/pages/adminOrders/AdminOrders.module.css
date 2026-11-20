@@ -311,3 +311,90 @@
   border: 1px dashed #334155;
   font-size: 1.1rem;
 }
+
+/* ===== الهاتف ===== */
+@media (max-width: 640px) {
+  .adminPage {
+    padding: 1rem 0.75rem;
+  }
+
+  .headerSection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .titlePage {
+    font-size: 1.5rem;
+  }
+
+  .btnBack {
+    width: 100%;
+  }
+
+  /* الإحصائيات: بطاقتين في كل سطر */
+  .statsContainer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .statCard {
+    padding: 0.9rem;
+  }
+
+  .statValue {
+    font-size: 1.4rem;
+  }
+
+  .controlsSection {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .searchInput,
+  .selectWrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .orderCard {
+    padding: 1rem;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .customerInfo {
+    display: block;
+    margin-left: 0;
+  }
+
+  .orderMeta {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .statusSelect {
+    padding: 0.6rem 0.9rem;
+  }
+
+  .itemRow {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .itemName {
+    flex-basis: 100%;
+  }
+
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+}
