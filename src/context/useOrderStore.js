@@ -79,6 +79,9 @@ export const useOrderStore = create((set, get) => ({
   },
 
   verifyGuestPhone: ({ phoneNumber }) => {
+    // نحذف التوكن القديم أولاً: إذا فشل التحقق لا يبقى توكن رقم آخر
+    localStorage.removeItem("guestToken");
+
     return axios
       .post(`${apiUrl}/api/guest/sessions`, { phoneNumber: phoneNumber })
       .then((response) => {
@@ -106,17 +109,21 @@ export const useOrderStore = create((set, get) => ({
         const data = response.data?.data || [];
         set({ myOrderData: data });
         return data;
+      })
+      .catch((err) => {
+        // الجلسة انتهت (30 يوم) أو غير صحيحة ← نحذف التوكن القديم
+        if (err.response?.status === 401) {
+          localStorage.removeItem("guestToken");
+        }
+        throw err;
       });
   },
 
   getMyOrder: async ({ phoneNumber, navigate }) => {
     try {
-      const token = localStorage.getItem("guestToken");
-
-      if (!token) {
-        await get().verifyGuestPhone({ phoneNumber: phoneNumber });
-      }
-
+      // دائماً نتحقق من الرقم الذي كتبه المستخدم الآن (توكن جديد لهذا الرقم)،
+      // حتى لا نعرض طلبات رقم قديم محفوظ في المتصفح
+      await get().verifyGuestPhone({ phoneNumber: phoneNumber });
       await get().fetchOrdersByToken();
       navigate("/my-orders");
     } catch (err) {

@@ -103,6 +103,42 @@
   box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
 }
 
+/* كود الدولة + رقم الهاتف في سطر واحد (مثل صفحة الشراء) */
+.phoneRow {
+  display: flex;
+  gap: 0.5rem;
+  direction: ltr; /* الكود على اليسار قبل الرقم */
+}
+
+.phoneRow .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.select {
+  width: 110px;
+  flex-shrink: 0;
+  background-color: #0d0e12;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 0 0.5rem;
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.select option {
+  background: #1a1c23;
+  color: #e2e8f0;
+}
+
 /* زر الإرسال الملون نيون الأساسي */
 .submitBtn {
   width: 100%;
@@ -196,6 +232,15 @@
 
   .subtitle {
     margin-bottom: 0.5rem;
+  }
+
+  .select {
+    width: 96px;
+    padding: 0 0.35rem;
+  }
+
+  .phoneRow .input {
+    letter-spacing: 0.5px;
   }
 }
 

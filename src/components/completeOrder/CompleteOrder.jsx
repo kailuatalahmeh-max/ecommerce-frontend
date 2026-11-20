@@ -2,11 +2,9 @@ import { useContext, useState } from "react";
 import styles from "./CompleteOrder.module.css";
 import { useOrderStore } from "../../context/useOrderStore";
 import { ItemContext } from "../../context/ItemContext";
+import { COUNTRY_CODES } from "../../utils/constants";
 
-const countryCode = [
-  { value: "+970", label: "Palestine" },
-  { value: "+972", label: "Israel" },
-];
+const countryCode = COUNTRY_CODES;
 
 const regions = [
   { value: "hebron", label: "الخليل" },
