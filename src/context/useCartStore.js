@@ -12,7 +12,7 @@ export const useCartStore = create((set, get) => ({
     const guestId = localStorage.getItem("guestId");
 
     axios
-      .get(`${apiUrl}/api/cart/${guestId}`)
+      .get(`${apiUrl}/api/carts/${guestId}`)
       .then((response) => {
         const data = response.data?.data?.items || [];
         set({ cartData: data });
@@ -39,7 +39,7 @@ export const useCartStore = create((set, get) => ({
     const guestId = localStorage.getItem("guestId");
 
     axios
-      .post(`${apiUrl}/api/cart/add/${guestId}`, {
+      .post(`${apiUrl}/api/carts/${guestId}/items`, {
         itemId: thisItem._id,
         quantity: Number(quantity),
       })
@@ -57,7 +57,7 @@ export const useCartStore = create((set, get) => ({
   deleteItem: (id) => {
     const guestId = localStorage.getItem("guestId");
     axios
-      .delete(`${apiUrl}/api/cart/delete/${guestId}/${id}`)
+      .delete(`${apiUrl}/api/carts/${guestId}/items/${id}`)
       .then((response) => {
         const newData = response?.data?.data?.items || [];
 
@@ -75,7 +75,7 @@ export const useCartStore = create((set, get) => ({
     const guestId = localStorage.getItem("guestId");
 
     axios
-      .patch(`${apiUrl}/api/cart/add-quantity/${guestId}/${id}`)
+      .patch(`${apiUrl}/api/carts/${guestId}/items/${id}/increase`)
       .then((response) => {
         const newData = response?.data?.data?.items || [];
 
@@ -90,7 +90,7 @@ export const useCartStore = create((set, get) => ({
   reducingQuantity: (id) => {
     const guestId = localStorage.getItem("guestId");
     axios
-      .patch(`${apiUrl}/api/cart/reducing-quantity/${guestId}/${id}`)
+      .patch(`${apiUrl}/api/carts/${guestId}/items/${id}/decrease`)
       .then((response) => {
         const newData = response?.data?.data?.items || [];
         set({ cartData: newData });
@@ -104,7 +104,7 @@ export const useCartStore = create((set, get) => ({
   clearCart: () => {
     const guestId = localStorage.getItem("guestId");
     axios
-      .delete(`${apiUrl}/api/cart/delete-all/${guestId}`)
+      .delete(`${apiUrl}/api/carts/${guestId}/items`)
       .then((response) => {
         set({ cartData: [] });
         toast.success(response?.data?.message || "تم الحذف بنجاح");

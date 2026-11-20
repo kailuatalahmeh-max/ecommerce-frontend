@@ -30,7 +30,7 @@ export default function NewAdminLogIn() {
     }
 
     axios
-      .post(`${apiUrl}/api/admin/logIn`, adminData)
+      .post(`${apiUrl}/api/auth/login`, adminData)
       .then((response) => {
         login(response.data.token);
         navigate("/admin/control-items");

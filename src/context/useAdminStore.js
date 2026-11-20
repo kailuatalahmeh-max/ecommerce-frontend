@@ -19,7 +19,7 @@ export const useAdminStore = create((set, get) => ({
       .filter((img) => img.imageURL.length > 0);
 
     axiosAdmin
-      .post(`${apiUrl}/api/addItem`, {
+      .post(`${apiUrl}/api/items`, {
         images: images,
         itemName: formInputData.itemName.trim(),
         itemPrice: Number(formInputData.itemPrice),
@@ -51,7 +51,7 @@ export const useAdminStore = create((set, get) => ({
       .filter((img) => img.imageURL.length > 0);
 
     axiosAdmin
-      .put(`${apiUrl}/api/item/edit/${id}`, {
+      .put(`${apiUrl}/api/items/${id}`, {
         images: images,
         itemName: itemEditing.itemName.trim(),
         itemPrice: Number(itemEditing.itemPrice),
@@ -75,7 +75,7 @@ export const useAdminStore = create((set, get) => ({
   handleDeleteItem: ({ id, setItemsData, itemsData }) => {
     if (window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
       axiosAdmin
-        .delete(`${apiUrl}/api/deleteItem/${id}`)
+        .delete(`${apiUrl}/api/items/${id}`)
         .then(() => {
           const items = itemsData.filter((item) => item._id !== id);
           setItemsData(items);
@@ -93,7 +93,7 @@ export const useAdminStore = create((set, get) => ({
 
   getOrdersData: () => {
     axiosAdmin
-      .get(`${apiUrl}/api/admin-control/orders`)
+      .get(`${apiUrl}/api/orders`)
       .then((response) => {
         const data = response.data?.data;
         set({ ordersData: data });
@@ -106,8 +106,7 @@ export const useAdminStore = create((set, get) => ({
 
   updateOrderStatus: ({ orderId, status }) => {
     axiosAdmin
-      .patch(`${apiUrl}/api/admin-control/order-edit-status`, {
-        orderId: orderId,
+      .patch(`${apiUrl}/api/orders/${orderId}`, {
         status: status,
       })
       .then(() => {
@@ -128,7 +127,7 @@ export const useAdminStore = create((set, get) => ({
 
   createAdminAccount: ({ setFormData, formData, setLoading }) => {
     axiosAdmin
-      .post(`${apiUrl}/api/admin/create-new-admin`, formData)
+      .post(`${apiUrl}/api/admins`, formData)
       .then((res) => {
         toast.success(res.data.message || "تم إنشاء حساب الإدارة بنجاح!");
         setFormData({ fullName: "", email: "", password: "", role: "admin" });
@@ -142,7 +141,7 @@ export const useAdminStore = create((set, get) => ({
     set({ analyticsLoading: true });
 
     axiosAdmin
-      .get(`${apiUrl}/api/admin/analytics`)
+      .get(`${apiUrl}/api/dashboard/analytics`)
       .then((response) => {
         const data = response.data?.data;
 
@@ -159,7 +158,7 @@ export const useAdminStore = create((set, get) => ({
 
   getAdminsData: () => {
     axiosAdmin
-      .get(`${apiUrl}/api/admin/get-admins`)
+      .get(`${apiUrl}/api/admins`)
       .then((response) => {
         const data = response.data?.data;
         set({ adminsData: data });
@@ -172,7 +171,7 @@ export const useAdminStore = create((set, get) => ({
 
   disableAdmin: ({ adminId }) => {
     axiosAdmin
-      .put(`${apiUrl}/api/admin/disable-admin/${adminId}`)
+      .patch(`${apiUrl}/api/admins/${adminId}/disable`)
       .then(() => {
         const updatedAdmins = get().adminsData.map((admin) =>
           admin._id === adminId ? { ...admin, isActive: false } : admin,
@@ -188,7 +187,7 @@ export const useAdminStore = create((set, get) => ({
 
   enableAdmin: ({ adminId }) => {
     axiosAdmin
-      .put(`${apiUrl}/api/admin/enable-admin/${adminId}`)
+      .patch(`${apiUrl}/api/admins/${adminId}/enable`)
       .then(() => {
         const updatedAdmins = get().adminsData.map((admin) =>
           admin._id === adminId ? { ...admin, isActive: true } : admin,

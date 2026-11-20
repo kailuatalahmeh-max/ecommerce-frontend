@@ -11,7 +11,7 @@ export default function ItemProvider({ children }) {
 
   useEffect(() => {
     axios
-      .get(`${apiUrl}/api/getItemsData`)
+      .get(`${apiUrl}/api/items`)
       .then((response) => {
         setItemsData(
           Array.isArray(response.data.itemsData) ? response.data.itemsData : [],
