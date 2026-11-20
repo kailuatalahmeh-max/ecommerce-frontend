@@ -31,6 +31,8 @@ function App() {
     <>
       <Toaster
         position="top-center"
+        // فوق كل المودالات (السلة 9999999، نافذة التأكيد 10000000)
+        containerStyle={{ zIndex: 100000000 }}
         toastOptions={{
           duration: 3500,
 
