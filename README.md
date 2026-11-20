@@ -140,7 +140,7 @@ The app runs at `http://localhost:5173` (Vite default).
 
 ## 📦 How Guest Order Tracking Works
 
-1. The user enters their phone number → `POST /api/guest/verify`.
+1. The user enters their phone number → `POST /api/guest/sessions`.
 2. The backend returns a guest token. It is saved in `localStorage` (key: `guestToken`).
 3. The orders are loaded with `GET /api/guest/orders` and the `x-guest-token` header.
 
@@ -156,8 +156,8 @@ The app runs at `http://localhost:5173` (Vite default).
 | Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`                                          |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |
 | Cart      | `/api/carts/:guestId/...` (see backend README)                                                |
-| Purchase  | `POST /api/direct-purchase/set-data`, `POST /api/cart-purchase/set-data/:guestId`             |
-| Guest     | `POST /api/guest/verify`, `GET /api/guest/orders`                                             |
+| Purchase  | `POST /api/orders`, `POST /api/carts/:guestId/checkout`                                       |
+| Guest     | `POST /api/guest/sessions`, `GET /api/guest/orders`                                           |
 | Health    | `GET /health`                                                                                 |
 
 Full details are in the [backend README](../backend/README.md#-api-endpoints).

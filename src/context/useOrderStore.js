@@ -21,7 +21,7 @@ export const useOrderStore = create((set, get) => ({
     }
 
     return axios
-      .post(`${apiUrl}/api/direct-purchase/set-data`, {
+      .post(`${apiUrl}/api/orders`, {
         purchaseDetails: purchaseDetails,
         itemId: itemId,
         quantity: Number(quantity),
@@ -60,7 +60,7 @@ export const useOrderStore = create((set, get) => ({
     const guestId = localStorage.getItem("guestId");
 
     return axios
-      .post(`${apiUrl}/api/cart-purchase/set-data/${guestId}`, {
+      .post(`${apiUrl}/api/carts/${guestId}/checkout`, {
         purchaseDetails: purchaseDetails,
       })
       .then((response) => {
@@ -80,7 +80,7 @@ export const useOrderStore = create((set, get) => ({
 
   verifyGuestPhone: ({ phoneNumber }) => {
     return axios
-      .post(`${apiUrl}/api/guest/verify`, { phoneNumber: phoneNumber })
+      .post(`${apiUrl}/api/guest/sessions`, { phoneNumber: phoneNumber })
       .then((response) => {
         const token = response.data?.token;
         if (token) {

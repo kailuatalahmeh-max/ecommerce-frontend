@@ -140,7 +140,7 @@ npm run dev
 
 ## 📦 كيف تعمل متابعة طلبات الضيف
 
-1. المستخدم يدخل رقم هاتفه ← `POST /api/guest/verify`.
+1. المستخدم يدخل رقم هاتفه ← `POST /api/guest/sessions`.
 2. الـ Backend يرجع Guest Token، ويتم حفظه في `localStorage` (المفتاح: `guestToken`).
 3. يتم جلب الطلبات عبر `GET /api/guest/orders` مع الـ header `x-guest-token`.
 
@@ -156,8 +156,8 @@ npm run dev
 | الطلبات (الأدمن) | `GET /api/orders`، `PATCH /api/orders/:orderId`                                               |
 | المنتجات         | `GET /api/items`، `POST /api/items`، `PUT /api/items/:id`، `DELETE /api/items/:id`            |
 | السلة            | `/api/carts/:guestId/...` (راجع ملف الـ Backend)                                              |
-| الشراء           | `POST /api/direct-purchase/set-data`، `POST /api/cart-purchase/set-data/:guestId`             |
-| الضيف            | `POST /api/guest/verify`، `GET /api/guest/orders`                                             |
+| الشراء           | `POST /api/orders`، `POST /api/carts/:guestId/checkout`                                       |
+| الضيف            | `POST /api/guest/sessions`، `GET /api/guest/orders`                                           |
 | حالة السيرفر     | `GET /health`                                                                                 |
 
 التفاصيل الكاملة موجودة في [ملف الـ Backend](../backend/README.ar.md).
