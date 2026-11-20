@@ -8,6 +8,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 export const useOrderStore = create((set, get) => ({
   myPastOrderDetails: [],
   myOrderData: [],
+  myOrdersLoading: false,
 
   setDirectPurchaseData: ({
     purchaseDetails,
@@ -99,6 +100,8 @@ export const useOrderStore = create((set, get) => ({
       return Promise.reject(new Error("no token"));
     }
 
+    set({ myOrdersLoading: true });
+
     return axios
       .get(`${apiUrl}/api/guest/orders`, {
         headers: {
@@ -114,8 +117,12 @@ export const useOrderStore = create((set, get) => ({
         // الجلسة انتهت (30 يوم) أو غير صحيحة ← نحذف التوكن القديم
         if (err.response?.status === 401) {
           localStorage.removeItem("guestToken");
+          set({ myOrderData: [] });
         }
         throw err;
+      })
+      .finally(() => {
+        set({ myOrdersLoading: false });
       });
   },
 

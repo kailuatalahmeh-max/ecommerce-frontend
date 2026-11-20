@@ -142,9 +142,11 @@ The app runs at `http://localhost:5173` (Vite default).
 
 ## 📦 How Guest Order Tracking Works
 
-1. The user enters their phone number → `POST /api/guest/sessions`.
-2. The backend returns a guest token. It is saved in `localStorage` (key: `guestToken`).
+1. The user picks the country code (`+970` / `+972`, same list as checkout in `utils/constants.js`) and enters their phone number → `POST /api/guest/sessions`.
+2. The backend returns a guest token. It is saved in `localStorage` (key: `guestToken`). The number the user types is **always** checked again, so an old token for another number is never used.
 3. The orders are loaded with `GET /api/guest/orders` and the `x-guest-token` header.
+4. When the "My orders" page opens or is refreshed, it loads the orders again with the saved token (so it also shows the latest status).
+5. If there is no token, or it has expired (**401**), the token is removed and the page asks the user to enter their number from the home page.
 
 ---
 

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import styles from "./MyOrders.module.css";
 import { useOrderStore } from "../../context/useOrderStore";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +10,23 @@ export default function MyOrders() {
   const [statusFilter, setStatusFilter] = useState("");
 
   const myOrderData = useOrderStore((state) => state.myOrderData);
+  const myOrdersLoading = useOrderStore((state) => state.myOrdersLoading);
+  const fetchOrdersByToken = useOrderStore(
+    (state) => state.fetchOrdersByToken,
+  );
+
+  // يُقرأ في كل render: بعد 401 يحذف الـ store التوكن، فتظهر رسالة "أدخل رقمك"
+  const hasToken = !!localStorage.getItem("guestToken");
+
+  // عند فتح الصفحة أو عمل refresh: نجلب الطلبات من جديد بالتوكن المحفوظ
+  // (وهكذا تظهر أيضاً آخر حالة للطلب إذا غيّرها الأدمن)
+  useEffect(() => {
+    if (!localStorage.getItem("guestToken")) return;
+
+    fetchOrdersByToken().catch((err) => {
+      toast.error(err.response?.data?.message || "فشل احضار الطلبات");
+    });
+  }, [fetchOrdersByToken]);
 
   const filteredOrders = myOrderData?.filter((order) => {
     if (!statusFilter) return true;
@@ -20,6 +38,40 @@ export default function MyOrders() {
   filteredOrders?.forEach((order) => {
     totalPrice += order.totalPrice;
   });
+
+  // لا يوجد توكن (أو انتهى): المستخدم يحتاج إدخال رقمه من الصفحة الرئيسية
+  if (!hasToken) {
+    return (
+      <div className={styles.myPage}>
+        <div className={styles.stateBox}>
+          <div className={styles.stateIcon}>📱</div>
+          <h2 className={styles.stateTitle}>أدخل رقم هاتفك لعرض طلباتك</h2>
+          <p className={styles.stateText}>
+            اضغط على 🎁 My Orders في الصفحة الرئيسية وأدخل رقمك.
+          </p>
+          <button
+            type="button"
+            className={`btn-global ${styles.BtnBack}`}
+            onClick={() => navigate("/")}
+          >
+            الصفحة الرئيسية
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // أول تحميل بعد refresh (لا توجد بيانات بعد)
+  if (myOrdersLoading && myOrderData.length === 0) {
+    return (
+      <div className={styles.myPage}>
+        <div className={styles.stateBox}>
+          <span className={styles.spinner} aria-hidden="true" />
+          <p className={styles.stateText}>جاري تحميل طلباتك...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.myPage}>
@@ -44,6 +96,9 @@ export default function MyOrders() {
         <div className={styles.orderCard}>
           <div className={styles.cardBody}>
             <p className={styles.itemsTitle}>Items Summary</p>
+            {filteredOrders?.length === 0 && (
+              <p className={styles.stateText}>لا توجد طلبات بهذه الحالة</p>
+            )}
             {filteredOrders?.map((order) => {
               return (
                 <div key={order._id} className={styles.orderCard}>
