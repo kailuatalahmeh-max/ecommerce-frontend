@@ -222,17 +222,30 @@
 }
 
 @media (max-width: 640px) {
+  /* في الهاتف البطاقة ليست مربعة: الطول حسب المحتوى.
+     (aspect-ratio + height: 50% + overflow: hidden كانت تخفي اسم المنتج في Safari) */
   .itemCard {
+    aspect-ratio: auto;
     min-height: 0;
+    justify-content: flex-start;
     padding: 0.75rem;
     padding-top: 1.9rem; /* مكان لشارة المخزون */
     border-radius: 12px;
   }
 
+  /* الصورة لها شكل ثابت خاص بها */
   .itemCard img {
-    width: 70%;
-    height: 50%;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
     padding: 0.3rem;
+    flex-shrink: 0;
+  }
+
+  .itemName,
+  .itemPrice {
+    flex-shrink: 0;
+    line-height: 1.4;
   }
 
   .itemName {
@@ -259,8 +272,8 @@
   }
 
   .itemCard img {
-    width: 65%;
-    height: 45%;
+    width: 100%;
+    height: auto;
   }
 
   .itemName {

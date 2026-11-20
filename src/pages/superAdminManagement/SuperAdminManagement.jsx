@@ -3,6 +3,7 @@ import styles from "./SuperAdminManagement.module.css";
 import { useAdminStore } from "../../context/useAdminStore";
 import { useAuthStore } from "../../context/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { confirmDialog } from "../../context/useConfirmStore";
 
 export const SuperAdminManagement = () => {
   const adminsData = useAdminStore((state) => state.adminsData);
@@ -18,17 +19,19 @@ export const SuperAdminManagement = () => {
   }, [getAdminsData]);
 
   function handleSubmit(admin) {
-    if (
-      window.confirm(
-        `هل أنت متأكد أنك تريد ${admin.isActive ? "تعطيل" : "تفعيل"} حساب الأدمن؟`,
-      )
-    ) {
-      if (admin.isActive) {
-        disableAdmin({ adminId: admin._id });
-      } else {
-        enableAdmin({ adminId: admin._id });
-      }
-    }
+    const disabling = admin.isActive;
+    const actionText = disabling ? "تعطيل" : "تفعيل";
+
+    confirmDialog({
+      title: `${actionText} حساب الأدمن`,
+      message: `هل أنت متأكد أنك تريد ${actionText} حساب "${admin.firstName}"؟`,
+      confirmText: actionText,
+      variant: disabling ? "danger" : "success",
+      onConfirm: () =>
+        disabling
+          ? disableAdmin({ adminId: admin._id })
+          : enableAdmin({ adminId: admin._id }),
+    });
   }
 
   return (

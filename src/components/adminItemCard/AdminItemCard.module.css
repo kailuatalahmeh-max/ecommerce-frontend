@@ -1,176 +1,177 @@
-/* حاوية الكارت الرئيسية - تحولت إلى Flex أفقياً */
+/* بطاقة المنتج في لوحة التحكم
+   الصف الأول: الصورة + المعلومات
+   الصف الثاني: الأزرار */
 .itemCard {
-  display: flex;
-  flex-direction: row; /* عرض العناصر أفقياً */
-  align-items: center;
-  background-color: #a8815a;
-  border-radius: 12px;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-areas:
+    "image info"
+    "actions actions";
+  gap: 14px;
+  padding: 14px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  border-right: 5px solid #667eea;
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.02),
-    0 1px 3px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  height: 110px; /* ارتفاع ثابت ومستطيل */
+    0 4px 14px rgba(102, 126, 234, 0.08);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  border: 1px solid #e2e8f0;
-  padding-left: 16px; /* مسافة من اليسار عند الأزرار */
+  direction: rtl;
+  text-align: right;
 }
 
-/* تأثير التمرير */
 .itemCard:hover {
-  transform: translateX(-4px); /* إزاحة خفيفة لليمين/اليسار */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(102, 126, 234, 0.18);
 }
 
-/* حاوية الصورة المستطيلة */
+/* الصورة */
 .imageWrapper {
-  width: 140px; /* عرض ثابت للصورة */
-  min-width: 140px;
-  height: 100%;
-  background-color: #f8fafc;
+  grid-area: image;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
   overflow: hidden;
-  border-left: 1px solid #e2e8f0; /* فاصل بين الصورة والنص */
+  background-color: #f8fafc;
+  border: 1px solid #eef2f7;
 }
 
 .imageWrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-/* تفاصيل المنتج */
+/* المعلومات */
 .itemInfo {
-  padding: 12px 20px;
+  grid-area: info;
   min-width: 0;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
   gap: 6px;
-  overflow: hidden;
 }
 
-/* تحويل النص إلى نقاط إذا تجاوز مساحته السطر الواحد */
 .itemInfo h4 {
   margin: 0;
+  width: 100%;
   font-size: 1rem;
+  line-height: 1.35;
   color: #1e293b;
-  font-weight: 600;
-  white-space: nowrap; /* إجبار النص على البقاء في سطر واحد */
+  font-weight: 700;
+  /* سطرين كحد أقصى ثم ... */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis; /* ظهور النقاط ... */
 }
 
 .itemPrice {
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 800;
   color: #10b981;
 }
 
-/* منطقة الأزرار - أصبحت على اليسار بالكامل */
-.cardActions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 0;
+/* شارة المخزون */
+.stockBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
 }
 
-/* زر الحذف والتعديل بتصميم أنيق ومناسب للمستطيل */
+.inStock {
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.1);
+}
+
+.lowStock {
+  color: #c2410c;
+  background: rgba(234, 88, 12, 0.12);
+}
+
+.outOfStock {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* الأزرار */
+.cardActions {
+  grid-area: actions;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 .deleteBtn,
 .editBtn {
-  background-color: #fee2e2;
-  border: 1px solid #fca5a5;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
+
+.editBtn {
+  color: #2563eb;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.editBtn:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
 .deleteBtn {
   color: #ef4444;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
 }
 
 .deleteBtn:hover {
   background-color: #ef4444;
   color: #ffffff;
   border-color: #ef4444;
-  margin: 3px;
 }
 
-.deleteBtn:active {
-  transform: scale(0.97);
-}
-
-.editBtn {
-  color: #2196f3;
-}
-
-.editBtn:hover {
-  background-color: #2196f3;
-  color: #ffffff;
-  border-color: #2196f3;
-  margin: 3px;
-}
-
+.deleteBtn:active,
 .editBtn:active {
   transform: scale(0.97);
 }
 
-/* التجاوب مع الشاشات الصغيرة جداً */
-@media (max-width: 640px) {
-  .cardActions {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .deleteBtn,
-  .editBtn {
-    padding: 8px 12px;
+/* في الهاتف لا يوجد hover */
+@media (hover: none) {
+  .itemCard:hover {
+    transform: none;
   }
 }
 
-@media (max-width: 480px) {
-  .cardActions {
-    flex-direction: row;
-  }
-
-  .deleteBtn,
-  .editBtn {
-    flex: 1;
-    justify-content: center;
-    padding: 10px 12px;
-  }
-
-  .deleteBtn:hover,
-  .editBtn:hover {
-    margin: 0;
-  }
-
+@media (max-width: 380px) {
   .itemCard {
-    flex-direction: column;
-    height: auto;
-    padding: 12px;
+    grid-template-columns: 76px minmax(0, 1fr);
     gap: 12px;
+    padding: 12px;
   }
+
   .imageWrapper {
-    width: 100%;
-    height: 150px;
-    border-left: none;
-    border-bottom: 1px solid #e2e8f0;
-    border-radius: 8px;
+    width: 76px;
+    height: 76px;
   }
-  .itemInfo {
-    padding: 0;
-    text-align: center;
-  }
-  .cardActions {
-    width: 100%;
+
+  .itemInfo h4 {
+    font-size: 0.92rem;
   }
 }

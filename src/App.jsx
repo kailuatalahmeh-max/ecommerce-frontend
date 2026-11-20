@@ -15,6 +15,8 @@ import MyOrders from "./pages/myOrders/MyOrders";
 import AdminOrders from "./pages/adminOrders/AdminOrders";
 import AdminAnalytics from "./pages/adminAnalytics/AdminAnalytics";
 import { ProtectedRoute } from "../Routes/ProtectedRoute";
+import BackButton from "./components/backButton/BackButton";
+import ConfirmDialog from "./components/confirmDialog/ConfirmDialog";
 
 function App() {
   const initGuestId = useCartStore((state) => state.initGuestId);
@@ -28,7 +30,7 @@ function App() {
   return (
     <>
       <Toaster
-        position="bottom-left"
+        position="top-center"
         toastOptions={{
           duration: 3500,
 
@@ -102,6 +104,8 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <BackButton />
+      <ConfirmDialog />
     </>
   );
 }

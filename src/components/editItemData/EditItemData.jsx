@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { useAuthStore } from "../../context/useAuthStore";
 import { useAdminStore } from "../../context/useAdminStore";
+import { confirmDialog } from "../../context/useConfirmStore";
 import styles from "./EditItemData.module.css";
 import { useContext, useState } from "react";
 import { ItemContext } from "../../context/ItemContext";
@@ -69,10 +70,7 @@ export default function EditItemData({ onClose, item }) {
       return;
     }
 
-    if (!window.confirm("هل أنت متأكد من حفظ التعديلات؟")) {
-      return;
-    }
-
+    // نتحقق من البيانات أولاً، ثم نسأل للتأكيد
     const cleanedImages = itemEditing.images
       .map((img) => ({ imageURL: cleanUrl(img.imageURL) }))
       .filter((img) => img.imageURL.length > 0);
@@ -87,11 +85,18 @@ export default function EditItemData({ onClose, item }) {
       images: cleanedImages,
     };
 
-    editItem({
-      id: item._id,
-      itemEditing: finalItemEditing,
-      setItemsData,
-      onClose,
+    confirmDialog({
+      title: "حفظ التعديلات",
+      message: `هل أنت متأكد من حفظ التعديلات على "${item.itemName}"؟`,
+      confirmText: "💾 حفظ",
+      variant: "success",
+      onConfirm: () =>
+        editItem({
+          id: item._id,
+          itemEditing: finalItemEditing,
+          setItemsData,
+          onClose,
+        }),
     });
   }
 

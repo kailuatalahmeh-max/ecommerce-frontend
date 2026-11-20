@@ -19,6 +19,12 @@ export default function AdminControler() {
 
   const [serverStatus, setServerStatus] = useState("جاري التحقق...");
   const [isServerOnline, setIsServerOnline] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredItems =
+    itemsData?.filter((item) =>
+      item.itemName?.toLowerCase().includes(searchTerm.toLowerCase().trim()),
+    ) || [];
 
   useEffect(() => {
     const controller = new AbortController();
@@ -48,7 +54,6 @@ export default function AdminControler() {
     handleDeleteItem({
       id: id,
       setItemsData: setItemsData,
-      itemsData: itemsData,
     });
   }
 
@@ -71,11 +76,26 @@ export default function AdminControler() {
         </div>
 
         <nav className={styles.sidebarNav}>
-          <Link to="/admin/analytics">📊 الإحصائيات العامة</Link>
-          <Link to="/admin/management">👤 أنشاء حساب أدمن</Link>
-          <Link to="/admin/admins-management">👥 إدارة حسابات الأدمن</Link>
-          <Link to="/admin/control-items/add">➕ إضافة منتج جديد</Link>
-          <Link to="/admin/orders-management">📜 طلبات الشراء</Link>
+          <Link to="/admin/analytics">
+            <span className={styles.navIcon}>📊</span>
+            <span>الإحصائيات العامة</span>
+          </Link>
+          <Link to="/admin/management">
+            <span className={styles.navIcon}>👤</span>
+            <span>إنشاء حساب أدمن</span>
+          </Link>
+          <Link to="/admin/admins-management">
+            <span className={styles.navIcon}>👥</span>
+            <span>إدارة حسابات الأدمن</span>
+          </Link>
+          <Link to="/admin/control-items/add">
+            <span className={styles.navIcon}>➕</span>
+            <span>إضافة منتج جديد</span>
+          </Link>
+          <Link to="/admin/orders-management">
+            <span className={styles.navIcon}>📜</span>
+            <span>طلبات الشراء</span>
+          </Link>
         </nav>
         <div className={styles.sidebarFooter}>
           <Link to="/" className={styles.backHomeBtn}>
@@ -104,16 +124,34 @@ export default function AdminControler() {
           </div>
         </header>
         <main className={styles.mainContent}>
-          <div className={styles.cardSiction}>
-            {itemsData?.map((product) => (
-              <AdminItemCard
-                key={product._id}
-                item={product}
-                onDelete={handleSubmit}
-                openEditing={openEditing}
-              />
-            ))}
+          <div className={styles.toolbar}>
+            <h2 className={styles.sectionTitle}>
+              المنتجات
+              <span className={styles.countBadge}>{itemsData?.length || 0}</span>
+            </h2>
+            <input
+              type="search"
+              placeholder="🔍 ابحث عن منتج..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
           </div>
+
+          {filteredItems.length > 0 ? (
+            <div className={styles.cardSiction}>
+              {filteredItems.map((product) => (
+                <AdminItemCard
+                  key={product._id}
+                  item={product}
+                  onDelete={handleSubmit}
+                  openEditing={openEditing}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className={styles.emptyState}>لا توجد منتجات</p>
+          )}
         </main>
       </div>
 

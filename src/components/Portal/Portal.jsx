@@ -1,25 +1,19 @@
 // components/Portal.jsx
-import { createPortal } from 'react-dom';
-import { useEffect, useState } from 'react';
+import { createPortal } from "react-dom";
+import { useEffect } from "react";
 
+// التطبيق يعمل في المتصفح فقط (Vite)، لذلك document.body موجود دائماً
+// ولا نحتاج حالة "mounted" (كانت تسبب render إضافي).
 export default function Portal({ children }) {
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('modal-open');
-    
+    document.body.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
+
     return () => {
-      document.body.style.overflow = 'unset';
-      document.body.classList.remove('modal-open');
+      document.body.style.overflow = "unset";
+      document.body.classList.remove("modal-open");
     };
   }, []);
 
-  if (!mounted) return null;
-
-  return createPortal(
-    children,
-    document.body
-  );
+  return createPortal(children, document.body);
 }

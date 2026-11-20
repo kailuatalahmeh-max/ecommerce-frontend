@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { ItemContext } from "../../context/ItemContext";
 import { useAuthStore } from "../../context/useAuthStore";
 import { useAdminStore } from "../../context/useAdminStore";
+import { confirmDialog } from "../../context/useConfirmStore";
 
 import { cleanUrl } from "../../utils/urlHelpers";
 import { MAX_IMAGES_PER_ITEM } from "../../utils/constants";
@@ -64,11 +65,7 @@ export default function AddItemData() {
       return;
     }
 
-    const confirmAdd = window.confirm("هل أنت متأكد من أضافة المنتج؟");
-
-    if (!confirmAdd) {
-      return;
-    }
+    // نتحقق من البيانات أولاً، ثم نسأل للتأكيد
     const cleanedImages = formInputData.images
       .map((img) => ({ imageURL: cleanUrl(img.imageURL) }))
       .filter((img) => img.imageURL.length > 0);
@@ -84,10 +81,17 @@ export default function AddItemData() {
       imageURL: cleanedImages[0].imageURL,
     };
 
-    addItem({
-      formInputData: finalData,
-      setFormInputData: setFormInputData,
-      setItemsData: setItemsData,
+    confirmDialog({
+      title: "إضافة منتج",
+      message: `هل أنت متأكد من إضافة "${finalData.itemName.trim()}"؟`,
+      confirmText: "➕ إضافة",
+      variant: "success",
+      onConfirm: () =>
+        addItem({
+          formInputData: finalData,
+          setFormInputData: setFormInputData,
+          setItemsData: setItemsData,
+        }),
     });
   }
   /*<----handleFunction----> */

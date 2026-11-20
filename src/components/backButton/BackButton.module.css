@@ -1,0 +1,79 @@
+/* زر الرجوع العائم */
+.backBtn {
+  position: fixed;
+  left: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  z-index: 900; /* أقل من المودالات (السلة، التعديل...) حتى تغطيه */
+  direction: rtl;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow:
+    0 6px 20px rgba(102, 126, 234, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.backBtn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 28px rgba(102, 126, 234, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.backBtn:active {
+  transform: scale(0.95);
+}
+
+.backBtn:focus-visible {
+  outline: 3px solid #f093fb;
+  outline-offset: 3px;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.spacer {
+  display: none;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== الهاتف ===== */
+@media (max-width: 640px) {
+  .backBtn {
+    left: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  .spacer {
+    display: block;
+    height: 76px;
+  }
+}

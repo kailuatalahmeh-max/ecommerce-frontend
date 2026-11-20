@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axiosAdmin from "../utils/axiosAdmin";
 import toast from "react-hot-toast";
+import { confirmDialog } from "./useConfirmStore";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const useAdminStore = create((set, get) => ({
@@ -18,7 +19,8 @@ export const useAdminStore = create((set, get) => ({
       }))
       .filter((img) => img.imageURL.length > 0);
 
-    axiosAdmin
+    // نرجع الـ Promise حتى تنتظر نافذة التأكيد انتهاء الطلب
+    return axiosAdmin
       .post(`${apiUrl}/api/items`, {
         images: images,
         itemName: formInputData.itemName.trim(),
@@ -50,7 +52,7 @@ export const useAdminStore = create((set, get) => ({
       }))
       .filter((img) => img.imageURL.length > 0);
 
-    axiosAdmin
+    return axiosAdmin
       .put(`${apiUrl}/api/items/${id}`, {
         images: images,
         itemName: itemEditing.itemName.trim(),
@@ -72,23 +74,28 @@ export const useAdminStore = create((set, get) => ({
       });
   },
 
-  handleDeleteItem: ({ id, setItemsData, itemsData }) => {
-    if (window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-      axiosAdmin
-        .delete(`${apiUrl}/api/items/${id}`)
-        .then(() => {
-          const items = itemsData.filter((item) => item._id !== id);
-          setItemsData(items);
-          toast.success("تم حذف العنصر بنجاح!", {
-            style: { color: "green" },
-          });
-        })
-        .catch((err) => {
-          const errorMessage =
-            err.response?.data?.message || "فشل الحذف، يرجى المحاولة لاحقاً!";
-          toast.error(errorMessage);
-        });
-    }
+  handleDeleteItem: ({ id, setItemsData }) => {
+    return confirmDialog({
+      title: "حذف المنتج",
+      message: "هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذه العملية.",
+      confirmText: "🗑️ حذف",
+      variant: "danger",
+      onConfirm: () =>
+        axiosAdmin
+          .delete(`${apiUrl}/api/items/${id}`)
+          .then(() => {
+            // تحديث بالقيمة الأحدث (وليس نسخة قديمة من القائمة)
+            setItemsData((prev) => prev.filter((item) => item._id !== id));
+            toast.success("تم حذف العنصر بنجاح!", {
+              style: { color: "green" },
+            });
+          })
+          .catch((err) => {
+            const errorMessage =
+              err.response?.data?.message || "فشل الحذف، يرجى المحاولة لاحقاً!";
+            toast.error(errorMessage);
+          }),
+    });
   },
 
   getOrdersData: () => {
@@ -170,7 +177,7 @@ export const useAdminStore = create((set, get) => ({
   },
 
   disableAdmin: ({ adminId }) => {
-    axiosAdmin
+    return axiosAdmin
       .patch(`${apiUrl}/api/admins/${adminId}/disable`)
       .then(() => {
         const updatedAdmins = get().adminsData.map((admin) =>
@@ -186,7 +193,7 @@ export const useAdminStore = create((set, get) => ({
   },
 
   enableAdmin: ({ adminId }) => {
-    axiosAdmin
+    return axiosAdmin
       .patch(`${apiUrl}/api/admins/${adminId}/enable`)
       .then(() => {
         const updatedAdmins = get().adminsData.map((admin) =>
