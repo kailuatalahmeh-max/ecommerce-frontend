@@ -240,7 +240,6 @@
   color: #2d3748;
   font-family: inherit;
   outline: none;
-  direction: rtl;
   width: 100%;
   box-sizing: border-box;
 }
@@ -351,7 +350,6 @@
 
 /* ===== رسائل التوست ===== */
 .toastContainer {
-  direction: rtl;
 }
 
 /* ===== علامات الحقول المطلوبة ===== */

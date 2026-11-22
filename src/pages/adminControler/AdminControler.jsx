@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./AdminControler.module.css";
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ItemContext } from "../../context/ItemContext";
 import AdminItemCard from "../../components/adminItemCard/AdminItemCard";
 import axios from "axios";
@@ -11,14 +12,15 @@ import { useAdminStore } from "../../context/useAdminStore";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function AdminControler() {
+  const { t } = useTranslation();
   const { role } = useAuthStore();
 
   const { itemsData, setItemsData } = useContext(ItemContext);
   const handleDeleteItem = useAdminStore((state) => state.handleDeleteItem);
   const [editingItem, setEditingItem] = useState(null);
 
-  const [serverStatus, setServerStatus] = useState("جاري التحقق...");
-  const [isServerOnline, setIsServerOnline] = useState(false);
+  // "checking" | "online" | "offline" (النص من ملفات الترجمة admin.server.*)
+  const [serverStatus, setServerStatus] = useState("checking");
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredItems =
@@ -34,14 +36,12 @@ export default function AdminControler() {
         signal: controller.signal,
       })
       .then(() => {
-        setServerStatus("الخادم متصل");
-        setIsServerOnline(true);
+        setServerStatus("online");
       })
       .catch((err) => {
         if (axios.isCancel(err)) return;
 
-        setServerStatus("الخادم غير متصل");
-        setIsServerOnline(false);
+        setServerStatus("offline");
       });
 
     return () => {
@@ -71,35 +71,37 @@ export default function AdminControler() {
     <div className={styles.adminLayout}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <h3>لوحة التحكم 🛠️</h3>
-          <span className={styles.adminBadge}>{role || "المدير العام"}</span>
+          <h3>{t("admin.panelTitle")}</h3>
+          <span className={styles.adminBadge}>
+            {role || t("admin.defaultRole")}
+          </span>
         </div>
 
         <nav className={styles.sidebarNav}>
           <Link to="/admin/analytics">
             <span className={styles.navIcon}>📊</span>
-            <span>الإحصائيات العامة</span>
+            <span>{t("admin.nav.analytics")}</span>
           </Link>
           <Link to="/admin/management">
             <span className={styles.navIcon}>👤</span>
-            <span>إنشاء حساب أدمن</span>
+            <span>{t("admin.nav.createAdmin")}</span>
           </Link>
           <Link to="/admin/admins-management">
             <span className={styles.navIcon}>👥</span>
-            <span>إدارة حسابات الأدمن</span>
+            <span>{t("admin.nav.manageAdmins")}</span>
           </Link>
           <Link to="/admin/control-items/add">
             <span className={styles.navIcon}>➕</span>
-            <span>إضافة منتج جديد</span>
+            <span>{t("admin.nav.addProduct")}</span>
           </Link>
           <Link to="/admin/orders-management">
             <span className={styles.navIcon}>📜</span>
-            <span>طلبات الشراء</span>
+            <span>{t("admin.nav.orders")}</span>
           </Link>
         </nav>
         <div className={styles.sidebarFooter}>
           <Link to="/" className={styles.backHomeBtn}>
-            🏠 العودة للموقع الرئيسي
+            {t("admin.backHome")}
           </Link>
         </div>
       </aside>
@@ -108,30 +110,31 @@ export default function AdminControler() {
         <header className={styles.topHeader}>
           <div className={styles.headerSection}>
             <div className={styles.welcomeText}>
-              <h4>أهلاً بك مجدداً 👤</h4>
-              <p>إليك نظرة سريعة على متجرك اليوم</p>
+              <h4>{t("admin.welcome")}</h4>
+              <p>{t("admin.welcomeText")}</p>
             </div>
             <div className={styles.serverStatus}>
               <span
                 className={styles.statusDot}
                 style={{
-                  backgroundColor: isServerOnline ? "#10b981" : "#ef4444",
+                  backgroundColor:
+                    serverStatus === "online" ? "#10b981" : "#ef4444",
                 }}
               ></span>
 
-              {serverStatus || "الخادم غير متصل"}
+              {t(`admin.server.${serverStatus}`)}
             </div>
           </div>
         </header>
         <main className={styles.mainContent}>
           <div className={styles.toolbar}>
             <h2 className={styles.sectionTitle}>
-              المنتجات
+              {t("admin.products")}
               <span className={styles.countBadge}>{itemsData?.length || 0}</span>
             </h2>
             <input
               type="search"
-              placeholder="🔍 ابحث عن منتج..."
+              placeholder={t("admin.searchProducts")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
@@ -150,7 +153,7 @@ export default function AdminControler() {
               ))}
             </div>
           ) : (
-            <p className={styles.emptyState}>لا توجد منتجات</p>
+            <p className={styles.emptyState}>{t("admin.noProducts")}</p>
           )}
         </main>
       </div>

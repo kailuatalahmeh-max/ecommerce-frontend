@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
+import i18n from "../i18n";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -18,7 +19,7 @@ export const useCartStore = create((set, get) => ({
         set({ cartData: data });
       })
       .catch((err) => {
-        toast.error(err.response?.data?.message || "فشل احضار البيانات");
+        toast.error(err.response?.data?.message || i18n.t("common.fetchFailed"));
       });
   },
 
@@ -46,7 +47,7 @@ export const useCartStore = create((set, get) => ({
       .then((response) => {
         const newData = response?.data?.data?.items || [];
         set({ cartData: newData });
-        toast.success("تم إضافة المنتج إلى السلة!");
+        toast.success(i18n.t("cart.added"));
       })
       .catch((error) => {
         const errorMessage = error.response?.data?.message;
@@ -63,7 +64,7 @@ export const useCartStore = create((set, get) => ({
 
         set({ cartData: newData });
 
-        toast.success(response?.data?.message || "تم الحذف بنجاح");
+        toast.success(response?.data?.message || i18n.t("cart.deleted"));
       })
       .catch((error) => {
         const errMessage = error.response?.data?.message;
@@ -82,7 +83,7 @@ export const useCartStore = create((set, get) => ({
         set({ cartData: newData });
       })
       .catch((error) => {
-        const errMessage = error.response?.data?.message || "حدث خطأ ما!";
+        const errMessage = error.response?.data?.message || i18n.t("common.errorGeneric");
         toast.error(errMessage);
       });
   },
@@ -96,7 +97,7 @@ export const useCartStore = create((set, get) => ({
         set({ cartData: newData });
       })
       .catch((error) => {
-        const errMessage = error.response?.data?.message || "حدث خطأ ما!";
+        const errMessage = error.response?.data?.message || i18n.t("common.errorGeneric");
         toast.error(errMessage);
       });
   },
@@ -107,10 +108,10 @@ export const useCartStore = create((set, get) => ({
       .delete(`${apiUrl}/api/carts/${guestId}/items`)
       .then((response) => {
         set({ cartData: [] });
-        toast.success(response?.data?.message || "تم الحذف بنجاح");
+        toast.success(response?.data?.message || i18n.t("cart.deleted"));
       })
       .catch((error) => {
-        const errMessage = error.response?.data?.message || "حدث خطأ ما!";
+        const errMessage = error.response?.data?.message || i18n.t("common.errorGeneric");
         toast.error(errMessage);
       });
   },

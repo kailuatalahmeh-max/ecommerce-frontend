@@ -1,5 +1,6 @@
 import styles from "./itemList.module.css";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
 
@@ -11,6 +12,7 @@ export default function ItemList({
   itemPrice,
   itemQuantity,
 }) {
+  const { t } = useTranslation();
   const isOutOfStock = itemQuantity === 0;
 
   return (
@@ -29,10 +31,10 @@ export default function ItemList({
         }}
       >
         {isOutOfStock
-          ? "نفذت الكمية"
+          ? t("stock.out")
           : itemQuantity <= 5
-            ? `متبقي ${itemQuantity} فقط`
-            : "متوفر"}
+            ? t("stock.few", { count: itemQuantity })
+            : t("stock.in")}
       </span>
     </Link>
   );

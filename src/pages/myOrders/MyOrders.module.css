@@ -327,7 +327,6 @@
   align-items: center;
   gap: 1rem;
   text-align: center;
-  direction: rtl;
   background: rgba(26, 28, 35, 0.65);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);

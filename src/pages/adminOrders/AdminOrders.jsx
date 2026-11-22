@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./AdminOrders.module.css";
 import { useEffect } from "react";
 import { useAdminStore } from "../../context/useAdminStore";
+import { getDateLocale } from "../../i18n";
+
+const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
 export default function AdminOrders() {
+  const { t } = useTranslation();
   const getOrdersData = useAdminStore((state) => state.getOrdersData);
   const ordersData = useAdminStore((state) => state.ordersData);
   const updateOrderStatus = useAdminStore((state) => state.updateOrderStatus);
@@ -27,21 +32,15 @@ export default function AdminOrders() {
     return matchesStatus && matchesSearch;
   });
 
-  const pendingCount =
-    ordersData?.filter((o) => o.status === "Pending").length || 0;
-  const acceptedCount =
-    ordersData?.filter((o) => o.status === "Accepted").length || 0;
-  const deliveredCount =
-    ordersData?.filter((o) => o.status === "Delivered").length || 0;
-  const cancelledCount =
-    ordersData?.filter((o) => o.status === "Cancelled").length || 0;
+  const countByStatus = (status) =>
+    ordersData?.filter((o) => o.status === status).length || 0;
 
   return (
     <div className={styles.adminPage}>
       <header className={styles.headerSection}>
         <div>
-          <h1 className={styles.titlePage}>لوحة إدارة الطلبات</h1>
-          <p className={styles.subTitle}>متابعة وتحديث طلبات الزبائن</p>
+          <h1 className={styles.titlePage}>{t("adminOrders.title")}</h1>
+          <p className={styles.subTitle}>{t("adminOrders.subtitle")}</p>
         </div>
 
         <button
@@ -49,33 +48,33 @@ export default function AdminOrders() {
           className={`btn-global ${styles.btnBack}`}
           onClick={() => navigate("/admin/control-items")}
         >
-          ← العودة للوحة التحكم
+          {t("common.backToDashboard")}
         </button>
       </header>
 
       <section className={styles.statsContainer}>
         <div className={`${styles.statCard} ${styles.pendingBorder}`}>
-          <span className={styles.statTitle}>قيد الانتظار</span>
-          <span className={styles.statValue}>{pendingCount}</span>
+          <span className={styles.statTitle}>{t("status.Pending")}</span>
+          <span className={styles.statValue}>{countByStatus("Pending")}</span>
         </div>
         <div className={`${styles.statCard} ${styles.acceptedBorder}`}>
-          <span className={styles.statTitle}>مقبولة</span>
-          <span className={styles.statValue}>{acceptedCount}</span>
+          <span className={styles.statTitle}>{t("status.Accepted")}</span>
+          <span className={styles.statValue}>{countByStatus("Accepted")}</span>
         </div>
         <div className={`${styles.statCard} ${styles.deliveredBorder}`}>
-          <span className={styles.statTitle}>تم التوصيل</span>
-          <span className={styles.statValue}>{deliveredCount}</span>
+          <span className={styles.statTitle}>{t("status.Delivered")}</span>
+          <span className={styles.statValue}>{countByStatus("Delivered")}</span>
         </div>
         <div className={`${styles.statCard} ${styles.cancelledBorder}`}>
-          <span className={styles.statTitle}>تم الإلغاء</span>
-          <span className={styles.statValue}>{cancelledCount}</span>
+          <span className={styles.statTitle}>{t("status.Cancelled")}</span>
+          <span className={styles.statValue}>{countByStatus("Cancelled")}</span>
         </div>
       </section>
 
       <section className={styles.controlsSection}>
         <input
           type="text"
-          placeholder="ابحث باسم الزبون، الرقم، أو المنطقة..."
+          placeholder={t("adminOrders.search")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={styles.searchInput}
@@ -87,34 +86,37 @@ export default function AdminOrders() {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="">جميع الحالات</option>
-            <option value="Pending">Pending (معلق)</option>
-            <option value="Accepted">Accepted (مقبول)</option>
-            <option value="Delivered">Delivered (تم التوصيل)</option>
-            <option value="Cancelled">Cancelled (ملغى)</option>
+            <option value="">{t("adminOrders.allStatuses")}</option>
+            {STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {t(`status.${status}`)}
+              </option>
+            ))}
           </select>
         </div>
       </section>
 
       <main className={styles.mainSection}>
         {!filteredOrders || filteredOrders.length === 0 ? (
-          <div className={styles.emptyState}>لا توجد طلبات مطابقة للبحث.</div>
+          <div className={styles.emptyState}>{t("adminOrders.empty")}</div>
         ) : (
           filteredOrders.map((order) => (
             <div key={order._id} className={styles.orderCard}>
               <div className={styles.cardHeader}>
                 <div className={styles.customerDetails}>
                   <h3 className={styles.customerName}>{order.customerName}</h3>
-                  <span className={styles.customerInfo}>
+                  <span className={styles.customerInfo} dir="ltr">
                     📞 {order.phoneNumber}
                   </span>
-                  <span className={styles.customerInfo}>📍 {order.region}</span>
+                  <span className={styles.customerInfo}>
+                    📍 {t(`regions.${order.region}`, order.region)}
+                  </span>
                 </div>
 
                 <div className={styles.orderMeta}>
                   <span className={styles.orderDate}>
                     📅{" "}
-                    {new Date(order.createdAt).toLocaleString("en-US", {
+                    {new Date(order.createdAt).toLocaleString(getDateLocale(), {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
@@ -133,16 +135,17 @@ export default function AdminOrders() {
                       })
                     }
                   >
-                    <option value="Pending">Pending</option>
-                    <option value="Accepted">Accepted</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
+                    {STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {t(`status.${status}`)}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
 
               <div className={styles.cardBody}>
-                <p className={styles.itemsTitle}>عناصر الطلب:</p>
+                <p className={styles.itemsTitle}>{t("adminOrders.items")}</p>
                 <ul className={styles.itemsList}>
                   {order.items.map((item) => (
                     <li
@@ -151,7 +154,7 @@ export default function AdminOrders() {
                     >
                       <span className={styles.itemName}>{item.itemName}</span>
                       <span className={styles.itemQty}>
-                        الكمية: {item.quantity}
+                        {t("adminOrders.qty", { count: item.quantity })}
                       </span>
                       <span className={styles.itemPrice}>
                         ${item.itemPrice * item.quantity}
@@ -162,7 +165,9 @@ export default function AdminOrders() {
               </div>
 
               <div className={styles.cardFooter}>
-                <span className={styles.totalLabel}>المبلغ الإجمالي:</span>
+                <span className={styles.totalLabel}>
+                  {t("adminOrders.total")}
+                </span>
                 <span className={styles.totalPrice}>${order.totalPrice}</span>
               </div>
             </div>

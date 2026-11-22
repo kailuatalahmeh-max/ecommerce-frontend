@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAdminStore } from "../../context/useAdminStore";
 import styles from "./AdminAnalytics.module.css";
 import Loading from "../../components/loading/Loading";
 
 export default function AdminAnalytics() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const getAnalyticsData = useAdminStore((state) => state.getAnalyticsData);
@@ -39,8 +41,8 @@ export default function AdminAnalytics() {
     <div className={styles.adminPage}>
       <header className={styles.headerSection}>
         <div>
-          <h1 className={styles.titlePage}>لوحة الإحصائيات العامة</h1>
-          <p className={styles.subTitle}>رؤية شاملة لأداء المتجر والمبيعات</p>
+          <h1 className={styles.titlePage}>{t("analytics.title")}</h1>
+          <p className={styles.subTitle}>{t("analytics.subtitle")}</p>
         </div>
 
         <button
@@ -48,56 +50,56 @@ export default function AdminAnalytics() {
           className={`btn-global ${styles.btnBack}`}
           onClick={() => navigate("/admin/control-items")}
         >
-          ← العودة للوحة التحكم
+          {t("common.backToDashboard")}
         </button>
       </header>
 
       <section className={styles.kpiGrid}>
         <div className={`${styles.kpiCard} ${styles.revenueBorder}`}>
-          <span className={styles.kpiLabel}>إجمالي المبيعات</span>
+          <span className={styles.kpiLabel}>{t("analytics.revenue")}</span>
           <span className={styles.kpiValue}>${totalRevenue}</span>
         </div>
 
         <div className={`${styles.kpiCard} ${styles.ordersBorder}`}>
-          <span className={styles.kpiLabel}>إجمالي الطلبات</span>
+          <span className={styles.kpiLabel}>{t("analytics.orders")}</span>
           <span className={styles.kpiValue}>{totalOrders}</span>
         </div>
 
         <div className={`${styles.kpiCard} ${styles.itemsBorder}`}>
-          <span className={styles.kpiLabel}>إجمالي المنتجات</span>
+          <span className={styles.kpiLabel}>{t("analytics.items")}</span>
           <span className={styles.kpiValue}>{totalItems}</span>
         </div>
 
         <div className={`${styles.kpiCard} ${styles.cartsBorder}`}>
-          <span className={styles.kpiLabel}>السلات النشطة</span>
+          <span className={styles.kpiLabel}>{t("analytics.activeCarts")}</span>
           <span className={styles.kpiValue}>{activeCarts}</span>
         </div>
       </section>
 
       <section className={styles.middleGrid}>
         <div className={styles.panelCard}>
-          <h2 className={styles.panelTitle}>حالات الطلبات</h2>
+          <h2 className={styles.panelTitle}>{t("analytics.ordersByStatus")}</h2>
           <div className={styles.statusList}>
             <div className={styles.statusRow}>
-              <span>⏳ قيد الانتظار</span>
+              <span>{t("analytics.pending")}</span>
               <span className={styles.badgePending}>
                 {ordersByStatus.Pending}
               </span>
             </div>
             <div className={styles.statusRow}>
-              <span>✅ مقبول</span>
+              <span>{t("analytics.accepted")}</span>
               <span className={styles.badgeAccepted}>
                 {ordersByStatus.Accepted}
               </span>
             </div>
             <div className={styles.statusRow}>
-              <span>🚚 تم التوصيل</span>
+              <span>{t("analytics.delivered")}</span>
               <span className={styles.badgeDelivered}>
                 {ordersByStatus.Delivered}
               </span>
             </div>
             <div className={styles.statusRow}>
-              <span>❌ ملغى</span>
+              <span>{t("analytics.cancelled")}</span>
               <span className={styles.badgeCancelled}>
                 {ordersByStatus.Cancelled}
               </span>
@@ -106,36 +108,35 @@ export default function AdminAnalytics() {
         </div>
 
         <div className={styles.panelCard}>
-          <h2 className={styles.panelTitle}>تحليل المنتجات</h2>
+          <h2 className={styles.panelTitle}>
+            {t("analytics.productAnalysis")}
+          </h2>
 
           <div className={styles.topProductBox}>
-            <span className={styles.subLabel}>🔥 الأكثر مبيعاً:</span>
+            <span className={styles.subLabel}>{t("analytics.topProduct")}</span>
             {topProduct ? (
               <p className={styles.topProductName}>
-                {topProduct.itemName} ({topProduct.totalSold} قطعة)
+                {topProduct.itemName} (
+                {t("analytics.pieces", { count: topProduct.totalSold })})
               </p>
             ) : (
-              <p className={styles.emptyText}>لا توجد بيانات مبيعات بعد</p>
+              <p className={styles.emptyText}>{t("analytics.noSales")}</p>
             )}
           </div>
 
           <hr className={styles.divider} />
 
           <div className={styles.lowStockBox}>
-            <span className={styles.subLabel}>
-              ⚠️ تنبيهات المخزون (أقل من 5):
-            </span>
+            <span className={styles.subLabel}>{t("analytics.lowStock")}</span>
             {lowStockItems.length === 0 ? (
-              <p className={styles.successText}>
-                جميع المنتجات متوفرة بكميات جيدة
-              </p>
+              <p className={styles.successText}>{t("analytics.allGood")}</p>
             ) : (
               <ul className={styles.lowStockList}>
                 {lowStockItems.map((item) => (
                   <li key={item._id} className={styles.lowStockRow}>
                     <span>{item.itemName}</span>
                     <span className={styles.stockAlert}>
-                      المتبقي: {item.itemQuantity}
+                      {t("analytics.remaining", { count: item.itemQuantity })}
                     </span>
                   </li>
                 ))}
@@ -147,17 +148,19 @@ export default function AdminAnalytics() {
 
       <section className={styles.bottomSection}>
         <div className={styles.panelCard}>
-          <h2 className={styles.panelTitle}>📍 المناطق الأكثر طلباً</h2>
+          <h2 className={styles.panelTitle}>{t("analytics.topRegions")}</h2>
           {topRegions.length === 0 ? (
-            <p className={styles.emptyText}>لا توجد طلبات مسجلة بعد.</p>
+            <p className={styles.emptyText}>{t("analytics.noOrders")}</p>
           ) : (
             <ul className={styles.regionList}>
               {topRegions.map((reg, index) => (
                 <li key={reg._id || index} className={styles.regionRow}>
                   <span>
-                    {index + 1}. {reg._id}
+                    {index + 1}. {t(`regions.${reg._id}`, reg._id)}
                   </span>
-                  <span className={styles.regionCount}>{reg.count} طلبات</span>
+                  <span className={styles.regionCount}>
+                    {t("analytics.regionOrders", { count: reg.count })}
+                  </span>
                 </li>
               ))}
             </ul>

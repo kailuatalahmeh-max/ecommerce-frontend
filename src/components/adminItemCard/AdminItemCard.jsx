@@ -1,17 +1,19 @@
 import styles from "./AdminItemCard.module.css";
+import { useTranslation } from "react-i18next";
 import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
 
 export default function AdminItemCard({ item, onDelete, openEditing }) {
+  const { t } = useTranslation();
   const quantity = item.itemQuantity ?? 0;
 
   let stockClass = styles.inStock;
-  let stockText = `متوفر: ${quantity}`;
+  let stockText = t("stock.available", { count: quantity });
   if (quantity === 0) {
     stockClass = styles.outOfStock;
-    stockText = "نفذت الكمية";
+    stockText = t("stock.out");
   } else if (quantity <= 5) {
     stockClass = styles.lowStock;
-    stockText = `متبقي ${quantity}`;
+    stockText = t("stock.left", { count: quantity });
   }
 
   return (
@@ -36,14 +38,14 @@ export default function AdminItemCard({ item, onDelete, openEditing }) {
           }}
           className={styles.editBtn}
         >
-          ✏️ تعديل
+          {t("admin.edit")}
         </button>
         <button
           type="button"
           onClick={() => onDelete(item._id)}
           className={styles.deleteBtn}
         >
-          🗑️ حذف
+          {t("admin.delete")}
         </button>
       </div>
     </div>

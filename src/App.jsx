@@ -17,6 +17,7 @@ import AdminAnalytics from "./pages/adminAnalytics/AdminAnalytics";
 import { ProtectedRoute } from "../Routes/ProtectedRoute";
 import BackButton from "./components/backButton/BackButton";
 import ConfirmDialog from "./components/confirmDialog/ConfirmDialog";
+import LanguageSwitcher from "./components/languageSwitcher/LanguageSwitcher";
 
 function App() {
   const initGuestId = useCartStore((state) => state.initGuestId);
@@ -107,6 +108,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <BackButton />
+      <LanguageSwitcher />
       <ConfirmDialog />
     </>
   );

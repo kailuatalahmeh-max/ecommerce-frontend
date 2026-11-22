@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useConfirmStore, answerConfirm } from "../../context/useConfirmStore";
 import styles from "./ConfirmDialog.module.css";
 
@@ -12,6 +13,7 @@ const ICONS = {
 
 // يُوضع مرة واحدة في App.jsx
 export default function ConfirmDialog() {
+  const { t } = useTranslation();
   const dialog = useConfirmStore((state) => state.dialog);
   const loading = useConfirmStore((state) => state.loading);
   const cancelRef = useRef(null);
@@ -58,10 +60,10 @@ export default function ConfirmDialog() {
         <div className={`${styles.iconCircle} ${styles[variant]}`}>{icon}</div>
 
         <h2 id="confirm-title" className={styles.title}>
-          {dialog.title}
+          {dialog.title || t("common.confirmTitle")}
         </h2>
         <p id="confirm-message" className={styles.message}>
-          {dialog.message}
+          {dialog.message || t("common.confirmMessage")}
         </p>
 
         <div className={styles.actions}>
@@ -75,10 +77,10 @@ export default function ConfirmDialog() {
             {loading ? (
               <>
                 <span className={styles.spinner} aria-hidden="true" />
-                جاري التنفيذ...
+                {t("common.processing")}
               </>
             ) : (
-              dialog.confirmText
+              dialog.confirmText || t("common.confirm")
             )}
           </button>
           <button
@@ -88,7 +90,7 @@ export default function ConfirmDialog() {
             onClick={() => answerConfirm(false)}
             disabled={loading}
           >
-            {dialog.cancelText}
+            {dialog.cancelText || t("common.cancel")}
           </button>
         </div>
       </div>

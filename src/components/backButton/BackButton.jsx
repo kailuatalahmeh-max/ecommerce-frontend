@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./BackButton.module.css";
 
 // زر رجوع عائم يظهر في كل الصفحات ما عدا الصفحة الرئيسية
 export default function BackButton() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   if (pathname === "/") return null;
 
@@ -20,29 +22,25 @@ export default function BackButton() {
   }
 
   return (
-    <>
-      <button
-        type="button"
-        className={styles.backBtn}
-        onClick={handleBack}
-        aria-label="رجوع للصفحة السابقة"
+    <button
+      type="button"
+      className={styles.backBtn}
+      onClick={handleBack}
+      aria-label={t("common.backAria")}
+    >
+      <svg
+        className={styles.icon}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
       >
-        <svg
-          className={styles.icon}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M5 12h14M13 6l6 6-6 6" />
-        </svg>
-        <span>رجوع</span>
-      </button>
-      {/* مساحة فارغة في آخر الصفحة حتى لا يغطي الزر آخر المحتوى */}
-      <div className={styles.spacer} aria-hidden="true" />
-    </>
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+      <span>{t("common.back")}</span>
+    </button>
   );
 }

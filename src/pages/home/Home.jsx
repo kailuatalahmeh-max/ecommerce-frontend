@@ -1,6 +1,7 @@
 import styles from "./Home.module.css";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ItemContext } from "../../context/ItemContext";
 import { useCartStore } from "../../context/useCartStore";
 import { useAuthStore } from "../../context/useAuthStore";
@@ -8,6 +9,7 @@ import ItemList from "../../components/showITems/ItemList";
 import Cart from "../../components/Cart/Cart";
 import PhoneCheck from "../../components/phoneCheck/PhoneCheck";
 export default function Home() {
+  const { t } = useTranslation();
   const { itemsData } = useContext(ItemContext);
   const { role } = useAuthStore();
   const cartData = useCartStore((state) => state.cartData);
@@ -44,15 +46,15 @@ export default function Home() {
             logout();
           }}
         >
-          logout
+          {t("home.logout")}
         </button>
       )}
 
-      <h1 className={styles.titlePage}>Welcome to Talahmeh Phones</h1>
+      <h1 className={styles.titlePage}>{t("home.title")}</h1>
       <hr className={styles.hrAnderTitle} />
       <input
         type="text"
-        placeholder="🔍 ابحث عن هاتف أو إكسسوار..."
+        placeholder={t("home.search")}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={styles.searchInput}
@@ -63,7 +65,7 @@ export default function Home() {
           <div className={styles.welcomeIcon}>
             <img
               src="https://marketplace.canva.com/QIbKU/MAFf_gQIbKU/1/tl/canva-store-icon-template-MAFf_gQIbKU.png"
-              alt="أيقونة المتجر"
+              alt={t("home.storeIconAlt")}
             />
           </div>
 
@@ -74,7 +76,7 @@ export default function Home() {
               }}
               className={`${styles.btnDynamic} ${styles.btnCart} btn-global`}
             >
-              🛒 ({cartData.length}) Shopping Cart
+              {t("home.cart", { count: cartData.length })}
             </button>
 
             {role === "super_admin" && (
@@ -82,7 +84,7 @@ export default function Home() {
                 to="/admin/control-items"
                 className={`${styles.btnDynamic} ${styles.btnAdmin}`}
               >
-                🛠 Control Panel
+                {t("home.controlPanel")}
               </Link>
             )}
 
@@ -95,7 +97,7 @@ export default function Home() {
               target="_blank"
               className={`${styles.btnDynamic} ${styles.btnDownload}`}
             >
-              📥 Install our app
+              {t("home.installApp")}
             </a>
             <button
               className={`${styles.btnDynamic} ${styles.btnRequests} btn-success`}
@@ -103,7 +105,7 @@ export default function Home() {
                 handleMyOrders();
               }}
             >
-              🎁 My Orders
+              {t("home.myOrders")}
             </button>
           </div>
         </div>
@@ -112,7 +114,7 @@ export default function Home() {
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => <ItemList key={item._id} {...item} />)
         ) : (
-          <p className={styles.noResults}>لا توجد نتائج مطابقة لبحثك</p>
+          <p className={styles.noResults}>{t("home.noResults")}</p>
         )}
       </div>
     </div>

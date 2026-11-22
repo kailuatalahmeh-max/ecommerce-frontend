@@ -233,7 +233,6 @@
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.6);
   font-family: inherit;
-  direction: rtl;
 }
 
 .textArea:focus {

@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../context/useAuthStore";
 import { useAdminStore } from "../../context/useAdminStore";
 import { confirmDialog } from "../../context/useConfirmStore";
@@ -10,6 +11,7 @@ import { cleanUrl } from "../../utils/urlHelpers";
 import { MAX_IMAGES_PER_ITEM } from "../../utils/constants";
 
 export default function EditItemData({ onClose, item }) {
+  const { t } = useTranslation();
   const { setItemsData } = useContext(ItemContext);
 
   const { role } = useAuthStore();
@@ -35,7 +37,7 @@ export default function EditItemData({ onClose, item }) {
 
   function handleAddImageField() {
     if (itemEditing.images.length >= MAX_IMAGES_PER_ITEM) {
-      toast.error(`لا يمكن إضافة أكثر من ${MAX_IMAGES_PER_ITEM} صور`);
+      toast.error(t("itemForm.maxImages", { count: MAX_IMAGES_PER_ITEM }));
       return;
     }
     setItemEditing((prev) => ({
@@ -66,7 +68,7 @@ export default function EditItemData({ onClose, item }) {
     const allowedRoles = ["admin", "moderator", "super_admin"];
 
     if (!allowedRoles.includes(role)) {
-      toast.error("عذرا, ليس لديك رتبة مسؤول لتعديل العنصر!");
+      toast.error(t("common.noPermission"));
       return;
     }
 
@@ -76,7 +78,7 @@ export default function EditItemData({ onClose, item }) {
       .filter((img) => img.imageURL.length > 0);
 
     if (cleanedImages.length === 0) {
-      toast.error("يرجى إضافة رابط صورة واحد على الأقل");
+      toast.error(t("itemForm.atLeastOneImage"));
       return;
     }
 
@@ -86,9 +88,9 @@ export default function EditItemData({ onClose, item }) {
     };
 
     confirmDialog({
-      title: "حفظ التعديلات",
-      message: `هل أنت متأكد من حفظ التعديلات على "${item.itemName}"؟`,
-      confirmText: "💾 حفظ",
+      title: t("itemForm.confirmEditTitle"),
+      message: t("itemForm.confirmEditMessage", { name: item.itemName }),
+      confirmText: t("itemForm.confirmEditButton"),
       variant: "success",
       onConfirm: () =>
         editItem({
@@ -125,16 +127,20 @@ export default function EditItemData({ onClose, item }) {
           handleSubmit(e);
         }}
       >
-        <h2 className={styles.formTitle}>تعديل:{item.itemName}</h2>
+        <h2 className={styles.formTitle}>
+          {t("itemForm.editTitle", { name: item.itemName })}
+        </h2>
         <hr className={styles.hrAnderFormTitle} />
 
         <div className={styles.imagesSection}>
-          <label className={styles.labelImageLink}>روابط الصور:</label>
+          <label className={styles.labelImageLink}>
+            {t("itemForm.imageLinks")}
+          </label>
           {itemEditing.images.map((img, index) => (
             <div key={index} className={styles.imageInputRow}>
               <input
                 type="text"
-                placeholder={`رابط الصورة ${index + 1}`}
+                placeholder={t("itemForm.imageN", { n: index + 1 })}
                 className={styles.input}
                 value={img.imageURL}
                 onChange={(e) => handleImageChange(index, e.target.value)}
@@ -155,15 +161,15 @@ export default function EditItemData({ onClose, item }) {
             className={styles.addImageBtn}
             onClick={handleAddImageField}
           >
-            ➕ إضافة صورة
+            {t("itemForm.addImage")}
           </button>
         </div>
 
         <label>
-          item Name:
+          {t("itemForm.name")}
           <input
             type="text"
-            placeholder="الأسم الجديد"
+            placeholder={t("itemForm.newNamePlaceholder")}
             value={itemEditing.itemName}
             onChange={(e) => {
               setItemEditing((p) => ({ ...p, itemName: e.target.value }));
@@ -172,10 +178,10 @@ export default function EditItemData({ onClose, item }) {
           />
         </label>
         <label>
-          item Price:
+          {t("itemForm.price")}
           <input
             type="number"
-            placeholder="السعر الجديد"
+            placeholder={t("itemForm.newPricePlaceholder")}
             value={itemEditing.itemPrice}
             onChange={(e) => {
               setItemEditing((p) => ({ ...p, itemPrice: e.target.value }));
@@ -184,10 +190,10 @@ export default function EditItemData({ onClose, item }) {
           />
         </label>
         <label>
-          quantity:
+          {t("itemForm.quantity")}
           <input
             type="number"
-            placeholder="الكمية المتوفرة"
+            placeholder={t("itemForm.quantityPlaceholder")}
             value={itemEditing.itemQuantity}
             onChange={(e) => {
               setItemEditing((p) => ({
@@ -204,14 +210,14 @@ export default function EditItemData({ onClose, item }) {
             className="btn-global btn-success"
             disabled={hasErrors}
           >
-            حفظ التعديلات
+            {t("itemForm.save")}
           </button>
           <button
             type="button"
             className="btn-global btn-danger"
             onClick={() => setItemEditing(getInitialState(item))}
           >
-            مسح التعديلات
+            {t("itemForm.reset")}
           </button>
           <button
             type="button"
@@ -220,7 +226,7 @@ export default function EditItemData({ onClose, item }) {
               onClose();
             }}
           >
-            اغلاق
+            {t("itemForm.close")}
           </button>
         </div>
       </form>

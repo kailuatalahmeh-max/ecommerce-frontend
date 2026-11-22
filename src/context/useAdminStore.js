@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axiosAdmin from "../utils/axiosAdmin";
 import toast from "react-hot-toast";
+import i18n from "../i18n";
 import { confirmDialog } from "./useConfirmStore";
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -28,7 +29,7 @@ export const useAdminStore = create((set, get) => ({
         itemQuantity: Number(formInputData.itemQuantity),
       })
       .then((response) => {
-        toast.success("تم أضافة العنصر بنجاح!", {
+        toast.success(i18n.t("itemForm.added"), {
           style: { color: "green" },
         });
         const newProductFromServer = response.data?.data;
@@ -64,21 +65,21 @@ export const useAdminStore = create((set, get) => ({
         setItemsData((prev) =>
           prev.map((i) => (i._id === id ? updatedItem : i)),
         );
-        toast.success("تم التعديل بنجاح");
+        toast.success(i18n.t("itemForm.edited"));
         onClose();
       })
       .catch((err) => {
         const errorMessage =
-          err.response?.data?.message || "فشل التعديل يرجى المحاولة لاحقاً!";
+          err.response?.data?.message || i18n.t("itemForm.editFailed");
         toast.error(errorMessage);
       });
   },
 
   handleDeleteItem: ({ id, setItemsData }) => {
     return confirmDialog({
-      title: "حذف المنتج",
-      message: "هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذه العملية.",
-      confirmText: "🗑️ حذف",
+      title: i18n.t("itemForm.confirmDeleteTitle"),
+      message: i18n.t("itemForm.confirmDeleteMessage"),
+      confirmText: i18n.t("itemForm.confirmDeleteButton"),
       variant: "danger",
       onConfirm: () =>
         axiosAdmin
@@ -86,13 +87,13 @@ export const useAdminStore = create((set, get) => ({
           .then(() => {
             // تحديث بالقيمة الأحدث (وليس نسخة قديمة من القائمة)
             setItemsData((prev) => prev.filter((item) => item._id !== id));
-            toast.success("تم حذف العنصر بنجاح!", {
+            toast.success(i18n.t("itemForm.deleted"), {
               style: { color: "green" },
             });
           })
           .catch((err) => {
             const errorMessage =
-              err.response?.data?.message || "فشل الحذف، يرجى المحاولة لاحقاً!";
+              err.response?.data?.message || i18n.t("itemForm.deleteFailed");
             toast.error(errorMessage);
           }),
     });
@@ -107,7 +108,7 @@ export const useAdminStore = create((set, get) => ({
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "فشل احضار البيانات!");
+        toast.error(serverErrorMessage || i18n.t("common.fetchFailed"));
       });
   },
 
@@ -123,12 +124,12 @@ export const useAdminStore = create((set, get) => ({
 
         set({ ordersData: updatedOrders });
 
-        toast.success("تم تحديث حالة الطلب بنجاح");
+        toast.success(i18n.t("adminOrders.statusUpdated"));
       })
 
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "حدث خطأ ما");
+        toast.error(serverErrorMessage || i18n.t("common.errorGeneric"));
       });
   },
 
@@ -136,11 +137,11 @@ export const useAdminStore = create((set, get) => ({
     axiosAdmin
       .post(`${apiUrl}/api/admins`, formData)
       .then((res) => {
-        toast.success(res.data.message || "تم إنشاء حساب الإدارة بنجاح!");
+        toast.success(res.data.message || i18n.t("createAdmin.created"));
         setFormData({ fullName: "", email: "", password: "", role: "admin" });
       })
       .catch((err) => {
-        toast.error(err.response?.data?.message || "حدث خطأ ما");
+        toast.error(err.response?.data?.message || i18n.t("common.errorGeneric"));
       })
       .finally(() => setLoading(false));
   },
@@ -156,7 +157,7 @@ export const useAdminStore = create((set, get) => ({
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "حدث خطأ ما");
+        toast.error(serverErrorMessage || i18n.t("common.errorGeneric"));
       })
       .finally(() => {
         set({ analyticsLoading: false });
@@ -172,7 +173,7 @@ export const useAdminStore = create((set, get) => ({
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "حدث خطأ ما");
+        toast.error(serverErrorMessage || i18n.t("common.errorGeneric"));
       });
   },
 
@@ -184,11 +185,11 @@ export const useAdminStore = create((set, get) => ({
           admin._id === adminId ? { ...admin, isActive: false } : admin,
         );
         set({ adminsData: updatedAdmins });
-        toast.success("تم تعطيل حساب الأدمن بنجاح");
+        toast.success(i18n.t("adminsPage.disabled"));
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "حدث خطأ ما");
+        toast.error(serverErrorMessage || i18n.t("common.errorGeneric"));
       });
   },
 
@@ -200,11 +201,11 @@ export const useAdminStore = create((set, get) => ({
           admin._id === adminId ? { ...admin, isActive: true } : admin,
         );
         set({ adminsData: updatedAdmins });
-        toast.success("تم تفعيل حساب الأدمن بنجاح");
+        toast.success(i18n.t("adminsPage.enabled"));
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "حدث خطأ ما");
+        toast.error(serverErrorMessage || i18n.t("common.errorGeneric"));
       });
   },
 }));

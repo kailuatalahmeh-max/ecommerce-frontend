@@ -4,7 +4,6 @@
   left: 20px;
   bottom: calc(20px + env(safe-area-inset-bottom));
   z-index: 900; /* أقل من المودالات (السلة، التعديل...) حتى تغطيه */
-  direction: rtl;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -48,8 +47,9 @@
   flex-shrink: 0;
 }
 
-.spacer {
-  display: none;
+/* السهم يشير لليمين في العربية، ولليسار في الإنجليزية */
+:global([dir="ltr"]) .icon {
+  transform: scaleX(-1);
 }
 
 @keyframes popIn {
@@ -70,10 +70,5 @@
     bottom: calc(14px + env(safe-area-inset-bottom));
     padding: 12px 18px;
     font-size: 14px;
-  }
-
-  .spacer {
-    display: block;
-    height: 76px;
   }
 }

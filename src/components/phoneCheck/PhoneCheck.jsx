@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useOrderStore } from "../../context/useOrderStore";
 import styles from "./PhoneCheck.module.css";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { COUNTRY_CODES } from "../../utils/constants";
 
 export default function PhoneCheck({ handleClose }) {
+  const { t } = useTranslation();
   const getMyOrder = useOrderStore((state) => state.getMyOrder);
   const navigate = useNavigate();
 
@@ -36,22 +38,20 @@ export default function PhoneCheck({ handleClose }) {
       >
         <div className={styles.iconContainer}>📱</div>
 
-        <h2 className={styles.title}>التحقق من رقم الهاتف</h2>
-        <p className={styles.subtitle}>
-          أدخل رقم هاتفك لنتمكن من العثور على طلباتك وتأمين حسابك.
-        </p>
+        <h2 className={styles.title}>{t("phoneCheck.title")}</h2>
+        <p className={styles.subtitle}>{t("phoneCheck.subtitle")}</p>
 
         <div className={`${styles.inputWrapper} ${styles.phoneRow}`}>
           <select
             name="countryCode"
-            aria-label="كود الدولة"
+            aria-label={t("phoneCheck.countryCode")}
             value={countryCode}
             onChange={(e) => setCountryCode(e.target.value)}
             className={styles.select}
           >
             {COUNTRY_CODES.map((cc) => (
               <option key={cc.value} value={cc.value}>
-                {cc.label}
+                {t(cc.labelKey)}
               </option>
             ))}
           </select>
@@ -73,7 +73,7 @@ export default function PhoneCheck({ handleClose }) {
           className={styles.submitBtn}
           disabled={!phoneNumber.trim()}
         >
-          إرسال كود التحقق ←
+          {t("phoneCheck.submit")}
         </button>
         <button
           type="button"
@@ -82,7 +82,7 @@ export default function PhoneCheck({ handleClose }) {
             handleClose();
           }}
         >
-          إغلاق
+          {t("phoneCheck.close")}
         </button>
       </form>
     </div>

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import i18n from "../i18n";
 
 const ItemContext = createContext();
 
@@ -19,7 +20,7 @@ export default function ItemProvider({ children }) {
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
-        toast.error(serverErrorMessage || "فشل جلب البيانات!");
+        toast.error(serverErrorMessage || i18n.t("common.fetchFailed"));
       });
   }, []);
 

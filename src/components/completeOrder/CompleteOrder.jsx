@@ -1,34 +1,9 @@
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./CompleteOrder.module.css";
 import { useOrderStore } from "../../context/useOrderStore";
 import { ItemContext } from "../../context/ItemContext";
-import { COUNTRY_CODES } from "../../utils/constants";
-
-const countryCode = COUNTRY_CODES;
-
-const regions = [
-  { value: "hebron", label: "الخليل" },
-  { value: "dura", label: "دورا" },
-  { value: "al-fawwar", label: "الفوار" },
-  { value: "bani-naim", label: "بني نعيم" },
-  { value: "yatta", label: "يطا" },
-  { value: "halhul", label: "حلحول" },
-  { value: "beit-ummur", label: "بيت أمر" },
-  { value: "al-dhaheriyeh", label: "الظاهرية" },
-  { value: "as-samu", label: "السموع" },
-  { value: "sa-ir", label: "سعير" },
-  { value: "surif", label: "صوريف" },
-  { value: "tarqumiyah", label: "ترقوميا" },
-  { value: "idhna", label: "إذنا" },
-  { value: "beit-kahil", label: "بيت كاحل" },
-  { value: "beit-awwa", label: "بيت عوا" },
-  { value: "al-arrub", label: "مخيم العروب" },
-  { value: "kharas", label: "خاراس" },
-  { value: "nuba", label: "نوبا" },
-  { value: "ash-shuyukh", label: "الشيوخ" },
-  { value: "taffuh", label: "تفوح" },
-  { value: "deir-sammit", label: "دير سامت" },
-];
+import { COUNTRY_CODES, REGIONS } from "../../utils/constants";
 
 export default function CompleteOrder({
   onClose,
@@ -37,6 +12,7 @@ export default function CompleteOrder({
   purchaseType,
   totalPrice,
 }) {
+  const { t } = useTranslation();
   const setDirectPurchaseData = useOrderStore(
     (state) => state.setDirectPurchaseData,
   );
@@ -92,21 +68,22 @@ export default function CompleteOrder({
         <button
           type="button"
           className={styles.closeModal}
+          aria-label={t("common.close")}
           onClick={() => {
             onClose();
           }}
         >
           ❌
         </button>
-        <h2 className={styles.titleForm}>Complete Order</h2>
+        <h2 className={styles.titleForm}>{t("checkout.title")}</h2>
         <hr className={styles.hr} />
         <label className={styles.label}>
-          Your full name:{" "}
+          {t("checkout.fullName")}
           <input
             className={styles.input}
             type="text"
             required
-            placeholder="Two-part name"
+            placeholder={t("checkout.fullNamePlaceholder")}
             value={formData.fullName}
             onChange={(e) => {
               setFormData((p) => ({ ...p, fullName: e.target.value }));
@@ -115,7 +92,7 @@ export default function CompleteOrder({
         </label>
 
         <label className={styles.label}>
-          Your phone number:{" "}
+          {t("checkout.phone")}
           <div className={styles.phoneContainer}>
             <select
               name="countryCode"
@@ -125,13 +102,13 @@ export default function CompleteOrder({
                 setFormData((p) => ({ ...p, countryCode: e.target.value }))
               }
             >
-              {countryCode.map((CC) => (
+              {COUNTRY_CODES.map((CC) => (
                 <option
                   key={CC.value}
                   value={CC.value}
                   className={styles.optionsSection}
                 >
-                  {CC.label}
+                  {t(CC.labelKey)}
                 </option>
               ))}
             </select>
@@ -139,7 +116,7 @@ export default function CompleteOrder({
               className={styles.inputPhone}
               type="tel"
               required
-              placeholder="A phone number to contact you"
+              placeholder={t("checkout.phonePlaceholder")}
               value={formData.phoneNumber}
               onChange={(e) => {
                 setFormData((p) => ({ ...p, phoneNumber: e.target.value }));
@@ -148,7 +125,7 @@ export default function CompleteOrder({
           </div>
         </label>
         <label className={styles.label}>
-          Region:{" "}
+          {t("checkout.region")}
           <select
             className={styles.input}
             required
@@ -158,15 +135,15 @@ export default function CompleteOrder({
             }
           >
             <option value="" disabled>
-              select region
+              {t("checkout.selectRegion")}
             </option>
-            {regions.map((r) => (
+            {REGIONS.map((region) => (
               <option
-                key={r.value}
-                value={r.value}
+                key={region}
+                value={region}
                 className={styles.selectRegion}
               >
-                {r.label}
+                {t(`regions.${region}`)}
               </option>
             ))}
           </select>
@@ -174,7 +151,7 @@ export default function CompleteOrder({
 
         {totalPrice && (
           <div className={styles.summaryBox}>
-            <span>total price: </span>
+            <span>{t("checkout.totalPrice")} </span>
             <strong>{totalPrice} ₪</strong>
           </div>
         )}
@@ -190,7 +167,7 @@ export default function CompleteOrder({
             submitting
           }
         >
-          {submitting ? "جاري الإرسال..." : "completion"}
+          {submitting ? t("checkout.submitting") : t("checkout.submit")}
         </button>
       </form>
     </div>

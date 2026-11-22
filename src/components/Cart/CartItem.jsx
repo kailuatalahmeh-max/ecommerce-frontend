@@ -1,20 +1,22 @@
 import styles from "./Cart.module.css";
+import { useTranslation } from "react-i18next";
 import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
 
 export default function CartItem({ item, onReduce, onAdd, onDelete }) {
+  const { t } = useTranslation();
+
   return (
     <main className={styles.mainCart}>
       <div className={styles.itemDetails}>
         <img
           className={styles.itemImage}
           src={getFirstImageUrl(item.itemId)}
-          alt="صورة المنتج"
+          alt={t("cart.imageAlt")}
         />
         <div className={styles.itemNameAndPrice}>
           <p className={styles.itemName}>{item.itemId?.itemName}</p>
           <p className={styles.itemPrice}>
-            Price:
-            {" " + item.itemId?.itemPrice}$
+            {t("cart.itemPrice", { price: item.itemId?.itemPrice })}
           </p>
         </div>
       </div>

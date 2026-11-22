@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import styles from "./AdminManagement.module.css";
 import { useAdminStore } from "../../context/useAdminStore";
 
 export default function AdminManagement() {
+  const { t } = useTranslation();
   const createAdminAccount = useAdminStore((state) => state.createAdminAccount);
 
   const [formData, setFormData] = useState({
@@ -21,7 +23,7 @@ export default function AdminManagement() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.fullName || !formData.email || !formData.password) {
-      return toast.error("يرجى ملء جميع الحقول المطلوبة!");
+      return toast.error(t("createAdmin.fillAll"));
     }
 
     setLoading(true);
@@ -37,27 +39,27 @@ export default function AdminManagement() {
     <div className={styles.managementContainer}>
       <div>
         <div className={styles.managementHeader}>
-          <h2>👥 إدارة شؤون الموظفين والصلاحيات</h2>
-          <p>بصفتك مديراً عاماً، يمكنك إنشاء حسابات جديدة وتعيين الأدوار.</p>
+          <h2>{t("createAdmin.title")}</h2>
+          <p>{t("createAdmin.subtitle")}</p>
         </div>
 
         <div className={styles.contentGrid}>
           <section className={styles.formCard}>
-            <h3>➕ إنشاء حساب إداري جديد</h3>
+            <h3>{t("createAdmin.formTitle")}</h3>
             <form onSubmit={handleSubmit} className={styles.adminForm}>
               <label className={styles.inputGroup}>
-                <span>الاسم الكامل</span>
+                <span>{t("createAdmin.fullName")}</span>
                 <input
                   type="text"
                   name="fullName"
-                  placeholder="أدخل اسم الموظف الثنائي"
+                  placeholder={t("createAdmin.fullNamePlaceholder")}
                   value={formData.fullName}
                   onChange={handleChange}
                 />
               </label>
 
               <label className={styles.inputGroup}>
-                <span>البريد الإلكتروني الرسمي</span>
+                <span>{t("createAdmin.email")}</span>
                 <input
                   type="email"
                   name="email"
@@ -68,7 +70,7 @@ export default function AdminManagement() {
               </label>
 
               <label className={styles.inputGroup}>
-                <span>كلمة المرور المؤقتة</span>
+                <span>{t("createAdmin.password")}</span>
                 <input
                   type="password"
                   name="password"
@@ -79,16 +81,18 @@ export default function AdminManagement() {
               </label>
 
               <label className={styles.inputGroup}>
-                <span>تحديد مستوى الصلاحية (Role)</span>
+                <span>{t("createAdmin.role")}</span>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
                 >
-                  <option value="admin">أدمن عادي (إدارة منتجات وطلبات)</option>
-                  <option value="moderator">مشرف محتوى (تعديل طفيف)</option>
+                  <option value="admin">{t("createAdmin.roleAdmin")}</option>
+                  <option value="moderator">
+                    {t("createAdmin.roleModerator")}
+                  </option>
                   <option value="super_admin">
-                    مدير عام (صلاحيات كاملة للموقع)
+                    {t("createAdmin.roleSuperAdmin")}
                   </option>
                 </select>
               </label>
@@ -98,20 +102,17 @@ export default function AdminManagement() {
                 className={styles.submitBtn}
                 disabled={loading}
               >
-                {loading ? "جاري الإنشاء..." : "🚀 تفعيل الحساب فوراً"}
+                {loading ? t("createAdmin.submitting") : t("createAdmin.submit")}
               </button>
             </form>
           </section>
 
           <section className={styles.infoCard}>
-            <h3>🔒 إرشادات الأمان للمدير العام</h3>
+            <h3>{t("createAdmin.securityTitle")}</h3>
             <ul className={styles.infoList}>
-              <li>لا تقم بمشاركة هذا الرابط مع جهات خارجية.</li>
-              <li>يجب تعيين كلمة مرور معقدة تحتوي على رموز وأرقام.</li>
-              <li>
-                صلاحية الـ <b>Super Admin</b> تمنح الحساب قدرات كاملة، فاحذر لمن
-                تعطيها.
-              </li>
+              <li>{t("createAdmin.tip1")}</li>
+              <li>{t("createAdmin.tip2")}</li>
+              <li>{t("createAdmin.tip3")}</li>
             </ul>
           </section>
         </div>

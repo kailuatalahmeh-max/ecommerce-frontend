@@ -22,11 +22,12 @@ import { create } from "zustand";
   - أثناء تنفيذ onConfirm كل الأزرار مقفلة، ولا يمكن الإغلاق.
 */
 
+// النصوص الفارغة تأخذ الترجمة الافتراضية في ConfirmDialog (common.*)
 const DEFAULTS = {
-  title: "تأكيد العملية",
-  message: "هل أنت متأكد؟",
-  confirmText: "تأكيد",
-  cancelText: "إلغاء",
+  title: "",
+  message: "",
+  confirmText: "",
+  cancelText: "",
   variant: "primary",
   icon: null,
   onConfirm: null,

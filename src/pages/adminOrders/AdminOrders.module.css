@@ -9,7 +9,6 @@
     -apple-system,
     sans-serif;
   color: #f8fafc;
-  direction: rtl;
 }
 
 /* Header */
@@ -83,16 +82,16 @@
 
 /* حدود ملونة عميقة ومشبّعة */
 .pendingBorder {
-  border-right: 5px solid #d97706;
+  border-inline-start: 5px solid #d97706;
 }
 .acceptedBorder {
-  border-right: 5px solid #2563eb;
+  border-inline-start: 5px solid #2563eb;
 }
 .deliveredBorder {
-  border-right: 5px solid #059669;
+  border-inline-start: 5px solid #059669;
 }
 .cancelledBorder {
-  border-right: 5px solid #ef4444;
+  border-inline-start: 5px solid #ef4444;
 }
 
 /* Controls Section */
@@ -182,7 +181,7 @@
   display: inline-block;
   font-size: 0.875rem;
   color: #cbd5e1;
-  margin-left: 1.25rem;
+  margin-inline-end: 1.25rem;
   margin-top: 0.4rem;
 }
 

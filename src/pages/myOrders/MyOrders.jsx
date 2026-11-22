@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import styles from "./MyOrders.module.css";
 import { useOrderStore } from "../../context/useOrderStore";
 import { useNavigate } from "react-router-dom";
+import { getDateLocale } from "../../i18n";
+
+const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
 export default function MyOrders() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [statusFilter, setStatusFilter] = useState("");
@@ -24,8 +29,10 @@ export default function MyOrders() {
     if (!localStorage.getItem("guestToken")) return;
 
     fetchOrdersByToken().catch((err) => {
-      toast.error(err.response?.data?.message || "فشل احضار الطلبات");
+      toast.error(err.response?.data?.message || t("myOrders.fetchFailed"));
     });
+    // t يتغير مع اللغة؛ لا نريد إعادة الجلب عند تغيير اللغة
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchOrdersByToken]);
 
   const filteredOrders = myOrderData?.filter((order) => {
@@ -45,16 +52,14 @@ export default function MyOrders() {
       <div className={styles.myPage}>
         <div className={styles.stateBox}>
           <div className={styles.stateIcon}>📱</div>
-          <h2 className={styles.stateTitle}>أدخل رقم هاتفك لعرض طلباتك</h2>
-          <p className={styles.stateText}>
-            اضغط على 🎁 My Orders في الصفحة الرئيسية وأدخل رقمك.
-          </p>
+          <h2 className={styles.stateTitle}>{t("myOrders.enterNumberTitle")}</h2>
+          <p className={styles.stateText}>{t("myOrders.enterNumberText")}</p>
           <button
             type="button"
             className={`btn-global ${styles.BtnBack}`}
             onClick={() => navigate("/")}
           >
-            الصفحة الرئيسية
+            {t("myOrders.home")}
           </button>
         </div>
       </div>
@@ -67,7 +72,7 @@ export default function MyOrders() {
       <div className={styles.myPage}>
         <div className={styles.stateBox}>
           <span className={styles.spinner} aria-hidden="true" />
-          <p className={styles.stateText}>جاري تحميل طلباتك...</p>
+          <p className={styles.stateText}>{t("myOrders.loadingOrders")}</p>
         </div>
       </div>
     );
@@ -76,18 +81,21 @@ export default function MyOrders() {
   return (
     <div className={styles.myPage}>
       <header className={styles.headerSection}>
-        <h1 className={styles.titlePage}>My Orders</h1>
+        <h1 className={styles.titlePage}>{t("myOrders.title")}</h1>
         <div className={styles.selectWrapper}>
           <select
             className={styles.select}
+            value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value);
             }}
           >
-            <option value="">All Orders</option>
-            <option value="Pending">Pending</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
+            <option value="">{t("myOrders.allOrders")}</option>
+            {STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {t(`status.${status}`)}
+              </option>
+            ))}
           </select>
         </div>
       </header>
@@ -95,16 +103,16 @@ export default function MyOrders() {
       <main className={styles.mainSection}>
         <div className={styles.orderCard}>
           <div className={styles.cardBody}>
-            <p className={styles.itemsTitle}>Items Summary</p>
+            <p className={styles.itemsTitle}>{t("myOrders.itemsSummary")}</p>
             {filteredOrders?.length === 0 && (
-              <p className={styles.stateText}>لا توجد طلبات بهذه الحالة</p>
+              <p className={styles.stateText}>{t("myOrders.noneWithStatus")}</p>
             )}
             {filteredOrders?.map((order) => {
               return (
                 <div key={order._id} className={styles.orderCard}>
                   <span className={styles.spanDate}>
                     📅{" "}
-                    {new Date(order.createdAt).toLocaleString("en-US", {
+                    {new Date(order.createdAt).toLocaleString(getDateLocale(), {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -114,12 +122,14 @@ export default function MyOrders() {
                       hour12: true,
                     })}
                   </span>
-                  <span className={styles.spanStatus}>{order.status}</span>
+                  <span className={styles.spanStatus}>
+                    {t(`status.${order.status}`, order.status)}
+                  </span>
                   <ul>
                     {order.items.map((item) => (
                       <li key={item._id}>
                         <span>{item.itemName}</span>
-                        <span>Qty: {item.quantity}</span>
+                        <span>{t("myOrders.qty", { count: item.quantity })}</span>
                       </li>
                     ))}
                   </ul>
@@ -131,7 +141,9 @@ export default function MyOrders() {
 
           <div className={styles.cardFooter}>
             <div className={styles.priceContainer}>
-              <span className={styles.totalLabel}>Total Amount:</span>
+              <span className={styles.totalLabel}>
+                {t("myOrders.totalAmount")}
+              </span>
               <span className={styles.totalPrice}>${totalPrice}</span>
             </div>
 
@@ -140,7 +152,7 @@ export default function MyOrders() {
               className={`btn-global ${styles.BtnBack}`}
               onClick={() => navigate("/")}
             >
-              Continue Shopping →
+              {t("myOrders.continueShopping")}
             </button>
           </div>
         </div>
@@ -149,11 +161,13 @@ export default function MyOrders() {
       <footer className={styles.footerSection}>
         <div className={styles.supportDetails}>
           <h3 className={styles.supportContactDetails}>
-            Need Help? Contact Support
+            {t("myOrders.supportTitle")}
           </h3>
           <div className={styles.contactGrid}>
             <p className={styles.supportEmail}>📧 support@myshop.com</p>
-            <p className={styles.supportPhoneNumber}>📞 +970 000 000 000</p>
+            <p className={styles.supportPhoneNumber} dir="ltr">
+              📞 +970 000 000 000
+            </p>
           </div>
         </div>
       </footer>

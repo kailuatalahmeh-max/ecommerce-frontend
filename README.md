@@ -12,6 +12,7 @@ Main features:
 - "My orders" page for guests (by phone number and guest token).
 - Admin dashboard: products, orders, admin accounts, and analytics.
 - Pages protected by role (`admin`, `moderator`, `super_admin`).
+- Two languages: **Arabic** (default, right-to-left) and **English** (left-to-right), with a switch button on every page.
 
 ---
 
@@ -27,6 +28,7 @@ Main features:
 | **jwt-decode**       | Reading the role from the admin token     |
 | **uuid**             | Creating the guest ID for the cart        |
 | **react-hot-toast**  | Notifications                             |
+| **i18next** + **react-i18next** | Translations (Arabic / English) |
 | **CSS Modules**      | Styling for each component                |
 
 ---
@@ -41,8 +43,9 @@ frontend/
 ├── src/
 │   ├── App.jsx               # All page routes
 │   ├── main.jsx              # Entry point
-│   ├── components/           # Reusable parts (cart, item list, phone check...)
+│   ├── components/           # Reusable parts (cart, item list, phone check, back button, confirm dialog, language switcher...)
 │   ├── context/              # Zustand stores and React context
+│   ├── i18n/                 # Translations: index.js (setup), ar.json, en.json
 │   ├── pages/                # One folder per page
 │   └── utils/                # Helpers (axiosAdmin, constants, URL helpers)
 └── vercel.json               # Sends all paths to index.html (for React Router)
@@ -57,6 +60,7 @@ frontend/
 | `useOrderStore.js` | Purchases and guest order tracking                           |
 | `useAuthStore.js`  | Admin login state (token, role, admin ID)                    |
 | `useAdminStore.js` | Admin actions: products, orders, admins, analytics           |
+| `useConfirmStore.js` | `confirmDialog()`: the site's confirm popup (instead of `window.confirm`) |
 
 ---
 
@@ -118,6 +122,35 @@ The app runs at `http://localhost:5173` (Vite default).
 | `/admin/admins-management`   | Admin accounts           | `super_admin`                      |
 | `/admin/analytics`           | Analytics                | `super_admin`                      |
 | `*`                          | Not found (404)          | Everyone                           |
+
+---
+
+## 🌐 Languages (i18n)
+
+The site supports **Arabic** and **English** with [react-i18next](https://react.i18next.com/).
+
+| What | How |
+| ---- | --- |
+| Default language | Arabic (`ar`) |
+| Switch | The 🌐 button at the bottom-right of every page (`components/languageSwitcher/`) |
+| Saved choice | `localStorage` (key: `lang`) |
+| Direction | `<html dir>` changes automatically: `rtl` for Arabic, `ltr` for English |
+| Dates | Shown in the chosen language, with Latin digits (0–9) |
+| Text files | `src/i18n/ar.json` and `src/i18n/en.json` (same keys in both) |
+
+**To add new text:** add the same key to **both** JSON files, then use it in a component:
+
+```jsx
+import { useTranslation } from "react-i18next";
+
+const { t } = useTranslation();
+<p>{t("cart.emptyText")}</p>
+<p>{t("stock.few", { count: 3 })}</p>   // with a value: "Only {{count}} left"
+```
+
+Outside React components (for example in Zustand stores), use `i18n.t("key")` from `src/i18n`.
+
+> Messages that come from the backend (for example API errors) are in Arabic only. Product names come from the database and are not translated.
 
 ---
 

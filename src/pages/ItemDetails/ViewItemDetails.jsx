@@ -1,6 +1,7 @@
 import styles from "./ViewItemDetails.module.css";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import { ItemContext } from "../../context/ItemContext";
 import { useCartStore } from "../../context/useCartStore";
@@ -10,6 +11,7 @@ import { getAllImageUrls } from "../../utils/getFirstImageUrl";
 
 
 export default function ViewItemDetails() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { itemsData } = useContext(ItemContext);
   const thisItem = itemsData?.find((item) => item._id === id);
@@ -22,7 +24,7 @@ export default function ViewItemDetails() {
   if (!itemsData) {
     return (
       <div className={styles.bodyPage}>
-        <p>Loading data center...</p>
+        <p>{t("item.loading")}</p>
       </div>
     );
   }
@@ -30,7 +32,7 @@ export default function ViewItemDetails() {
   if (!thisItem) {
     return (
       <div className={styles.bodyPage}>
-        <p>Sorry, product not found!</p>{" "}
+        <p>{t("item.notFound")}</p>
       </div>
     );
   }
@@ -41,7 +43,7 @@ export default function ViewItemDetails() {
 
   function handleAddToCart() {
     if (isOutOfStock || quantity <= 0 || quantity > thisItem.itemQuantity) {
-      toast.error("الكمية المطلوبة غير متوفرة");
+      toast.error(t("item.notAvailable"));
       return;
     }
 
@@ -50,7 +52,7 @@ export default function ViewItemDetails() {
 
   function handleBuyNow() {
     if (isOutOfStock || quantity <= 0 || quantity > thisItem.itemQuantity) {
-      toast.error("الكمية المطلوبة غير متوفرة");
+      toast.error(t("item.notAvailable"));
       return;
     }
     setOpenCompleted(true);
@@ -99,15 +101,15 @@ export default function ViewItemDetails() {
         <div className={styles.itemDetails}>
           <h2 className={styles.itemName}>{thisItem.itemName}</h2>
           <div className={styles.priceSection}>
-            <p className={styles.priceWord}>Price:</p>
+            <p className={styles.priceWord}>{t("item.price")}</p>
             <span className={styles.lastPrice}>{thisItem.itemPrice}$</span>
 
-            <p className={styles.priceWord}>total Price:</p>
+            <p className={styles.priceWord}>{t("item.totalPrice")}</p>
             <span className={styles.lastPrice}>{totalPrice.toFixed(2)}$</span>
           </div>
 
           <p className={styles.p_availableQuantity}>
-            Available Quantity:{" "}
+            {t("item.availableQuantity")}{" "}
             <span
               className={styles.span_availableQuantity}
               style={{
@@ -128,9 +130,9 @@ export default function ViewItemDetails() {
             className={styles.quantityForm}
           >
             <label>
-              Select Quantity{" "}
+              {t("item.selectQuantity")}{" "}
               <span className={styles.maximumQuantity}>
-                Max quantity available ({thisItem.itemQuantity}){" "}
+                {t("item.maxQuantity", { count: thisItem.itemQuantity })}
               </span>
               <input
                 type="number"
@@ -159,7 +161,7 @@ export default function ViewItemDetails() {
                   handleBuyNow();
                 }}
               >
-                {isOutOfStock ? "Out of stock" : "Buy this item"}
+                {isOutOfStock ? t("item.outOfStock") : t("item.buyNow")}
               </button>
               <button
                 disabled={isOutOfStock}
@@ -169,14 +171,12 @@ export default function ViewItemDetails() {
                 }}
                 className={`${styles.btnSecondary} btn-global`}
               >
-                🛒 Add to cart
+                {t("item.addToCart")}
               </button>
             </div>
           </form>
-          <h5 className={styles.codTitle}>Cash on Delivery</h5>
-          <p className={styles.desc}>
-            We deliver straight to your doorstep. Pay on delivery.
-          </p>
+          <h5 className={styles.codTitle}>{t("item.codTitle")}</h5>
+          <p className={styles.desc}>{t("item.codDesc")}</p>
         </div>
       </div>
     </div>

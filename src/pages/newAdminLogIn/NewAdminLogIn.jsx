@@ -2,11 +2,13 @@ import { useState } from "react";
 import styles from "./NewAdminLogIn.module.css";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../context/useAuthStore";
 
 export default function NewAdminLogIn() {
+  const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_URL;
   const login = useAuthStore((state) => state.login);
 
@@ -25,7 +27,7 @@ export default function NewAdminLogIn() {
       adminData.password.trim().length === 0;
 
     if (invalid) {
-      toast.error("يرجى ملء جميع الحقول!");
+      toast.error(t("login.fillAll"));
       return;
     }
 
@@ -37,7 +39,7 @@ export default function NewAdminLogIn() {
       })
       .catch((error) => {
         const errorMessage =
-          error.response?.data?.message || "خطأ غير متوقع في السيرفر";
+          error.response?.data?.message || t("login.serverError");
         toast.error(errorMessage);
       });
   }
@@ -45,15 +47,15 @@ export default function NewAdminLogIn() {
   return (
     <div className={styles.page}>
       <section className={styles.infoCard}>
-        <h3>🔒 إرشادات تسجيل الدخول</h3>
+        <h3>{t("login.infoTitle")}</h3>
         <ul className={styles.infoList}>
-          <li>يجب إدخال اسم الأدمن والبريد الإلكتروني وكلمة المرور.</li>
-          <li>يجب أن تكون هذه البيانات صادرة من المدير العام فقط.</li>
+          <li>{t("login.info1")}</li>
+          <li>{t("login.info2")}</li>
         </ul>
       </section>
       <form onSubmit={handleSubmit} className={styles.newAdminForm}>
         <label className={styles.inputField}>
-          <span>البريد الإلكتروني الرسمي</span>
+          <span>{t("login.email")}</span>
           <input
             type="email"
             placeholder="example@gmail.com"
@@ -68,7 +70,7 @@ export default function NewAdminLogIn() {
         </label>
 
         <label className={styles.inputField}>
-          <span>كلمة المرور </span>
+          <span>{t("login.password")}</span>
           <input
             type="password"
             placeholder="••••••••"
@@ -90,7 +92,7 @@ export default function NewAdminLogIn() {
             adminData.password.trim().length === 0
           }
         >
-          تسجيل دخول
+          {t("login.submit")}
         </button>
       </form>
     </div>

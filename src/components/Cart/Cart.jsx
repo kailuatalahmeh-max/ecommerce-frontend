@@ -1,5 +1,6 @@
 import styles from "./Cart.module.css";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useCartStore } from "../../context/useCartStore";
 
 import CompleteOrder from "../completeOrder/CompleteOrder";
@@ -7,6 +8,7 @@ import Portal from "../Portal/Portal";
 import CartItem from "./CartItem";
 
 export default function Cart({ onClose }) {
+  const { t } = useTranslation();
   const cartData = useCartStore((state) => state.cartData);
   const deleteItem = useCartStore((state) => state.deleteItem);
   const addQuantity = useCartStore((state) => state.addQuantity);
@@ -25,19 +27,22 @@ export default function Cart({ onClose }) {
     <Portal>
       <div className={styles.bodyPage} onClick={onClose}>
         <div className={styles.modalBody} onClick={(e) => e.stopPropagation()}>
-          <button type="button" className={styles.closeModal} onClick={onClose}>
+          <button
+            type="button"
+            className={styles.closeModal}
+            onClick={onClose}
+            aria-label={t("common.close")}
+          >
             ❌
           </button>
-          <h2 className={styles.CartTitle}>Shopping Cart🛒</h2>
+          <h2 className={styles.CartTitle}>{t("cart.title")}</h2>
           {cartData?.length === 0 ? (
             <main className={styles.MainContainerCart}>
               <h2 className={styles.CartEmptyMessage}>
-                Your cart is empty 🛒{" "}
+                {t("cart.emptyTitle")}
               </h2>
 
-              <p className={styles.CartMainMessage}>
-                You have not added any products yet.{" "}
-              </p>
+              <p className={styles.CartMainMessage}>{t("cart.emptyText")}</p>
 
               <button
                 className={styles.StartShopBtn}
@@ -46,7 +51,7 @@ export default function Cart({ onClose }) {
                   onClose();
                 }}
               >
-                Start shopping{" "}
+                {t("cart.startShopping")}
               </button>
             </main>
           ) : (
@@ -65,9 +70,9 @@ export default function Cart({ onClose }) {
           <div className={styles.footerSection}>
             <p className={styles.CartDetails}>
               <span className={styles.spanQuantity}>{cartData?.length}</span>
-              item in your cart{" "}
+              {t("cart.itemsInCart")}{" "}
               <span className={styles.spanQuantity}>
-                total price: {totalPrice()}$
+                {t("cart.total", { price: totalPrice() })}
               </span>
             </p>
             <button
@@ -77,7 +82,7 @@ export default function Cart({ onClose }) {
                 clearCart();
               }}
             >
-              Delete All{" "}
+              {t("cart.deleteAll")}
             </button>
           </div>
           <hr className={styles.hr} />
@@ -89,7 +94,7 @@ export default function Cart({ onClose }) {
                 onClose();
               }}
             >
-              Add other products{" "}
+              {t("cart.addMore")}
             </button>
             <button
               type="button"
@@ -99,7 +104,7 @@ export default function Cart({ onClose }) {
               }}
               disabled={cartData?.length === 0}
             >
-              Completing your order{" "}
+              {t("cart.checkout")}
             </button>
           </div>
         </div>

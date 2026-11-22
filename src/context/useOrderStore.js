@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
+import i18n from "../i18n";
 import axios from "axios";
 import { useCartStore } from "./useCartStore";
 
@@ -17,7 +18,7 @@ export const useOrderStore = create((set, get) => ({
     setItemsData,
   }) => {
     if (!purchaseDetails) {
-      toast.error("يرجى التأكد من تعبئة البيانات بشكل صحيح");
+      toast.error(i18n.t("checkout.fillData"));
       return;
     }
 
@@ -29,7 +30,7 @@ export const useOrderStore = create((set, get) => ({
       })
       .then((response) => {
         toast.success(
-          response?.data?.message || "تم الشراء! العنصر موجود في صفحة طلباتي",
+          response?.data?.message || i18n.t("checkout.directSuccess"),
         );
         const itemQuantityUpdated =
           response.data?.data?.updatedItem?.itemQuantity;
@@ -47,14 +48,14 @@ export const useOrderStore = create((set, get) => ({
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
         toast.error(
-          serverErrorMessage || "فشل إتمام عملية الشراء، حاول مجدداً",
+          serverErrorMessage || i18n.t("checkout.failed"),
         );
       });
   },
 
   setCartPurchaseData: ({ purchaseDetails }) => {
     if (!purchaseDetails) {
-      toast.error("يرجى التأكد من تعبئة البيانات بشكل صحيح");
+      toast.error(i18n.t("checkout.fillData"));
       return;
     }
 
@@ -66,7 +67,7 @@ export const useOrderStore = create((set, get) => ({
       })
       .then((response) => {
         toast.success(
-          response?.data?.message || "تم الشراء! العناصر موجودة في صفحة طلباتي",
+          response?.data?.message || i18n.t("checkout.cartSuccess"),
         );
 
         useCartStore.getState().clearCartLocal();
@@ -74,7 +75,7 @@ export const useOrderStore = create((set, get) => ({
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
         toast.error(
-          serverErrorMessage || "فشل إتمام عملية الشراء، حاول مجدداً",
+          serverErrorMessage || i18n.t("checkout.failed"),
         );
       });
   },
@@ -134,7 +135,7 @@ export const useOrderStore = create((set, get) => ({
       await get().fetchOrdersByToken();
       navigate("/my-orders");
     } catch (err) {
-      toast.error(err.response?.data?.message || "فشل احضار البيانات");
+      toast.error(err.response?.data?.message || i18n.t("common.fetchFailed"));
     }
   },
 }));

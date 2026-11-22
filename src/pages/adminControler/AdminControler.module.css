@@ -2,7 +2,6 @@
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  direction: rtl;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background:
     radial-gradient(at 100% 0%, rgba(102, 126, 234, 0.12) 0px, transparent 45%),
@@ -231,7 +230,6 @@
   font-size: 0.95rem;
   background: #fff;
   outline: none;
-  direction: rtl;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;

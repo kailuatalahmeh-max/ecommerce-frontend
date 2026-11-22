@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./AddItemData.module.css";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ItemContext } from "../../context/ItemContext";
@@ -11,6 +12,7 @@ import { confirmDialog } from "../../context/useConfirmStore";
 import { cleanUrl } from "../../utils/urlHelpers";
 import { MAX_IMAGES_PER_ITEM } from "../../utils/constants";
 export default function AddItemData() {
+  const { t } = useTranslation();
   const { setItemsData } = useContext(ItemContext);
   const { role } = useAuthStore();
   const addItem = useAdminStore((state) => state.addItem);
@@ -29,7 +31,7 @@ export default function AddItemData() {
 
   function handleAddImageField() {
     if (formInputData.images.length >= MAX_IMAGES_PER_ITEM) {
-      toast.error(`لا يمكن إضافة أكثر من ${MAX_IMAGES_PER_ITEM} صور`);
+      toast.error(t("itemForm.maxImages", { count: MAX_IMAGES_PER_ITEM }));
       return;
     }
     setFormInputData((prev) => ({
@@ -61,7 +63,7 @@ export default function AddItemData() {
     const allowedRoles = ["admin", "moderator", "super_admin"];
 
     if (!allowedRoles.includes(role)) {
-      toast.error("عذرا, ليس لديك رتبة مسؤول لأضافة العنصر!");
+      toast.error(t("common.noPermission"));
       return;
     }
 
@@ -71,7 +73,7 @@ export default function AddItemData() {
       .filter((img) => img.imageURL.length > 0);
 
     if (cleanedImages.length === 0) {
-      toast.error("يرجى إضافة رابط صورة واحد على الأقل");
+      toast.error(t("itemForm.atLeastOneImage"));
       return;
     }
 
@@ -82,9 +84,11 @@ export default function AddItemData() {
     };
 
     confirmDialog({
-      title: "إضافة منتج",
-      message: `هل أنت متأكد من إضافة "${finalData.itemName.trim()}"؟`,
-      confirmText: "➕ إضافة",
+      title: t("itemForm.confirmAddTitle"),
+      message: t("itemForm.confirmAddMessage", {
+        name: finalData.itemName.trim(),
+      }),
+      confirmText: t("itemForm.confirmAddButton"),
       variant: "success",
       onConfirm: () =>
         addItem({
@@ -104,15 +108,17 @@ export default function AddItemData() {
           handleSubmit(e);
         }}
       >
-        <h2 className={styles.formTitle}>أدخل معلومات المنتج</h2>
+        <h2 className={styles.formTitle}>{t("itemForm.addTitle")}</h2>
         <hr className={styles.hrAnderFormTitle} />
         <div className={styles.imagesSection}>
-          <label className={styles.labelImageLink}>روابط الصور:</label>
+          <label className={styles.labelImageLink}>
+            {t("itemForm.imageLinks")}
+          </label>
           {formInputData.images.map((img, index) => (
             <div key={index} className={styles.imageInputRow}>
               <input
                 type="text"
-                placeholder={`رابط الصورة ${index + 1}`}
+                placeholder={t("itemForm.imageN", { n: index + 1 })}
                 className={styles.input}
                 value={img.imageURL}
                 onChange={(e) => handleImageChange(index, e.target.value)}
@@ -133,15 +139,15 @@ export default function AddItemData() {
             className={styles.addImageBtn}
             onClick={handleAddImageField}
           >
-            ➕ إضافة صورة
+            {t("itemForm.addImage")}
           </button>
         </div>
         <label>
-          item name:
+          {t("itemForm.name")}
           <input
             type="text"
             required
-            placeholder="أسم المنتج"
+            placeholder={t("itemForm.namePlaceholder")}
             className={styles.input}
             value={formInputData.itemName}
             onChange={(e) => {
@@ -152,11 +158,11 @@ export default function AddItemData() {
           />
         </label>
         <label>
-          item price:
+          {t("itemForm.price")}
           <input
             type="number"
             required
-            placeholder="سعر المنتج"
+            placeholder={t("itemForm.pricePlaceholder")}
             step="any"
             className={styles.input}
             value={formInputData.itemPrice}
@@ -168,11 +174,11 @@ export default function AddItemData() {
           />
         </label>
         <label>
-          Quantity:
+          {t("itemForm.quantity")}
           <input
             type="number"
             required
-            placeholder="الكمية"
+            placeholder={t("itemForm.quantityPlaceholder")}
             step="any"
             className={styles.input}
             value={formInputData.itemQuantity}
@@ -191,10 +197,10 @@ export default function AddItemData() {
             !formInputData.itemPrice
           }
         >
-          أضافة
+          {t("itemForm.add")}
         </button>
         <Link to="/admin/control-items" className="btn-global btn-primary">
-          لوحة التحكم 🛠️
+          {t("itemForm.controlPanel")}
         </Link>
       </form>
     </div>
