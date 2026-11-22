@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ItemContext } from "../../context/ItemContext";
 import { useCartStore } from "../../context/useCartStore";
 import { useAuthStore } from "../../context/useAuthStore";
-import ItemList from "../../components/showITems/ItemList";
+import ItemList from "../../components/itemList/ItemList";
 import Cart from "../../components/Cart/Cart";
 import PhoneCheck from "../../components/phoneCheck/PhoneCheck";
 export default function Home() {

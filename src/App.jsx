@@ -6,7 +6,7 @@ import { useCartStore } from "./context/useCartStore";
 import Home from "./pages/home/Home";
 import AddItemData from "./pages/addItemData/AddItemData";
 import ViewItemDetails from "./pages/ItemDetails/ViewItemDetails";
-import AdminControler from "./pages/adminControler/AdminControler";
+import AdminController from "./pages/adminController/AdminController";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import AdminManagement from "./pages/adminManagement/AdminManagement";
 import NewAdminLogIn from "./pages/newAdminLogIn/NewAdminLogIn";
@@ -14,7 +14,7 @@ import { SuperAdminManagement } from "./pages/superAdminManagement/SuperAdminMan
 import MyOrders from "./pages/myOrders/MyOrders";
 import AdminOrders from "./pages/adminOrders/AdminOrders";
 import AdminAnalytics from "./pages/adminAnalytics/AdminAnalytics";
-import { ProtectedRoute } from "../Routes/ProtectedRoute";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
 import BackButton from "./components/backButton/BackButton";
 import ConfirmDialog from "./components/confirmDialog/ConfirmDialog";
 import LanguageSwitcher from "./components/languageSwitcher/LanguageSwitcher";
@@ -57,7 +57,7 @@ function App() {
             <ProtectedRoute
               allowedRoles={["admin", "moderator", "super_admin"]}
             >
-              <AdminControler />
+              <AdminController />
             </ProtectedRoute>
           }
         />

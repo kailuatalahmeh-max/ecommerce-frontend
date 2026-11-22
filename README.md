@@ -37,8 +37,6 @@ Main features:
 
 ```text
 frontend/
-├── Routes/
-│   └── ProtectedRoute.jsx    # Blocks pages if the role is not allowed
 ├── public/                   # Static files (favicon, maintenance page)
 ├── src/
 │   ├── App.jsx               # All page routes
@@ -47,6 +45,8 @@ frontend/
 │   ├── context/              # Zustand stores and React context
 │   ├── i18n/                 # Translations: index.js (setup), ar.json, en.json
 │   ├── pages/                # One folder per page
+│   ├── routes/
+│   │   └── ProtectedRoute.jsx  # Blocks pages if the role is not allowed
 │   └── utils/                # Helpers (axiosAdmin, constants, URL helpers)
 └── vercel.json               # Sends all paths to index.html (for React Router)
 ```

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styles from "./AdminControler.module.css";
+import styles from "./AdminController.module.css";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ItemContext } from "../../context/ItemContext";
@@ -11,7 +11,7 @@ import { useAdminStore } from "../../context/useAdminStore";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export default function AdminControler() {
+export default function AdminController() {
   const { t } = useTranslation();
   const { role } = useAuthStore();
 

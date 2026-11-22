@@ -37,8 +37,6 @@
 
 ```text
 frontend/
-├── Routes/
-│   └── ProtectedRoute.jsx    # يمنع فتح الصفحة إذا الصلاحية غير مسموحة
 ├── public/                   # ملفات ثابتة (الأيقونة، صفحة الصيانة)
 ├── src/
 │   ├── App.jsx               # تعريف جميع الصفحات
@@ -47,6 +45,8 @@ frontend/
 │   ├── context/              # Zustand stores و React context
 │   ├── i18n/                 # الترجمة: index.js (الإعداد)، ar.json، en.json
 │   ├── pages/                # مجلد لكل صفحة
+│   ├── routes/
+│   │   └── ProtectedRoute.jsx  # يمنع فتح الصفحة إذا الصلاحية غير مسموحة
 │   └── utils/                # دوال مساعدة (axiosAdmin، الثوابت، روابط)
 └── vercel.json               # توجيه جميع المسارات إلى index.html (من أجل React Router)
 ```

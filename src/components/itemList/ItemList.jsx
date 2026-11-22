@@ -1,4 +1,4 @@
-import styles from "./itemList.module.css";
+import styles from "./ItemList.module.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
