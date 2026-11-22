@@ -157,7 +157,7 @@ export default function AdminOrders() {
                         {t("adminOrders.qty", { count: item.quantity })}
                       </span>
                       <span className={styles.itemPrice}>
-                        ${item.itemPrice * item.quantity}
+                        ₪{item.itemPrice * item.quantity}
                       </span>
                     </li>
                   ))}
@@ -168,7 +168,7 @@ export default function AdminOrders() {
                 <span className={styles.totalLabel}>
                   {t("adminOrders.total")}
                 </span>
-                <span className={styles.totalPrice}>${order.totalPrice}</span>
+                <span className={styles.totalPrice}>₪{order.totalPrice.toFixed(2)}</span>
               </div>
             </div>
           ))

@@ -57,7 +57,7 @@ export default function AdminAnalytics() {
       <section className={styles.kpiGrid}>
         <div className={`${styles.kpiCard} ${styles.revenueBorder}`}>
           <span className={styles.kpiLabel}>{t("analytics.revenue")}</span>
-          <span className={styles.kpiValue}>${totalRevenue}</span>
+          <span className={styles.kpiValue}>₪{totalRevenue.toFixed(2)}</span>
         </div>
 
         <div className={`${styles.kpiCard} ${styles.ordersBorder}`}>

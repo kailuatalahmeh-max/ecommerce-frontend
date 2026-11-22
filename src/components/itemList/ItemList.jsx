@@ -19,7 +19,7 @@ export default function ItemList({
     <Link to={`/itemDetails/${_id}`} className={styles.itemCard}>
       <img src={getFirstImageUrl({ imageURL, images })} alt={itemName} />{" "}
       <span className={styles.itemName}>{itemName}</span>
-      <span className={styles.itemPrice}>{itemPrice}$</span>
+      <span className={styles.itemPrice}>{itemPrice}₪</span>
       <span
         className={styles.stockBadge}
         style={{

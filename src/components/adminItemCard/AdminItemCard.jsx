@@ -24,7 +24,7 @@ export default function AdminItemCard({ item, onDelete, openEditing }) {
 
       <div className={styles.itemInfo}>
         <h4 title={item.itemName}>{item.itemName}</h4>
-        <span className={styles.itemPrice}>{item.itemPrice}$</span>
+        <span className={styles.itemPrice}>{item.itemPrice}₪</span>
         <span className={`${styles.stockBadge} ${stockClass}`}>
           {stockText}
         </span>

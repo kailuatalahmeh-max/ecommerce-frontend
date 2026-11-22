@@ -102,10 +102,10 @@ export default function ViewItemDetails() {
           <h2 className={styles.itemName}>{thisItem.itemName}</h2>
           <div className={styles.priceSection}>
             <p className={styles.priceWord}>{t("item.price")}</p>
-            <span className={styles.lastPrice}>{thisItem.itemPrice}$</span>
+            <span className={styles.lastPrice}>{thisItem.itemPrice}₪</span>
 
             <p className={styles.priceWord}>{t("item.totalPrice")}</p>
-            <span className={styles.lastPrice}>{totalPrice.toFixed(2)}$</span>
+            <span className={styles.lastPrice}>{totalPrice.toFixed(2)}₪</span>
           </div>
 
           <p className={styles.p_availableQuantity}>

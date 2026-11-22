@@ -133,7 +133,7 @@ export default function MyOrders() {
                       </li>
                     ))}
                   </ul>
-                  <span>{order.totalPrice}$</span>
+                  <span>{(order.totalPrice.toFixed(2))}₪</span>
                 </div>
               );
             })}
@@ -144,7 +144,7 @@ export default function MyOrders() {
               <span className={styles.totalLabel}>
                 {t("myOrders.totalAmount")}
               </span>
-              <span className={styles.totalPrice}>${totalPrice}</span>
+              <span className={styles.totalPrice}>₪{totalPrice.toFixed(2)}</span>
             </div>
 
             <button
