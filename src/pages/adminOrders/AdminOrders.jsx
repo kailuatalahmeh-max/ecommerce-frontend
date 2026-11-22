@@ -5,6 +5,7 @@ import styles from "./AdminOrders.module.css";
 import { useEffect } from "react";
 import { useAdminStore } from "../../context/useAdminStore";
 import { getDateLocale } from "../../i18n";
+import { formatPrice } from "../../utils/formatPrice";
 
 const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
@@ -157,7 +158,7 @@ export default function AdminOrders() {
                         {t("adminOrders.qty", { count: item.quantity })}
                       </span>
                       <span className={styles.itemPrice}>
-                        ₪{item.itemPrice * item.quantity}
+                        {formatPrice(item.itemPrice * item.quantity)}
                       </span>
                     </li>
                   ))}
@@ -168,7 +169,7 @@ export default function AdminOrders() {
                 <span className={styles.totalLabel}>
                   {t("adminOrders.total")}
                 </span>
-                <span className={styles.totalPrice}>₪{order.totalPrice.toFixed(2)}</span>
+                <span className={styles.totalPrice}>{formatPrice(order.totalPrice)}</span>
               </div>
             </div>
           ))

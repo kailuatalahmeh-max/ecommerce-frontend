@@ -5,6 +5,7 @@ import styles from "./MyOrders.module.css";
 import { useOrderStore } from "../../context/useOrderStore";
 import { useNavigate } from "react-router-dom";
 import { getDateLocale } from "../../i18n";
+import { formatPrice } from "../../utils/formatPrice";
 
 const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
@@ -133,7 +134,7 @@ export default function MyOrders() {
                       </li>
                     ))}
                   </ul>
-                  <span>{(order.totalPrice.toFixed(2))}₪</span>
+                  <span>{formatPrice(order.totalPrice)}</span>
                 </div>
               );
             })}
@@ -144,7 +145,7 @@ export default function MyOrders() {
               <span className={styles.totalLabel}>
                 {t("myOrders.totalAmount")}
               </span>
-              <span className={styles.totalPrice}>₪{totalPrice.toFixed(2)}</span>
+              <span className={styles.totalPrice}>{formatPrice(totalPrice)}</span>
             </div>
 
             <button

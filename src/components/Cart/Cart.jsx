@@ -1,6 +1,7 @@
 import styles from "./Cart.module.css";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { formatPrice } from "../../utils/formatPrice";
 import { useCartStore } from "../../context/useCartStore";
 
 import CompleteOrder from "../completeOrder/CompleteOrder";
@@ -72,7 +73,7 @@ export default function Cart({ onClose }) {
               <span className={styles.spanQuantity}>{cartData?.length}</span>
               {t("cart.itemsInCart")}{" "}
               <span className={styles.spanQuantity}>
-                {t("cart.total", { price: totalPrice() })}
+                {t("cart.total", { price: formatPrice(totalPrice()) })}
               </span>
             </p>
             <button

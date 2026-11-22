@@ -1,6 +1,7 @@
 import styles from "./AdminItemCard.module.css";
 import { useTranslation } from "react-i18next";
 import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
+import { formatPrice } from "../../utils/formatPrice";
 
 export default function AdminItemCard({ item, onDelete, openEditing }) {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ export default function AdminItemCard({ item, onDelete, openEditing }) {
 
       <div className={styles.itemInfo}>
         <h4 title={item.itemName}>{item.itemName}</h4>
-        <span className={styles.itemPrice}>{item.itemPrice}₪</span>
+        <span className={styles.itemPrice}>{formatPrice(item.itemPrice)}</span>
         <span className={`${styles.stockBadge} ${stockClass}`}>
           {stockText}
         </span>

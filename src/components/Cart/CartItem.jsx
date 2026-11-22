@@ -1,6 +1,7 @@
 import styles from "./Cart.module.css";
 import { useTranslation } from "react-i18next";
 import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
+import { formatPrice } from "../../utils/formatPrice";
 
 export default function CartItem({ item, onReduce, onAdd, onDelete }) {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ export default function CartItem({ item, onReduce, onAdd, onDelete }) {
         <div className={styles.itemNameAndPrice}>
           <p className={styles.itemName}>{item.itemId?.itemName}</p>
           <p className={styles.itemPrice}>
-            {t("cart.itemPrice", { price: item.itemId?.itemPrice })}
+            {t("cart.itemPrice", { price: formatPrice(item.itemId?.itemPrice) })}
           </p>
         </div>
       </div>

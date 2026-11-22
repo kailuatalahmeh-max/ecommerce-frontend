@@ -8,6 +8,7 @@ import { useCartStore } from "../../context/useCartStore";
 import CompleteOrder from "../../components/completeOrder/CompleteOrder";
 
 import { getAllImageUrls } from "../../utils/getFirstImageUrl";
+import { formatPrice } from "../../utils/formatPrice";
 
 
 export default function ViewItemDetails() {
@@ -102,10 +103,10 @@ export default function ViewItemDetails() {
           <h2 className={styles.itemName}>{thisItem.itemName}</h2>
           <div className={styles.priceSection}>
             <p className={styles.priceWord}>{t("item.price")}</p>
-            <span className={styles.lastPrice}>{thisItem.itemPrice}₪</span>
+            <span className={styles.lastPrice}>{formatPrice(thisItem.itemPrice)}</span>
 
             <p className={styles.priceWord}>{t("item.totalPrice")}</p>
-            <span className={styles.lastPrice}>{totalPrice.toFixed(2)}₪</span>
+            <span className={styles.lastPrice}>{formatPrice(totalPrice)}</span>
           </div>
 
           <p className={styles.p_availableQuantity}>

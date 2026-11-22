@@ -4,6 +4,7 @@ import styles from "./CompleteOrder.module.css";
 import { useOrderStore } from "../../context/useOrderStore";
 import { ItemContext } from "../../context/ItemContext";
 import { COUNTRY_CODES, REGIONS } from "../../utils/constants";
+import { formatPrice } from "../../utils/formatPrice";
 
 export default function CompleteOrder({
   onClose,
@@ -152,7 +153,7 @@ export default function CompleteOrder({
         {totalPrice && (
           <div className={styles.summaryBox}>
             <span>{t("checkout.totalPrice")} </span>
-            <strong>{totalPrice} ₪</strong>
+            <strong>{formatPrice(totalPrice)}</strong>
           </div>
         )}
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { getFirstImageUrl } from "../../utils/getFirstImageUrl";
+import { formatPrice } from "../../utils/formatPrice";
 
 export default function ItemList({
   _id,
@@ -19,7 +20,7 @@ export default function ItemList({
     <Link to={`/itemDetails/${_id}`} className={styles.itemCard}>
       <img src={getFirstImageUrl({ imageURL, images })} alt={itemName} />{" "}
       <span className={styles.itemName}>{itemName}</span>
-      <span className={styles.itemPrice}>{itemPrice}₪</span>
+      <span className={styles.itemPrice}>{formatPrice(itemPrice)}</span>
       <span
         className={styles.stockBadge}
         style={{

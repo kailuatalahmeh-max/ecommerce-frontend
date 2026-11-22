@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAdminStore } from "../../context/useAdminStore";
 import styles from "./AdminAnalytics.module.css";
 import Loading from "../../components/loading/Loading";
+import { formatPrice } from "../../utils/formatPrice";
 
 export default function AdminAnalytics() {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export default function AdminAnalytics() {
       <section className={styles.kpiGrid}>
         <div className={`${styles.kpiCard} ${styles.revenueBorder}`}>
           <span className={styles.kpiLabel}>{t("analytics.revenue")}</span>
-          <span className={styles.kpiValue}>₪{totalRevenue.toFixed(2)}</span>
+          <span className={styles.kpiValue}>{formatPrice(totalRevenue)}</span>
         </div>
 
         <div className={`${styles.kpiCard} ${styles.ordersBorder}`}>
