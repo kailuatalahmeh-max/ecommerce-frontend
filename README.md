@@ -47,7 +47,7 @@ frontend/
 │   ├── pages/                # One folder per page
 │   ├── routes/
 │   │   └── ProtectedRoute.jsx  # Blocks pages if the role is not allowed
-│   └── utils/                # Helpers (axiosAdmin, constants, URL helpers)
+│   └── utils/                # Helpers (axiosAdmin, constants, formatPrice, URL helpers)
 └── vercel.json               # Sends all paths to index.html (for React Router)
 ```
 
@@ -151,6 +151,23 @@ const { t } = useTranslation();
 Outside React components (for example in Zustand stores), use `i18n.t("key")` from `src/i18n`.
 
 > Messages that come from the backend (for example API errors) are in Arabic only. Product names come from the database and are not translated.
+
+---
+
+## 💰 Prices and Currency
+
+The store uses the **Israeli shekel (₪)**. Every price on the site goes through one helper, `src/utils/formatPrice.js`:
+
+```js
+import { formatPrice } from "../../utils/formatPrice";
+
+formatPrice(1099); // "1,099.00 ₪"
+formatPrice(9.5);  // "9.50 ₪"
+```
+
+- Comma for thousands, always 2 decimals, `₪` after the number. Latin digits (0–9) in both languages.
+- A missing or wrong value shows `0.00 ₪` (no crash).
+- To change the currency or the format, edit **only** `formatPrice.js`. Do not write `₪` directly in components or in the translation files.
 
 ---
 
