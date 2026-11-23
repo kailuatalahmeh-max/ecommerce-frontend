@@ -5,6 +5,7 @@ import { useOrderStore } from "../../context/useOrderStore";
 import { ItemContext } from "../../context/ItemContext";
 import { COUNTRY_CODES, REGIONS } from "../../utils/constants";
 import { formatPrice } from "../../utils/formatPrice";
+import WhatsAppConfirm from "../whatsAppConfirm/WhatsAppConfirm";
 
 export default function CompleteOrder({
   onClose,
@@ -24,6 +25,8 @@ export default function CompleteOrder({
   const { setItemsData } = useContext(ItemContext);
 
   const [submitting, setSubmitting] = useState(false);
+  // بعد نجاح الشراء: { orderId, confirmCode, expiresAt, whatsappUrl }
+  const [confirmation, setConfirmation] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     countryCode: "+970",
@@ -33,25 +36,57 @@ export default function CompleteOrder({
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (submitting) return;
     try {
       setSubmitting(true);
+      let result = null;
       if (purchaseType === "direct") {
-        await setDirectPurchaseData({
+        result = await setDirectPurchaseData({
           purchaseDetails: formData,
           itemId: itemId,
           quantity: quantity,
           setItemsData: setItemsData,
         });
       } else if (purchaseType === "cart") {
-        await setCartPurchaseData({ purchaseDetails: formData });
+        result = await setCartPurchaseData({ purchaseDetails: formData });
       }
-      onClose();
+
+      // نجح الشراء ← ننتقل لخطوة تأكيد واتساب (الفشل: الفورم يبقى مفتوح)
+      if (result?.orderId && result?.confirmCode) {
+        setConfirmation(result);
+      } else if (result) {
+        onClose();
+      }
     } catch {
       // تم التعامل مع الخطأ في المخزن
     } finally {
       setSubmitting(false);
     }
   }
+
+  // خطوة تأكيد واتساب: الضغط خارج النافذة لا يغلقها، حتى لا يضيع الرمز بالغلط
+  if (confirmation) {
+    return (
+      <div className={styles.bodyPage}>
+        <div className={styles.formPage}>
+          <button
+            type="button"
+            className={styles.closeModal}
+            aria-label={t("common.close")}
+            onClick={onClose}
+          >
+            ❌
+          </button>
+          <WhatsAppConfirm
+            confirmation={confirmation}
+            phoneNumber={`${formData.countryCode}${formData.phoneNumber.trim()}`}
+            onClose={onClose}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={styles.bodyPage}

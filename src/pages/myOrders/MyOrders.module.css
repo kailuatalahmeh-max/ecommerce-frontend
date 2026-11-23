@@ -172,6 +172,35 @@
   border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
+/* حالة تأكيد واتساب */
+.confirmBadge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.confirmPending {
+  background-color: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.confirmConfirmed {
+  background-color: rgba(37, 211, 102, 0.1);
+  color: #4ade80;
+  border-color: rgba(37, 211, 102, 0.25);
+}
+
+.confirmExpired {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
 /* 2. تنسيق بطاقات الفواتير الحقيقية المكررة بالداخل (order) لتبدو كفواتير فرعية متناسقة */
 .cardBody .orderCard {
   background: rgba(255, 255, 255, 0.02);

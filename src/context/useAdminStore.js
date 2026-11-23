@@ -133,6 +133,53 @@ export const useAdminStore = create((set, get) => ({
       });
   },
 
+  // تأكيد الطلب يدوياً بعد ما الأدمن يشوف رسالة الزبون على واتساب
+  confirmOrderManually: (order) => {
+    const { code } = order.confirmation;
+
+    return confirmDialog({
+      title: i18n.t("adminOrders.confirmTitle"),
+      message: i18n.t("adminOrders.confirmMessage", {
+        code,
+        phone: order.phoneNumber,
+      }),
+      confirmText: i18n.t("adminOrders.confirmButton"),
+      variant: "success",
+      onConfirm: () =>
+        axiosAdmin
+          .post(`${apiUrl}/api/orders/confirm`, {
+            code,
+            senderPhone: order.phoneNumber,
+          })
+          .then(() => {
+            set((state) => ({
+              ordersData: state.ordersData.map((o) =>
+                o._id === order._id
+                  ? {
+                      ...o,
+                      confirmation: {
+                        ...o.confirmation,
+                        status: "confirmed",
+                        confirmedAt: new Date().toISOString(),
+                        method: "admin",
+                      },
+                    }
+                  : o,
+              ),
+            }));
+            toast.success(i18n.t("adminOrders.confirmed"));
+          })
+          .catch((err) => {
+            const serverErrorMessage = err.response?.data?.message;
+            toast.error(serverErrorMessage || i18n.t("common.errorGeneric"));
+            // ALREADY_CONFIRMED أو EXPIRED: نجيب الحالة الحقيقية من السيرفر
+            if ([409, 410].includes(err.response?.status)) {
+              get().getOrdersData();
+            }
+          }),
+    });
+  },
+
   createAdminAccount: ({ setFormData, formData, setLoading }) => {
     axiosAdmin
       .post(`${apiUrl}/api/admins`, formData)

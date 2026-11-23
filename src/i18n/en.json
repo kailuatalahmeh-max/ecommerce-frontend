@@ -115,6 +115,24 @@
     "cartSuccess": "Purchased! You can find the items in My Orders",
     "failed": "Purchase failed, please try again"
   },
+  "confirmOrder": {
+    "title": "Confirm your order on WhatsApp",
+    "text": "Your order is saved. Send this code to the store on WhatsApp to confirm it.",
+    "yourCode": "Your confirmation code:",
+    "copy": "Copy",
+    "copied": "Code copied",
+    "copyFailed": "Could not copy, please write the code down",
+    "expiresAt": "Confirm before {{time}}",
+    "openWhatsApp": "Confirm on WhatsApp",
+    "waiting": "Waiting for your WhatsApp message...",
+    "checkNow": "Check now",
+    "confirmedTitle": "Order confirmed!",
+    "confirmedText": "Thank you! We will contact you soon.",
+    "expiredTitle": "Time is over",
+    "expiredText": "This confirmation code has expired. Please contact support.",
+    "myOrders": "Go to My Orders",
+    "done": "Done"
+  },
   "phoneCheck": {
     "title": "Check your phone number",
     "subtitle": "Enter your phone number so we can find your orders.",
@@ -135,7 +153,12 @@
     "home": "Home page",
     "loadingOrders": "Loading your orders...",
     "fetchFailed": "Failed to load orders",
-    "supportTitle": "Need help? Contact support"
+    "supportTitle": "Need help? Contact support",
+    "confirm": {
+      "pending": "⏳ Waiting for WhatsApp confirmation · code {{code}}",
+      "confirmed": "✅ Confirmed on WhatsApp",
+      "expired": "⌛ Confirmation expired"
+    }
   },
   "notFound": {
     "subtitle": "Sorry, page not found!",
@@ -211,7 +234,16 @@
     "items": "Order items:",
     "qty": "Qty: {{count}}",
     "total": "Total amount:",
-    "statusUpdated": "Order status updated successfully"
+    "statusUpdated": "Order status updated successfully",
+    "confirmTitle": "Confirm this order?",
+    "confirmMessage": "Only confirm if you got a WhatsApp message with code {{code}} from {{phone}}.",
+    "confirmButton": "Confirm order",
+    "confirmed": "Order confirmed",
+    "confirmState": {
+      "pending": "⏳ Waiting for WhatsApp",
+      "confirmed": "✅ Confirmed",
+      "expired": "⌛ Expired"
+    }
   },
   "adminsPage": {
     "title": "Admin Accounts Management",

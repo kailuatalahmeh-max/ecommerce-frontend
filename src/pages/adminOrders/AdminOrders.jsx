@@ -9,11 +9,29 @@ import { formatPrice } from "../../utils/formatPrice";
 
 const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
+// pending انتهى وقته = expired (حتى لو السيرفر لسا ما حدّثه)
+function getConfirmState(confirmation) {
+  const { status, expiresAt } = confirmation;
+  if (status === "pending" && new Date(expiresAt) < new Date()) {
+    return "expired";
+  }
+  return status;
+}
+
+const CONFIRM_CLASSES = {
+  pending: styles.confirmPending,
+  confirmed: styles.confirmConfirmed,
+  expired: styles.confirmExpired,
+};
+
 export default function AdminOrders() {
   const { t } = useTranslation();
   const getOrdersData = useAdminStore((state) => state.getOrdersData);
   const ordersData = useAdminStore((state) => state.ordersData);
   const updateOrderStatus = useAdminStore((state) => state.updateOrderStatus);
+  const confirmOrderManually = useAdminStore(
+    (state) => state.confirmOrderManually,
+  );
 
   useEffect(() => {
     getOrdersData();
@@ -144,6 +162,35 @@ export default function AdminOrders() {
                   </select>
                 </div>
               </div>
+
+              {/* تأكيد واتساب (الطلبات القديمة ما فيها confirmation) */}
+              {order.confirmation && (
+                <div className={styles.confirmRow}>
+                  <span
+                    className={`${styles.confirmBadge} ${
+                      CONFIRM_CLASSES[getConfirmState(order.confirmation)]
+                    }`}
+                  >
+                    {t(
+                      `adminOrders.confirmState.${getConfirmState(order.confirmation)}`,
+                    )}
+                    {" · "}
+                    <span dir="ltr" className={styles.confirmCode}>
+                      {order.confirmation.code}
+                    </span>
+                  </span>
+
+                  {getConfirmState(order.confirmation) === "pending" && (
+                    <button
+                      type="button"
+                      className={styles.confirmBtn}
+                      onClick={() => confirmOrderManually(order)}
+                    >
+                      {t("adminOrders.confirmButton")}
+                    </button>
+                  )}
+                </div>
+              )}
 
               <div className={styles.cardBody}>
                 <p className={styles.itemsTitle}>{t("adminOrders.items")}</p>

@@ -8,7 +8,7 @@ Main features:
 
 - Product list and product details pages.
 - Shopping cart without login (uses a `guestId` saved in the browser).
-- Direct purchase and cart purchase.
+- Direct purchase and cart purchase, with order confirmation on WhatsApp.
 - "My orders" page for guests (by phone number and guest token).
 - Admin dashboard: products, orders, admin accounts, and analytics.
 - Pages protected by role (`admin`, `moderator`, `super_admin`).
@@ -41,7 +41,7 @@ frontend/
 ├── src/
 │   ├── App.jsx               # All page routes
 │   ├── main.jsx              # Entry point
-│   ├── components/           # Reusable parts (cart, item list, phone check, back button, confirm dialog, language switcher...)
+│   ├── components/           # Reusable parts (cart, item list, phone check, back button, confirm dialog, language switcher, WhatsApp confirm...)
 │   ├── context/              # Zustand stores and React context
 │   ├── i18n/                 # Translations: index.js (setup), ar.json, en.json
 │   ├── pages/                # One folder per page
@@ -57,9 +57,9 @@ frontend/
 | ------------------ | ------------------------------------------------------------ |
 | `ItemContext.jsx`  | Gets the product list                                        |
 | `useCartStore.js`  | Cart: create `guestId`, add, remove, change quantity         |
-| `useOrderStore.js` | Purchases and guest order tracking                           |
+| `useOrderStore.js` | Purchases, WhatsApp confirm status, and guest order tracking |
 | `useAuthStore.js`  | Admin login state (token, role, admin ID)                    |
-| `useAdminStore.js` | Admin actions: products, orders, admins, analytics           |
+| `useAdminStore.js` | Admin actions: products, orders (and manual confirm), admins, analytics |
 | `useConfirmStore.js` | `confirmDialog()`: the site's confirm popup (instead of `window.confirm`) |
 
 ---
@@ -104,6 +104,17 @@ The app runs at `http://localhost:5173` (Vite default).
 > The backend must be running too. See the [backend README](../backend/README.md).
 >
 > ⚠️ The backend allows only one CORS origin: its `FRONTEND_URL`. For local work, set `FRONTEND_URL=http://localhost:5173` in `backend/.env`, or the browser will block the requests.
+>
+> ⚠️ Buying does not work until the store's WhatsApp number is saved once: `node scripts/storeSettingsSeed.js +970599123456` (from `backend/`). Without it the API returns `503`.
+
+### Test on a phone (same Wi-Fi)
+
+1. Find your PC's IP (`ipconfig`), for example `192.168.1.16`.
+2. Set `VITE_API_URL=http://192.168.1.16:5000` in `frontend/.env.development` and `FRONTEND_URL=http://192.168.1.16:5173` in `backend/.env`.
+3. **Restart both servers** (a running server does not read `.env` again). Start the frontend with `npm run dev -- --host`.
+4. Open `http://192.168.1.16:5173` on the phone. Use the IP on the PC too, not `localhost`, or CORS will block it.
+
+> On `http` (not `https`) the phone blocks the clipboard, so the **Copy** button of the confirm code shows an error. It works on Vercel.
 
 ---
 
@@ -190,6 +201,21 @@ formatPrice(9.5);  // "9.50 ₪"
 2. All cart requests send this `guestId` in the URL (`/api/carts/:guestId/...`).
 3. No login is needed.
 
+## 💬 How WhatsApp Order Confirmation Works
+
+1. After a successful purchase (direct or cart), the checkout form changes to a confirm screen (`components/whatsAppConfirm/`).
+2. It shows the 6-character code, a **Copy** button, and the time limit (60 minutes).
+3. **Confirm on WhatsApp** opens the `whatsappUrl` from the backend: a chat with the store, with the code already typed.
+4. While the order is `pending`, the screen asks `GET /api/orders/:id/confirmation` every **5 seconds**, and right away when the customer comes back to the page.
+5. `confirmed` → ✅ screen with a **Go to My Orders** button. `expired` → ⌛ screen.
+6. Clicking outside this screen does not close it, so the code is not lost by mistake.
+
+**My orders** shows a badge on each order: waiting (with the code), confirmed, or expired.
+
+**Admin orders page** (`/admin/orders-management`): each order shows its confirm state and code. While it is waiting, a **Confirm order** button opens a popup ("only confirm if you got code X from number Y"), then calls `POST /api/orders/confirm`.
+
+> Automatic confirmation (a WhatsApp bot) is not built yet. For now a moderator confirms by hand.
+
 ## 📦 How Guest Order Tracking Works
 
 1. The user picks the country code (`+970` / `+972`, same list as checkout in `utils/constants.js`) and enters their phone number → `POST /api/guest/sessions`.
@@ -207,7 +233,8 @@ formatPrice(9.5);  // "9.50 ₪"
 | Auth      | `POST /api/auth/login`                                                                        |
 | Admins    | `GET /api/admins`, `POST /api/admins`, `PATCH /api/admins/:id/disable`, `PATCH /api/admins/:id/enable` |
 | Dashboard | `GET /api/dashboard/analytics`                                                                |
-| Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`                                          |
+| Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`, `POST /api/orders/confirm`              |
+| Confirmation | `GET /api/orders/:id/confirmation`                                                          |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |
 | Cart      | `/api/carts/:guestId/...` (see backend README)                                                |
 | Purchase  | `POST /api/orders`, `POST /api/carts/:guestId/checkout`                                       |

@@ -9,6 +9,21 @@ import { formatPrice } from "../../utils/formatPrice";
 
 const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
+// pending انتهى وقته = expired (حتى لو السيرفر لسا ما حدّثه)
+function getConfirmState(confirmation) {
+  const { status, expiresAt } = confirmation;
+  if (status === "pending" && new Date(expiresAt) < new Date()) {
+    return "expired";
+  }
+  return status;
+}
+
+const CONFIRM_CLASSES = {
+  pending: styles.confirmPending,
+  confirmed: styles.confirmConfirmed,
+  expired: styles.confirmExpired,
+};
+
 export default function MyOrders() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -126,6 +141,19 @@ export default function MyOrders() {
                   <span className={styles.spanStatus}>
                     {t(`status.${order.status}`, order.status)}
                   </span>
+                  {/* الطلبات القديمة ما فيها confirmation */}
+                  {order.confirmation && (
+                    <span
+                      className={`${styles.confirmBadge} ${
+                        CONFIRM_CLASSES[getConfirmState(order.confirmation)]
+                      }`}
+                    >
+                      {t(
+                        `myOrders.confirm.${getConfirmState(order.confirmation)}`,
+                        { code: order.confirmation.code },
+                      )}
+                    </span>
+                  )}
                   <ul>
                     {order.items.map((item) => (
                       <li key={item._id}>

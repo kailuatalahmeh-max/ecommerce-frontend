@@ -44,12 +44,16 @@ export const useOrderStore = create((set, get) => ({
             ),
           );
         }
+
+        // { orderId, confirmCode, expiresAt, whatsappUrl } لخطوة تأكيد واتساب
+        return response.data?.data || null;
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
         toast.error(
           serverErrorMessage || i18n.t("checkout.failed"),
         );
+        return null;
       });
   },
 
@@ -71,13 +75,24 @@ export const useOrderStore = create((set, get) => ({
         );
 
         useCartStore.getState().clearCartLocal();
+
+        // { orderId, confirmCode, expiresAt, whatsappUrl } لخطوة تأكيد واتساب
+        return response.data?.data || null;
       })
       .catch((err) => {
         const serverErrorMessage = err.response?.data?.message;
         toast.error(
           serverErrorMessage || i18n.t("checkout.failed"),
         );
+        return null;
       });
+  },
+
+  // حالة تأكيد الطلب: "pending" | "confirmed" | "expired"
+  getOrderConfirmation: (orderId) => {
+    return axios
+      .get(`${apiUrl}/api/orders/${orderId}/confirmation`)
+      .then((response) => response.data?.data?.status || "pending");
   },
 
   verifyGuestPhone: ({ phoneNumber }) => {

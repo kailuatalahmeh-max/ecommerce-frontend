@@ -312,6 +312,82 @@
 }
 
 /* ===== الهاتف ===== */
+/* ===== تأكيد واتساب ===== */
+.confirmRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.confirmBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+}
+
+.confirmCode {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: 0.15em;
+}
+
+.confirmPending {
+  background-color: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.confirmConfirmed {
+  background-color: rgba(37, 211, 102, 0.1);
+  color: #4ade80;
+  border-color: rgba(37, 211, 102, 0.3);
+}
+
+.confirmExpired {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.confirmBtn {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+  transition: all 0.2s ease;
+}
+
+.confirmBtn:hover {
+  box-shadow: 0 0 16px rgba(37, 211, 102, 0.45);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .confirmBadge,
+  .confirmBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .confirmBtn {
+    padding: 0.75rem 1rem;
+  }
+}
+
 @media (max-width: 640px) {
   .adminPage {
     padding: 1rem 0.75rem;
