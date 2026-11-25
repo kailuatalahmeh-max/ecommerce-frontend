@@ -204,7 +204,7 @@ formatPrice(9.5);  // "9.50 ₪"
 ## 💬 How WhatsApp Order Confirmation Works
 
 1. After a successful purchase (direct or cart), the checkout form changes to a confirm screen (`components/whatsAppConfirm/`).
-2. It shows the 6-character code, a **Copy** button, and the time limit (60 minutes).
+2. It shows the 6-character code, a **Copy** button, and the time limit (24 hours, shown with date and time).
 3. **Confirm on WhatsApp** opens the `whatsappUrl` from the backend: a chat with the store, with the code already typed.
 4. While the order is `pending`, the screen asks `GET /api/orders/:id/confirmation` every **5 seconds**, and right away when the customer comes back to the page.
 5. `confirmed` → ✅ screen with a **Go to My Orders** button. `expired` → ⌛ screen.

@@ -65,7 +65,10 @@ export default function WhatsAppConfirm({ confirmation, phoneNumber, onClose }) 
     }
   }
 
-  const expiresTime = new Date(expiresAt).toLocaleTimeString(getDateLocale(), {
+  // the limit can be tomorrow (24 hours), so show the date too
+  const expiresTime = new Date(expiresAt).toLocaleString(getDateLocale(), {
+    day: "numeric",
+    month: "short",
     hour: "2-digit",
     minute: "2-digit",
   });
