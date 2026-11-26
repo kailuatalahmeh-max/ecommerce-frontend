@@ -228,6 +228,29 @@
   font-weight: 700;
 }
 
+/* زر إلغاء الطلب (فقط للطلبات Pending) */
+.cancelBtn {
+  width: 100%;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 14px;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.cancelBtn:active {
+  transform: scale(0.98);
+}
+
 /* "أو تتبّع طلباً آخر" بين الزر والفورم */
 .divider {
   margin: 0;

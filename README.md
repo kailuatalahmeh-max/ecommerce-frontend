@@ -225,7 +225,7 @@ The **🎁 My Orders** button on the home page opens `components/trackOrder/Trac
 1. The customer enters the **confirmation code** (from the WhatsApp screen after buying) and their **phone number** with the country code.
    - The code is made uppercase and spaces are removed (`k7p 2xm` → `K7P2XM`). It must be 6 characters with no `0 O 1 I L`, or a yellow hint shows and the button stays disabled.
 2. `trackOrder()` in `useOrderStore.js` sends both to `POST /api/orders/track`.
-3. If found, the same popup shows the order: code, order status, WhatsApp confirm badge, date, items, and total. The order is also **saved on this device** (so it shows in "My orders"). Buttons: **See all my orders** and **Track another order**.
+3. If found, the same popup shows the order: code, order status, WhatsApp confirm badge, date, items, and total. The order is also **saved on this device** (so it shows in "My orders"). Buttons: **✖ Cancel order** (only for a **Pending** order, see [Cancel an order](#-cancel-an-order)), **See all my orders** and **Track another order**.
 4. If not found, a toast shows the server's message.
 
 > The phone is needed too: someone who only knows a phone number cannot see orders this way.
@@ -251,7 +251,9 @@ There is **no login and no token**. The browser keeps a small list of the custom
 
 ### ✖ Cancel an order
 
-- Each **Pending** order in "My orders" has a red **Cancel order** button. Accepted, Delivered and Cancelled orders don't have it.
+- Each **Pending** order has a red **Cancel order** button, in "My orders" **and** in the TrackOrder popup. Accepted, Delivered and Cancelled orders don't have it.
+- Both use the same `cancelOrder()`. It returns `{ order }` on success, `{ failed: true }` on an error, or `null` if the customer chose "No, keep it".
+- In TrackOrder, the popup shows **Cancelled** at once. On an error it asks `/track` again, to show the new status.
 - A click opens the confirm dialog ("Cancel order" / "No, keep it").
 - `cancelOrder()` in `useOrderStore.js` sends the saved `code + phoneNumber` to `POST /api/orders/cancel`. The server returns the stock.
 - On success the card shows **Cancelled** at once, and the order **stays** in the list.

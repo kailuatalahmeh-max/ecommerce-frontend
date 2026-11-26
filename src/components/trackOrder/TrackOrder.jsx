@@ -29,18 +29,35 @@ export default function TrackOrder({ handleClose }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const trackOrder = useOrderStore((state) => state.trackOrder);
+  const cancelOrder = useOrderStore((state) => state.cancelOrder);
 
   const [code, setCode] = useState("");
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0].value);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState(null);
+  // الرقم الكامل الذي وجدنا به الطلب (نحتاجه للإلغاء)
+  const [foundPhone, setFoundPhone] = useState("");
   // عدد الطلبات المحفوظة في هذا المتصفح (localStorage)، لزر "مشاهدة الطلبات المحفوظة"
   const [savedCount] = useState(() => getSavedOrders().length);
 
   // حروف كبيرة وبدون مسافات: "k7p 2xm" ← "K7P2XM"
   const cleanCode = code.replace(/\s/g, "").toUpperCase();
   const codeIsValid = CODE_REGEX.test(cleanCode);
+
+  // إلغاء الطلب المعروض (فقط Pending)
+  async function handleCancel() {
+    const code = order.confirmation?.code || cleanCode;
+    const result = await cancelOrder({ code, phoneNumber: foundPhone });
+    if (result?.order) {
+      setOrder(result.order);
+    } else if (result?.failed) {
+      // مثلاً المتجر قبل الطلب قبل قليل: نعرض الحالة الجديدة
+      trackOrder({ code, phoneNumber: foundPhone })
+        .then((fresh) => fresh && setOrder(fresh))
+        .catch(() => {});
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -53,6 +70,7 @@ export default function TrackOrder({ handleClose }) {
       const found = await trackOrder({ code: cleanCode, phoneNumber: fullPhone });
       // نحفظه في هذا المتصفح، فيظهر في "طلباتي" (مفيد على جهاز جديد)
       saveOrder({ code: cleanCode, phoneNumber: fullPhone });
+      setFoundPhone(fullPhone);
       setOrder(found);
     } catch (err) {
       toast.error(err.response?.data?.message || t("trackOrder.notFound"));
@@ -133,6 +151,17 @@ export default function TrackOrder({ handleClose }) {
           </div>
 
           <p className={styles.savedNote}>{t("trackOrder.savedNote")}</p>
+
+          {/* الإلغاء فقط قبل أن يقبل المتجر الطلب */}
+          {order.status === "Pending" && (
+            <button
+              type="button"
+              className={styles.cancelBtn}
+              onClick={handleCancel}
+            >
+              ✖ {t("myOrders.cancelButton")}
+            </button>
+          )}
 
           <button
             type="button"
