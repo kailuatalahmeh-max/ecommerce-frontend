@@ -38,7 +38,7 @@
 ```text
 frontend/
 ├── .env.example              # مثال لمتغيرات البيئة (انسخه إلى .env.development)
-├── public/                   # ملفات ثابتة (الأيقونة، صفحة الصيانة)
+├── public/                   # ملفات ثابتة (الأيقونة، صفحة الصيانة، placeholder-image.svg)
 ├── src/
 │   ├── App.jsx               # تعريف جميع الصفحات
 │   ├── main.jsx              # نقطة التشغيل
@@ -254,6 +254,9 @@ formatPrice(9.5);  // "9.50 ₪"
 6. 🗑️ على كل طلب و**حذف الكل** يحذفان الطلبات **من هذا الجهاز فقط** (الطلب **لا** يُلغى). كلاهما يسأل أولاً بنافذة التأكيد.
 7. لا توجد طلبات محفوظة ← رسالة تشرح كيف تضيف طلباً (الشراء، أو 🎁 طلباتي + الرمز).
 8. الطلبات التي تمت **قبل** هذه الميزة غير محفوظة على الجهاز. أدخل الرمز + الرقم مرة واحدة في 🎁 طلباتي لإضافتها.
+9. قسم **تواصل مع الدعم** في الأسفل يستخدم رقم واتساب المتجر من **⚙️ إعدادات المتجر** (`GET /api/store-settings/public`): رابط محادثة 💬 واتساب ورابط 📞 اتصال. إذا لا يوجد رقم محفوظ، هذا القسم لا يظهر (لا يظهر رقم مزيف أبداً).
+
+> المنتج بدون صور يعرض `public/placeholder-image.svg` (`PLACEHOLDER_IMAGE` في `utils/constants.js`). الملف داخل المشروع، لذلك لا يعتمد على موقع آخر.
 
 > الـ `guestToken` القديم في `localStorage` يُحذف مرة واحدة عند فتح التطبيق (جلسات الضيف حُذفت من الـ Backend).
 
@@ -290,7 +293,7 @@ formatPrice(9.5);  // "9.50 ₪"
 | تسجيل الدخول     | `POST /api/auth/login`                                                                        |
 | الأدمنز          | `GET /api/admins`، `POST /api/admins`، `PATCH /api/admins/:id/disable`، `PATCH /api/admins/:id/enable` |
 | الإحصائيات       | `GET /api/dashboard/analytics`                                                                |
-| إعدادات المتجر   | `GET /api/store-settings`، `PUT /api/store-settings`                                          |
+| إعدادات المتجر   | `GET /api/store-settings`، `PUT /api/store-settings`، `GET /api/store-settings/public`        |
 | الطلبات (الأدمن) | `GET /api/orders`، `PATCH /api/orders/:orderId`، `POST /api/orders/confirm`                   |
 | تتبّع الطلب      | `POST /api/orders/track`، `POST /api/orders/track-many`، `POST /api/orders/cancel`            |
 | المنتجات         | `GET /api/items`، `POST /api/items`، `PUT /api/items/:id`، `DELETE /api/items/:id`            |

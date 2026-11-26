@@ -1,4 +1,5 @@
-export const PLACEHOLDER_IMAGE = "https://via.placeholder.com/150";
+// صورة بديلة للمنتج بدون صور. ملف داخل المشروع (public/)، لا يعتمد على موقع خارجي
+export const PLACEHOLDER_IMAGE = "/placeholder-image.svg";
 export const MAX_IMAGES_PER_ITEM = 6;
 
 // نفس القائمة في صفحة الشراء وصفحة "طلباتي" (ويجب أن تطابق COUNTRY_CODES في الـ backend)

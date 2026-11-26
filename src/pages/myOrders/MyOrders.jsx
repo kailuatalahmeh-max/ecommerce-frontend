@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import styles from "./MyOrders.module.css";
@@ -9,6 +10,15 @@ import { formatPrice } from "../../utils/formatPrice";
 import { getSavedOrders } from "../../utils/savedOrders";
 
 const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+// "+970599111222" ← "+970 599 111 222" (أسهل للقراءة)
+function formatPhone(phone) {
+  const local = phone.slice(-9);
+  const code = phone.slice(0, -9);
+  return `${code} ${local.slice(0, 3)} ${local.slice(3, 6)} ${local.slice(6)}`;
+}
 
 // pending انتهى وقته = expired (حتى لو السيرفر لسا ما حدّثه)
 function getConfirmState(confirmation) {
@@ -35,6 +45,19 @@ export default function MyOrders() {
   const navigate = useNavigate();
 
   const [statusFilter, setStatusFilter] = useState("");
+  // رقم واتساب المتجر من إعدادات المتجر (GET /api/store-settings/public)
+  const [supportPhone, setSupportPhone] = useState(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    axios
+      .get(`${apiUrl}/api/store-settings/public`, { signal: controller.signal })
+      .then((res) => setSupportPhone(res.data?.data?.whatsappNumber || null))
+      .catch(() => {
+        // بدون رقم: قسم الدعم لا يظهر (ليس خطأً مهماً للزبون)
+      });
+    return () => controller.abort();
+  }, []);
 
   const myOrderData = useOrderStore((state) => state.myOrderData);
   const myOrdersLoading = useOrderStore((state) => state.myOrdersLoading);
@@ -267,19 +290,33 @@ export default function MyOrders() {
         </div>
       </main>
 
-      <footer className={styles.footerSection}>
-        <div className={styles.supportDetails}>
-          <h3 className={styles.supportContactDetails}>
-            {t("myOrders.supportTitle")}
-          </h3>
-          <div className={styles.contactGrid}>
-            <p className={styles.supportEmail}>📧 support@myshop.com</p>
-            <p className={styles.supportPhoneNumber} dir="ltr">
-              📞 +970 000 000 000
-            </p>
+      {/* الدعم: رقم واتساب المتجر من الإعدادات. بدون رقم لا يظهر هذا القسم */}
+      {supportPhone && (
+        <footer className={styles.footerSection}>
+          <div className={styles.supportDetails}>
+            <h3 className={styles.supportContactDetails}>
+              {t("myOrders.supportTitle")}
+            </h3>
+            <div className={styles.contactGrid}>
+              <a
+                className={styles.supportLink}
+                href={`https://wa.me/${supportPhone.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                💬 {t("myOrders.supportWhatsApp")}
+              </a>
+              <a
+                className={styles.supportLink}
+                href={`tel:${supportPhone}`}
+                dir="ltr"
+              >
+                📞 {formatPhone(supportPhone)}
+              </a>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }

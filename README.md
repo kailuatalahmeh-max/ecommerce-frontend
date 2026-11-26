@@ -38,7 +38,7 @@ Main features:
 ```text
 frontend/
 ├── .env.example              # Example env variables (copy it to .env.development)
-├── public/                   # Static files (favicon, maintenance page)
+├── public/                   # Static files (favicon, maintenance page, placeholder-image.svg)
 ├── src/
 │   ├── App.jsx               # All page routes
 │   ├── main.jsx              # Entry point
@@ -254,6 +254,9 @@ There is **no login and no token**. The browser keeps a small list of the custom
 6. 🗑️ on each order and **Clear all** remove orders **from this device only** (the order is **not** cancelled). Both ask first with the confirm dialog.
 7. No saved orders → a message explains how to add one (buy, or 🎁 My Orders + code).
 8. Orders made **before** this feature are not saved on the device. Enter the code + phone once in 🎁 My Orders to add them.
+9. **Contact support** at the bottom uses the store WhatsApp number from **⚙️ Store settings** (`GET /api/store-settings/public`): a 💬 WhatsApp chat link and a 📞 call link. With no saved number, this part is hidden (a fake number never shows).
+
+> A product with no images shows `public/placeholder-image.svg` (`PLACEHOLDER_IMAGE` in `utils/constants.js`). It is inside the project, so it does not depend on another website.
 
 > The old `guestToken` in `localStorage` is removed once when the app loads (guest sessions were removed from the backend).
 
@@ -290,7 +293,7 @@ There is **no login and no token**. The browser keeps a small list of the custom
 | Auth      | `POST /api/auth/login`                                                                        |
 | Admins    | `GET /api/admins`, `POST /api/admins`, `PATCH /api/admins/:id/disable`, `PATCH /api/admins/:id/enable` |
 | Dashboard | `GET /api/dashboard/analytics`                                                                |
-| Store settings | `GET /api/store-settings`, `PUT /api/store-settings`                                     |
+| Store settings | `GET /api/store-settings`, `PUT /api/store-settings`, `GET /api/store-settings/public`   |
 | Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`, `POST /api/orders/confirm`              |
 | Track     | `POST /api/orders/track`, `POST /api/orders/track-many`, `POST /api/orders/cancel`            |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |

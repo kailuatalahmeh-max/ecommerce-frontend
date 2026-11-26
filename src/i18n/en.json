@@ -185,6 +185,7 @@
     "loadingOrders": "Loading your orders...",
     "fetchFailed": "Failed to load orders",
     "supportTitle": "Need help? Contact support",
+    "supportWhatsApp": "Message us on WhatsApp",
     "confirm": {
       "pending": "⏳ Waiting for WhatsApp confirmation · code {{code}}",
       "confirmed": "✅ Confirmed on WhatsApp",
