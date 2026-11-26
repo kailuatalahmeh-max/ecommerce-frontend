@@ -2,7 +2,7 @@
 
 **English** | [العربية](README.ar.md)
 
-The frontend for the online store, built with **React** and **Vite**. It talks to the [backend API](../backend/README.md).
+The frontend for the online store, built with **React** and **Vite**. It talks to the [backend API](https://github.com/kailuatalahmeh-max/ecommerce-api/blob/main/README.md).
 
 Main features:
 
@@ -109,7 +109,7 @@ The app runs at `http://localhost:5173` (Vite default).
 | `npm run preview` | Preview the production build         |
 | `npm run lint`    | Check the code with ESLint           |
 
-> The backend must be running too. See the [backend README](../backend/README.md).
+> The backend must be running too. See the [backend README](https://github.com/kailuatalahmeh-max/ecommerce-api/blob/main/README.md).
 >
 > ⚠️ The backend allows only one CORS origin: its `FRONTEND_URL`. For local work, set `FRONTEND_URL=http://localhost:5173` in `backend/.env`, or the browser will block the requests.
 >
@@ -160,7 +160,7 @@ The app runs at `http://localhost:5173` (Vite default).
 | Purchase  | `POST /api/orders`, `POST /api/carts/:guestId/checkout`                                       |
 | Health    | `GET /health`                                                                                 |
 
-Full details are in the [backend README](../backend/docs/api.md#-api-endpoints).
+Full details are in the [backend README](https://github.com/kailuatalahmeh-max/ecommerce-api/blob/main/docs/api.md#-api-endpoints).
 
 ---
 

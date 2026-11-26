@@ -2,7 +2,7 @@
 
 [English](README.md) | **العربية**
 
-واجهة المتجر الإلكتروني، مبنية باستخدام **React** و **Vite**، وتتواصل مع [الـ Backend API](../backend/README.ar.md).
+واجهة المتجر الإلكتروني، مبنية باستخدام **React** و **Vite**، وتتواصل مع [الـ Backend API](https://github.com/kailuatalahmeh-max/ecommerce-api/blob/main/README.ar.md).
 
 أهم المميزات:
 
@@ -109,7 +109,7 @@ npm run dev
 | `npm run preview` | معاينة نسخة الإنتاج                   |
 | `npm run lint`    | فحص الكود باستخدام ESLint             |
 
-> يجب تشغيل الـ Backend أيضاً. راجع [ملف الـ Backend](../backend/README.ar.md).
+> يجب تشغيل الـ Backend أيضاً. راجع [ملف الـ Backend](https://github.com/kailuatalahmeh-max/ecommerce-api/blob/main/README.ar.md).
 >
 > ⚠️ الـ Backend يسمح بـ CORS origin واحد فقط وهو `FRONTEND_URL`. للتطوير المحلي ضع `FRONTEND_URL=http://localhost:5173` في `backend/.env`، وإلا سيمنع المتصفح الطلبات.
 >
@@ -160,7 +160,7 @@ npm run dev
 | الشراء           | `POST /api/orders`، `POST /api/carts/:guestId/checkout`                                       |
 | حالة السيرفر     | `GET /health`                                                                                 |
 
-التفاصيل الكاملة موجودة في [توثيق الـ API في الـ Backend](../backend/docs/ar/api.md#-توثيق-الـ-api-endpoints).
+التفاصيل الكاملة موجودة في [توثيق الـ API في الـ Backend](https://github.com/kailuatalahmeh-max/ecommerce-api/blob/main/docs/ar/api.md#-توثيق-الـ-api-endpoints).
 
 ---
 
