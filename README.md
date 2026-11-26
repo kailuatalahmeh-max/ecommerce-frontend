@@ -211,7 +211,7 @@ formatPrice(9.5);  // "9.50 ₪"
 
 > The screen does **not** ask the server for the confirm status. That route (`GET /api/orders/:id/confirmation`) is closed until the WhatsApp bot is built.
 
-**My orders** shows a badge on each order: waiting (with the code), confirmed, or expired.
+**My orders** shows a badge on each order: waiting (with the code), confirmed, or expired. An order not confirmed in **24 hours** is cancelled by the server (status **Cancelled** + badge **expired**), and its stock comes back.
 
 **Admin orders page** (`/admin/orders-management`): each order shows its confirm state and code. While it is waiting, a **Confirm order** button opens a popup ("only confirm if you got code X from number Y"), then calls `POST /api/orders/confirm`.
 
