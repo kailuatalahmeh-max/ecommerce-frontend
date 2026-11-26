@@ -7,7 +7,7 @@ import { useCartStore } from "../../context/useCartStore";
 import { useAuthStore } from "../../context/useAuthStore";
 import ItemList from "../../components/itemList/ItemList";
 import Cart from "../../components/Cart/Cart";
-import PhoneCheck from "../../components/phoneCheck/PhoneCheck";
+import TrackOrder from "../../components/trackOrder/TrackOrder";
 export default function Home() {
   const { t } = useTranslation();
   const { itemsData } = useContext(ItemContext);
@@ -15,7 +15,7 @@ export default function Home() {
   const cartData = useCartStore((state) => state.cartData);
   const logout = useAuthStore((state) => state.logout);
   const [openCart, setOpenCart] = useState(false);
-  const [openPhoneCheck, setOpenPhoneCheck] = useState(false);
+  const [openTrackOrder, setOpenTrackOrder] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredItems =
@@ -27,17 +27,17 @@ export default function Home() {
     setOpenCart(false);
   }
 
-  function handleClosePhoneCheck() {
-    setOpenPhoneCheck(false);
+  function handleCloseTrackOrder() {
+    setOpenTrackOrder(false);
   }
 
   function handleMyOrders() {
-    setOpenPhoneCheck(true);
+    setOpenTrackOrder(true);
   }
   return (
     <div className={styles.bodyPage}>
-      {openPhoneCheck && (
-        <PhoneCheck handleClose={handleClosePhoneCheck}></PhoneCheck>
+      {openTrackOrder && (
+        <TrackOrder handleClose={handleCloseTrackOrder}></TrackOrder>
       )}
       {!!role && (
         <button

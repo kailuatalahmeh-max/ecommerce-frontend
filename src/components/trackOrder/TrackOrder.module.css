@@ -212,6 +212,139 @@
   }
 }
 
+/* ===== تتبّع الطلب بالرمز ===== */
+
+/* النتيجة ممكن تكون طويلة (عدة منتجات) */
+.form {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fieldLabel {
+  align-self: stretch;
+  text-align: start;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: -0.5rem;
+}
+
+.codeInput {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+}
+
+.hint {
+  align-self: stretch;
+  text-align: start;
+  margin: -0.75rem 0 0;
+  font-size: 0.8rem;
+  color: #fbbf24;
+}
+
+.result {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1rem;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.resultRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.resultLabel {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.resultCode {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: 0.2em;
+  color: #a5b4fc;
+  font-size: 1.05rem;
+}
+
+.statusBadge,
+.confirmBadge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.statusBadge {
+  background-color: rgba(168, 85, 247, 0.1);
+  color: #c084fc;
+  border-color: rgba(168, 85, 247, 0.25);
+}
+
+.confirm_pending {
+  background-color: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+.confirm_confirmed {
+  background-color: rgba(37, 211, 102, 0.1);
+  color: #4ade80;
+  border-color: rgba(37, 211, 102, 0.25);
+}
+
+.confirm_expired {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.itemsList {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-align: start;
+}
+
+.itemName {
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.itemQty {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.totalRow strong {
+  color: #818cf8;
+  font-size: 1.05rem;
+}
+
 @media (max-width: 640px) {
   /* يفتح من أسفل الشاشة مثل السلة */
   .page {

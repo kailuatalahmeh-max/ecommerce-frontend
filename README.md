@@ -41,7 +41,7 @@ frontend/
 ├── src/
 │   ├── App.jsx               # All page routes
 │   ├── main.jsx              # Entry point
-│   ├── components/           # Reusable parts (cart, item list, phone check, back button, confirm dialog, language switcher, WhatsApp confirm...)
+│   ├── components/           # Reusable parts (cart, item list, track order, back button, confirm dialog, language switcher, WhatsApp confirm...)
 │   ├── context/              # Zustand stores and React context
 │   ├── i18n/                 # Translations: index.js (setup), ar.json, en.json
 │   ├── pages/                # One folder per page
@@ -57,7 +57,7 @@ frontend/
 | ------------------ | ------------------------------------------------------------ |
 | `ItemContext.jsx`  | Gets the product list                                        |
 | `useCartStore.js`  | Cart: create `guestId`, add, remove, change quantity         |
-| `useOrderStore.js` | Purchases, WhatsApp confirm status, and guest order tracking |
+| `useOrderStore.js` | Purchases, tracking one order by code (`trackOrder`), and guest order tracking |
 | `useAuthStore.js`  | Admin login state (token, role, admin ID)                    |
 | `useAdminStore.js` | Admin actions: products, orders (and manual confirm), admins, analytics |
 | `useConfirmStore.js` | `confirmDialog()`: the site's confirm popup (instead of `window.confirm`) |
@@ -206,9 +206,10 @@ formatPrice(9.5);  // "9.50 ₪"
 1. After a successful purchase (direct or cart), the checkout form changes to a confirm screen (`components/whatsAppConfirm/`).
 2. It shows the 6-character code, a **Copy** button, and the time limit (24 hours, shown with date and time).
 3. **Confirm on WhatsApp** opens the `whatsappUrl` from the backend: a chat with the store, with the code already typed.
-4. While the order is `pending`, the screen asks `GET /api/orders/:id/confirmation` every **5 seconds**, and right away when the customer comes back to the page.
-5. `confirmed` → ✅ screen with a **Go to My Orders** button. `expired` → ⌛ screen.
-6. Clicking outside this screen does not close it, so the code is not lost by mistake.
+4. A note says the store will confirm the order, and the status can be seen later. Buttons: **Go to My Orders** and **Done**.
+5. Clicking outside this screen does not close it, so the code is not lost by mistake.
+
+> The screen does **not** ask the server for the confirm status. That route (`GET /api/orders/:id/confirmation`) is closed until the WhatsApp bot is built.
 
 **My orders** shows a badge on each order: waiting (with the code), confirmed, or expired.
 
@@ -216,13 +217,27 @@ formatPrice(9.5);  // "9.50 ₪"
 
 > Automatic confirmation (a WhatsApp bot) is not built yet. For now a moderator confirms by hand.
 
-## 📦 How Guest Order Tracking Works
+## 🔎 Track an Order by Code (home page)
 
-1. The user picks the country code (`+970` / `+972`, same list as checkout in `utils/constants.js`) and enters their phone number → `POST /api/guest/sessions`.
+The **🎁 My Orders** button on the home page opens `components/trackOrder/TrackOrder.jsx`:
+
+1. The customer enters the **confirmation code** (from the WhatsApp screen after buying) and their **phone number** with the country code.
+   - The code is made uppercase and spaces are removed (`k7p 2xm` → `K7P2XM`). It must be 6 characters with no `0 O 1 I L`, or a yellow hint shows and the button stays disabled.
+2. `trackOrder()` in `useOrderStore.js` sends both to `POST /api/orders/track`.
+3. If found, the same popup shows the order: code, order status, WhatsApp confirm badge, date, items, and total. **Track another order** goes back to the form.
+4. If not found, a toast shows the server's message.
+
+> The phone is needed too: someone who only knows a phone number cannot see orders this way.
+
+## 📦 How Guest Order Tracking Works ("My orders" page)
+
+The full "My orders" page is opened from **Go to My Orders** on the confirm screen after buying.
+
+1. The app uses the number from the checkout form (country code + number) → `POST /api/guest/sessions`.
 2. The backend returns a guest token. It is saved in `localStorage` (key: `guestToken`). The number the user types is **always** checked again, so an old token for another number is never used.
 3. The orders are loaded with `GET /api/guest/orders` and the `x-guest-token` header.
 4. When the "My orders" page opens or is refreshed, it loads the orders again with the saved token (so it also shows the latest status).
-5. If there is no token, or it has expired (**401**), the token is removed and the page asks the user to enter their number from the home page.
+5. If there is no token, or it has expired (**401**), the token is removed and the page shows a message with a button back to the home page.
 
 ---
 
@@ -234,7 +249,7 @@ formatPrice(9.5);  // "9.50 ₪"
 | Admins    | `GET /api/admins`, `POST /api/admins`, `PATCH /api/admins/:id/disable`, `PATCH /api/admins/:id/enable` |
 | Dashboard | `GET /api/dashboard/analytics`                                                                |
 | Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`, `POST /api/orders/confirm`              |
-| Confirmation | `GET /api/orders/:id/confirmation`                                                          |
+| Track     | `POST /api/orders/track`                                                                      |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |
 | Cart      | `/api/carts/:guestId/...` (see backend README)                                                |
 | Purchase  | `POST /api/orders`, `POST /api/carts/:guestId/checkout`                                       |

@@ -88,11 +88,12 @@ export const useOrderStore = create((set, get) => ({
       });
   },
 
-  // حالة تأكيد الطلب: "pending" | "confirmed" | "expired"
-  getOrderConfirmation: (orderId) => {
+  // البحث عن طلب واحد برمز التأكيد + رقم الهاتف (POST /api/orders/track)
+  // يرجع الطلب، أو يرمي الخطأ (الصفحة تعرض الرسالة)
+  trackOrder: ({ code, phoneNumber }) => {
     return axios
-      .get(`${apiUrl}/api/orders/${orderId}/confirmation`)
-      .then((response) => response.data?.data?.status || "pending");
+      .post(`${apiUrl}/api/orders/track`, { code, phoneNumber })
+      .then((response) => response.data?.data);
   },
 
   verifyGuestPhone: ({ phoneNumber }) => {

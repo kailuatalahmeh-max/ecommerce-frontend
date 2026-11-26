@@ -106,29 +106,12 @@
   transform: translateY(-1px);
 }
 
-/* ===== الانتظار ===== */
-.waiting {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+/* ===== ملاحظة بعد زر واتساب ===== */
+.note {
   color: #94a3b8;
-  font-size: 0.9rem;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-top-color: #25d366;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  font-size: 0.88rem;
+  line-height: 1.6;
+  max-width: 360px;
 }
 
 /* ===== الأزرار ===== */
@@ -160,13 +143,8 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.secondaryBtn:hover:not(:disabled) {
+.secondaryBtn:hover {
   background: rgba(255, 255, 255, 0.05);
-}
-
-.secondaryBtn:disabled {
-  color: #4a5568;
-  cursor: not-allowed;
 }
 
 @media (max-width: 480px) {
