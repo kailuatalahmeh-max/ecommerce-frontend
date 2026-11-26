@@ -97,7 +97,6 @@ export default function ViewItemDetails() {
               ))}
             </div>
           )}
-          <span className={styles.favorites}>❤️</span>
         </div>
         <div className={styles.itemDetails}>
           <h2 className={styles.itemName}>{thisItem.itemName}</h2>
