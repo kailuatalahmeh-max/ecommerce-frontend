@@ -161,6 +161,39 @@ export const useOrderStore = create((set) => ({
     });
   },
 
+  // إلغاء طلب "Pending" (POST /api/orders/cancel). المخزون يرجع في السيرفر.
+  // الطلب يبقى محفوظاً على الجهاز، بحالة "ملغي"
+  cancelOrder: ({ code, phoneNumber }) => {
+    return confirmDialog({
+      title: i18n.t("myOrders.cancelTitle"),
+      message: i18n.t("myOrders.cancelMessage", { code }),
+      confirmText: i18n.t("myOrders.cancelButton"),
+      cancelText: i18n.t("myOrders.keepOrder"),
+      variant: "danger",
+      onConfirm: async () => {
+        try {
+          const response = await axios.post(`${apiUrl}/api/orders/cancel`, {
+            code,
+            phoneNumber,
+          });
+          const updated = response.data?.data;
+          set((state) => ({
+            myOrderData: state.myOrderData.map((o) =>
+              o.code === code && updated ? { ...o, order: updated } : o,
+            ),
+          }));
+          toast.success(i18n.t("myOrders.cancelled"));
+        } catch (err) {
+          toast.error(err.response?.data?.message || i18n.t("myOrders.cancelFailed"));
+          // مثلاً المتجر قبل الطلب قبل قليل: نعرض الحالة الجديدة
+          if (err.response?.status === 409) {
+            useOrderStore.getState().fetchSavedOrders().catch(() => {});
+          }
+        }
+      },
+    });
+  },
+
   // حذف كل الطلبات من هذا الجهاز
   clearAllOrdersFromDevice: () => {
     return confirmDialog({

@@ -57,7 +57,7 @@ frontend/
 | ------------------ | --------------------------------------------------------- |
 | `ItemContext.jsx`  | جلب قائمة المنتجات                                        |
 | `useCartStore.js`  | السلة: إنشاء `guestId`، إضافة، حذف، تعديل الكمية          |
-| `useOrderStore.js` | عمليات الشراء، تتبّع طلب واحد (`trackOrder`)، الطلبات المحفوظة (`fetchSavedOrders`، الحذف، حذف الكل) |
+| `useOrderStore.js` | عمليات الشراء، تتبّع طلب واحد (`trackOrder`)، الطلبات المحفوظة (`fetchSavedOrders`، الحذف، حذف الكل)، الإلغاء (`cancelOrder`) |
 | `useAuthStore.js`  | حالة تسجيل دخول الأدمن (التوكن، الصلاحية، معرّف الأدمن)    |
 | `useAdminStore.js` | عمليات الأدمن: المنتجات، الطلبات (والتأكيد اليدوي)، الأدمنز، الإحصائيات |
 | `useConfirmStore.js` | `confirmDialog()`: نافذة التأكيد الخاصة بالموقع (بدل `window.confirm`) |
@@ -249,7 +249,14 @@ formatPrice(9.5);  // "9.50 ₪"
 
 > الـ `guestToken` القديم في `localStorage` يُحذف مرة واحدة عند فتح التطبيق (جلسات الضيف حُذفت من الـ Backend).
 
-> **لاحقاً:** الرمز + الرقم المحفوظان يمكن استخدامهما أيضاً للسماح للزبون **بإلغاء** طلبه.
+### ✖ إلغاء الطلب
+
+- كل طلب **Pending** في "طلباتي" فيه زر أحمر **إلغاء الطلب**. الطلبات المقبولة، والتي تم توصيلها، والملغية لا يظهر فيها.
+- الضغط يفتح نافذة التأكيد ("إلغاء الطلب" / "لا، أبقِ الطلب").
+- الدالة `cancelOrder()` في `useOrderStore.js` ترسل `code + phoneNumber` المحفوظين إلى `POST /api/orders/cancel`. السيرفر يرجع المخزون.
+- عند النجاح البطاقة تعرض **ملغي** مباشرة، والطلب **يبقى** في القائمة.
+- إذا قبل المتجر الطلب قبل لحظة (`409`)، تظهر رسالة السيرفر، وتُجلب القائمة من جديد بالحالة الجديدة.
+- الطلبات الملغية **لا** تدخل في الإجمالي.
 
 ---
 
@@ -261,7 +268,7 @@ formatPrice(9.5);  // "9.50 ₪"
 | الأدمنز          | `GET /api/admins`، `POST /api/admins`، `PATCH /api/admins/:id/disable`، `PATCH /api/admins/:id/enable` |
 | الإحصائيات       | `GET /api/dashboard/analytics`                                                                |
 | الطلبات (الأدمن) | `GET /api/orders`، `PATCH /api/orders/:orderId`، `POST /api/orders/confirm`                   |
-| تتبّع الطلب      | `POST /api/orders/track`، `POST /api/orders/track-many`                                       |
+| تتبّع الطلب      | `POST /api/orders/track`، `POST /api/orders/track-many`، `POST /api/orders/cancel`            |
 | المنتجات         | `GET /api/items`، `POST /api/items`، `PUT /api/items/:id`، `DELETE /api/items/:id`            |
 | السلة            | `/api/carts/:guestId/...` (راجع ملف الـ Backend)                                              |
 | الشراء           | `POST /api/orders`، `POST /api/carts/:guestId/checkout`                                       |

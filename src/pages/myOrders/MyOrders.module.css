@@ -301,6 +301,29 @@
   margin-top: 0.3rem;
 }
 
+/* زر إلغاء الطلب (فقط للطلبات Pending) */
+.cancelBtn {
+  align-self: flex-end;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 10px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.cancelBtn:active {
+  transform: scale(0.97);
+}
+
 /* ===== طلب غير موجود ===== */
 .missingOrder {
   border-color: rgba(251, 191, 36, 0.25);

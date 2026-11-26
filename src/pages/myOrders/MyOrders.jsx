@@ -45,6 +45,7 @@ export default function MyOrders() {
   const clearAllOrdersFromDevice = useOrderStore(
     (state) => state.clearAllOrdersFromDevice,
   );
+  const cancelOrder = useOrderStore((state) => state.cancelOrder);
 
   useEffect(() => {
     fetchSavedOrders().catch((err) => {
@@ -60,8 +61,12 @@ export default function MyOrders() {
     return !statusFilter || entry.order.status === statusFilter;
   });
 
+  // الطلبات الملغية لا تدخل في الإجمالي
   const totalPrice = visible.reduce(
-    (sum, entry) => sum + (entry.status === "found" ? entry.order.totalPrice : 0),
+    (sum, entry) =>
+      entry.status === "found" && entry.order.status !== "Cancelled"
+        ? sum + entry.order.totalPrice
+        : sum,
     0,
   );
 
@@ -222,6 +227,22 @@ export default function MyOrders() {
                   <span className={styles.orderPrice}>
                     {formatPrice(order.totalPrice)}
                   </span>
+
+                  {/* الإلغاء فقط قبل أن يقبل المتجر الطلب */}
+                  {order.status === "Pending" && (
+                    <button
+                      type="button"
+                      className={styles.cancelBtn}
+                      onClick={() =>
+                        cancelOrder({
+                          code: entry.code,
+                          phoneNumber: entry.phoneNumber,
+                        })
+                      }
+                    >
+                      ✖ {t("myOrders.cancelButton")}
+                    </button>
+                  )}
                 </div>
               );
             })}

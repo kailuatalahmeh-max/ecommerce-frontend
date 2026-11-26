@@ -57,7 +57,7 @@ frontend/
 | ------------------ | ------------------------------------------------------------ |
 | `ItemContext.jsx`  | Gets the product list                                        |
 | `useCartStore.js`  | Cart: create `guestId`, add, remove, change quantity         |
-| `useOrderStore.js` | Purchases, tracking one order (`trackOrder`), the saved orders (`fetchSavedOrders`, remove, clear all) |
+| `useOrderStore.js` | Purchases, tracking one order (`trackOrder`), the saved orders (`fetchSavedOrders`, remove, clear all), cancel (`cancelOrder`) |
 | `useAuthStore.js`  | Admin login state (token, role, admin ID)                    |
 | `useAdminStore.js` | Admin actions: products, orders (and manual confirm), admins, analytics |
 | `useConfirmStore.js` | `confirmDialog()`: the site's confirm popup (instead of `window.confirm`) |
@@ -249,7 +249,14 @@ There is **no login and no token**. The browser keeps a small list of the custom
 
 > The old `guestToken` in `localStorage` is removed once when the app loads (guest sessions were removed from the backend).
 
-> **Later:** the saved code + phone can also be used to let the customer **cancel** an order.
+### ✖ Cancel an order
+
+- Each **Pending** order in "My orders" has a red **Cancel order** button. Accepted, Delivered and Cancelled orders don't have it.
+- A click opens the confirm dialog ("Cancel order" / "No, keep it").
+- `cancelOrder()` in `useOrderStore.js` sends the saved `code + phoneNumber` to `POST /api/orders/cancel`. The server returns the stock.
+- On success the card shows **Cancelled** at once, and the order **stays** in the list.
+- If the store accepted the order a moment before (`409`), the server's message shows, and the list loads again with the new status.
+- Cancelled orders are **not** counted in the total price.
 
 ---
 
@@ -261,7 +268,7 @@ There is **no login and no token**. The browser keeps a small list of the custom
 | Admins    | `GET /api/admins`, `POST /api/admins`, `PATCH /api/admins/:id/disable`, `PATCH /api/admins/:id/enable` |
 | Dashboard | `GET /api/dashboard/analytics`                                                                |
 | Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`, `POST /api/orders/confirm`              |
-| Track     | `POST /api/orders/track`, `POST /api/orders/track-many`                                       |
+| Track     | `POST /api/orders/track`, `POST /api/orders/track-many`, `POST /api/orders/cancel`            |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |
 | Cart      | `/api/carts/:guestId/...` (see backend README)                                                |
 | Purchase  | `POST /api/orders`, `POST /api/carts/:guestId/checkout`                                       |
