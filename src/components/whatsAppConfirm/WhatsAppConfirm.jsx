@@ -2,21 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import styles from "./WhatsAppConfirm.module.css";
-import { useOrderStore } from "../../context/useOrderStore";
 import { getDateLocale } from "../../i18n";
 
 /*
   خطوة ما بعد الشراء: الزبون يرسل رمز التأكيد للمتجر على واتساب.
   confirmation = { orderId, confirmCode, expiresAt, whatsappUrl } (من رد الشراء)
-  phoneNumber = رقم الزبون الكامل (مثل +970599123456) لفتح "طلباتي"
+  الطلب محفوظ في المتصفح (CompleteOrder)، فيظهر مباشرة في صفحة "طلباتي".
 
   الشاشة لا تسأل السيرفر عن حالة التأكيد (المسار مقفل حتى يعمل بوت واتساب).
   الزبون يشوف الحالة في صفحة "طلباتي".
 */
-export default function WhatsAppConfirm({ confirmation, phoneNumber, onClose }) {
+export default function WhatsAppConfirm({ confirmation, onClose }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const getMyOrder = useOrderStore((state) => state.getMyOrder);
 
   const { confirmCode, expiresAt, whatsappUrl } = confirmation;
 
@@ -73,7 +71,7 @@ export default function WhatsAppConfirm({ confirmation, phoneNumber, onClose }) 
       <button
         type="button"
         className={styles.primaryBtn}
-        onClick={() => getMyOrder({ phoneNumber, navigate })}
+        onClick={() => navigate("/my-orders")}
       >
         {t("confirmOrder.myOrders")}
       </button>

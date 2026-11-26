@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import styles from "./TrackOrder.module.css";
@@ -6,6 +7,7 @@ import { useOrderStore } from "../../context/useOrderStore";
 import { COUNTRY_CODES } from "../../utils/constants";
 import { getDateLocale } from "../../i18n";
 import { formatPrice } from "../../utils/formatPrice";
+import { saveOrder } from "../../utils/savedOrders";
 
 // نفس حروف رمز التأكيد في الباك إند (بدون 0 O 1 I L)
 const CODE_REGEX = /^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/;
@@ -25,6 +27,7 @@ function getConfirmState(confirmation) {
 */
 export default function TrackOrder({ handleClose }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const trackOrder = useOrderStore((state) => state.trackOrder);
 
   const [code, setCode] = useState("");
@@ -43,11 +46,11 @@ export default function TrackOrder({ handleClose }) {
 
     try {
       setLoading(true);
-      const found = await trackOrder({
-        code: cleanCode,
-        // نفس شكل الشراء: كود الدولة + الرقم (مثال: +970599123456)
-        phoneNumber: `${countryCode}${phoneNumber.trim()}`,
-      });
+      // نفس شكل الشراء: كود الدولة + الرقم (مثال: +970599123456)
+      const fullPhone = `${countryCode}${phoneNumber.trim()}`;
+      const found = await trackOrder({ code: cleanCode, phoneNumber: fullPhone });
+      // نحفظه في هذا المتصفح، فيظهر في "طلباتي" (مفيد على جهاز جديد)
+      saveOrder({ code: cleanCode, phoneNumber: fullPhone });
       setOrder(found);
     } catch (err) {
       toast.error(err.response?.data?.message || t("trackOrder.notFound"));
@@ -127,9 +130,18 @@ export default function TrackOrder({ handleClose }) {
             </div>
           </div>
 
+          <p className={styles.savedNote}>{t("trackOrder.savedNote")}</p>
+
           <button
             type="button"
             className={styles.submitBtn}
+            onClick={() => navigate("/my-orders")}
+          >
+            {t("trackOrder.seeAllOrders")}
+          </button>
+          <button
+            type="button"
+            className={styles.backBtn}
             onClick={() => setOrder(null)}
           >
             {t("trackOrder.searchAgain")}

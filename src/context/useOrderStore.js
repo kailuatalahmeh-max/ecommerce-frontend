@@ -3,11 +3,28 @@ import toast from "react-hot-toast";
 import i18n from "../i18n";
 import axios from "axios";
 import { useCartStore } from "./useCartStore";
+import { confirmDialog } from "./useConfirmStore";
+import {
+  getSavedOrders,
+  removeSavedOrder,
+  clearSavedOrders,
+} from "../utils/savedOrders";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const useOrderStore = create((set, get) => ({
-  myPastOrderDetails: [],
+// track-many يقبل 20 طلب كحد أقصى في الطلب الواحد
+const TRACK_MANY_LIMIT = 20;
+
+// جلسات الضيف (guestToken) انحذفت من الباك إند: نمسح التوكن القديم مرة واحدة
+try {
+  localStorage.removeItem("guestToken");
+} catch {
+  // التخزين ممنوع: لا شيء
+}
+
+export const useOrderStore = create((set) => ({
+  // نتائج track-many للطلبات المحفوظة في هذا المتصفح:
+  // [{ code, phoneNumber, status: "found" | "notFound" | "invalid", order? }]
   myOrderData: [],
   myOrdersLoading: false,
 
@@ -96,62 +113,66 @@ export const useOrderStore = create((set, get) => ({
       .then((response) => response.data?.data);
   },
 
-  verifyGuestPhone: ({ phoneNumber }) => {
-    // نحذف التوكن القديم أولاً: إذا فشل التحقق لا يبقى توكن رقم آخر
-    localStorage.removeItem("guestToken");
+  // بيانات جديدة لكل الطلبات المحفوظة (POST /api/orders/track-many)
+  // أكثر من 20 طلب ← عدة طلبات، كل واحد فيه 20 كحد أقصى
+  fetchSavedOrders: async () => {
+    const saved = getSavedOrders();
+    if (saved.length === 0) {
+      set({ myOrderData: [], myOrdersLoading: false });
+      return [];
+    }
 
-    return axios
-      .post(`${apiUrl}/api/guest/sessions`, { phoneNumber: phoneNumber })
-      .then((response) => {
-        const token = response.data?.token;
-        if (token) {
-          localStorage.setItem("guestToken", token);
-        }
-        return token;
-      });
-  },
-
-  fetchOrdersByToken: () => {
-    const token = localStorage.getItem("guestToken");
-    if (!token) {
-      return Promise.reject(new Error("no token"));
+    const chunks = [];
+    for (let i = 0; i < saved.length; i += TRACK_MANY_LIMIT) {
+      chunks.push(saved.slice(i, i + TRACK_MANY_LIMIT));
     }
 
     set({ myOrdersLoading: true });
-
-    return axios
-      .get(`${apiUrl}/api/guest/orders`, {
-        headers: {
-          "x-guest-token": token,
-        },
-      })
-      .then((response) => {
-        const data = response.data?.data || [];
-        set({ myOrderData: data });
-        return data;
-      })
-      .catch((err) => {
-        // الجلسة انتهت (30 يوم) أو غير صحيحة ← نحذف التوكن القديم
-        if (err.response?.status === 401) {
-          localStorage.removeItem("guestToken");
-          set({ myOrderData: [] });
-        }
-        throw err;
-      })
-      .finally(() => {
-        set({ myOrdersLoading: false });
-      });
+    try {
+      const responses = await Promise.all(
+        chunks.map((chunk) =>
+          axios.post(`${apiUrl}/api/orders/track-many`, {
+            orders: chunk.map(({ code, phoneNumber }) => ({ code, phoneNumber })),
+          }),
+        ),
+      );
+      const data = responses.flatMap((r) => r.data?.data || []);
+      set({ myOrderData: data });
+      return data;
+    } finally {
+      set({ myOrdersLoading: false });
+    }
   },
 
-  getMyOrder: async ({ phoneNumber, navigate }) => {
-    try {
-      // دائماً نتحقق من الرقم الذي كتبه المستخدم الآن (توكن جديد لهذا الرقم)،
-      // حتى لا نعرض طلبات رقم قديم محفوظ في المتصفح
-      await get().verifyGuestPhone({ phoneNumber: phoneNumber });
-      await get().fetchOrdersByToken();
-      navigate("/my-orders");
-    } catch (err) {
-      toast.error(err.response?.data?.message || i18n.t("common.fetchFailed"));
-    }
+  // حذف طلب من هذا الجهاز فقط (الطلب لا يُلغى)
+  removeOrderFromDevice: (code) => {
+    return confirmDialog({
+      title: i18n.t("myOrders.removeTitle"),
+      message: i18n.t("myOrders.removeMessage", { code }),
+      confirmText: i18n.t("myOrders.removeButton"),
+      variant: "danger",
+      onConfirm: () => {
+        removeSavedOrder(code);
+        set((state) => ({
+          myOrderData: state.myOrderData.filter((o) => o.code !== code),
+        }));
+        toast.success(i18n.t("myOrders.removed"));
+      },
+    });
+  },
+
+  // حذف كل الطلبات من هذا الجهاز
+  clearAllOrdersFromDevice: () => {
+    return confirmDialog({
+      title: i18n.t("myOrders.clearAllTitle"),
+      message: i18n.t("myOrders.clearAllMessage"),
+      confirmText: i18n.t("myOrders.clearAll"),
+      variant: "danger",
+      onConfirm: () => {
+        clearSavedOrders();
+        set({ myOrderData: [] });
+        toast.success(i18n.t("myOrders.cleared"));
+      },
+    });
   },
 }));

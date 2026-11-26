@@ -201,8 +201,8 @@
   border-color: rgba(239, 68, 68, 0.25);
 }
 
-/* 2. تنسيق بطاقات الفواتير الحقيقية المكررة بالداخل (order) لتبدو كفواتير فرعية متناسقة */
-.cardBody .orderCard {
+/* ===== بطاقة كل طلب محفوظ ===== */
+.savedOrder {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 12px;
@@ -213,53 +213,150 @@
   gap: 0.8rem;
 }
 
-.cardBody .orderCard:last-child {
+.savedOrder:last-child {
   margin-bottom: 0;
 }
 
-/* تنسيق تواريخ وحالات الشراء الداخلية */
-.cardBody .orderCard > span:nth-child(1) {
+/* التاريخ (أو عنوان "غير موجود") + زر الحذف */
+.orderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.orderDate {
   font-size: 0.85rem;
   color: #64748b;
 }
 
-.cardBody .orderCard > span:nth-child(2) {
+.removeBtn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.removeBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.orderStatus {
   font-size: 0.8rem;
   font-weight: 700;
   color: #a855f7;
   background: rgba(168, 85, 247, 0.1);
-  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  padding: 0.25rem 0.6rem;
   border-radius: 6px;
-  align-self: flex-start;
 }
 
-/* قائمة المنتجات المعروضة (li) داخل بطاقات الشراء */
-.cardBody .orderCard li {
+/* قائمة المنتجات داخل الطلب */
+.orderItems {
+  margin: 0;
+  padding: 0;
+}
+
+.orderItems li {
   list-style: none;
   display: flex;
   justify-content: space-between;
+  gap: 0.75rem;
   background: rgba(255, 255, 255, 0.01);
   padding: 0.75rem 1rem;
   border-radius: 10px;
   font-size: 0.95rem;
   color: #cbd5e1;
-  border-left: 3px solid #6366f1;
+  border-inline-start: 3px solid #6366f1;
   margin-bottom: 0.5rem;
 }
 
-.cardBody .orderCard li:last-of-type {
+.orderItems li:last-of-type {
   margin-bottom: 0;
 }
 
-/* سعر المشتريات الفرعي الداخلي */
-.cardBody .orderCard > span:last-child {
-  text-align: right;
+/* سعر الطلب */
+.orderPrice {
+  text-align: end;
   font-weight: 700;
   font-size: 1.1rem;
   color: #e2e8f0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: 0.5rem;
   margin-top: 0.3rem;
+}
+
+/* ===== طلب غير موجود ===== */
+.missingOrder {
+  border-color: rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.04);
+}
+
+.missingTitle {
+  color: #fbbf24;
+  font-size: 0.95rem;
+}
+
+.orderCode {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: 0.2em;
+  color: #a5b4fc;
+  align-self: flex-start;
+}
+
+.missingText {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+/* ===== الهيدر: الفلتر + "حذف الكل" ===== */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.clearAllBtn {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.clearAllBtn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.deviceNote {
+  width: 100%;
+  max-width: 800px;
+  margin: -1.5rem 0 1.5rem;
+  font-size: 0.85rem;
+  color: #64748b;
 }
 
 /* ذيل الكارت وزر التفاصيل المجموع الكبير الافتراضي */
@@ -432,8 +529,17 @@
     padding-bottom: 1rem;
   }
 
-  .selectWrapper {
+  .headerActions {
     width: 100%;
+  }
+
+  .selectWrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .deviceNote {
+    margin: -0.75rem 0 1rem;
   }
 
   .mainSection {
@@ -450,12 +556,12 @@
     gap: 0.5rem;
   }
 
-  .cardBody .orderCard {
+  .savedOrder {
     padding: 0.9rem;
   }
 
   /* اسم المنتج والكمية والسعر ينزلوا لسطر جديد إذا لم يكفِ المكان */
-  .cardBody .orderCard li {
+  .orderItems li {
     flex-wrap: wrap;
     gap: 0.25rem 0.75rem;
     padding: 0.65rem 0.8rem;

@@ -345,6 +345,13 @@
   font-size: 1.05rem;
 }
 
+/* "تم حفظ الطلب في هذا الجهاز" */
+.savedNote {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #4ade80;
+}
+
 @media (max-width: 640px) {
   /* يفتح من أسفل الشاشة مثل السلة */
   .page {

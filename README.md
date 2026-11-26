@@ -9,7 +9,7 @@ Main features:
 - Product list and product details pages.
 - Shopping cart without login (uses a `guestId` saved in the browser).
 - Direct purchase and cart purchase, with order confirmation on WhatsApp.
-- "My orders" page for guests (by phone number and guest token).
+- "My orders" page: the orders saved on this device, always with fresh data (by confirmation code + phone, no login).
 - Admin dashboard: products, orders, admin accounts, and analytics.
 - Pages protected by role (`admin`, `moderator`, `super_admin`).
 - Two languages: **Arabic** (default, right-to-left) and **English** (left-to-right), with a switch button on every page.
@@ -47,7 +47,7 @@ frontend/
 │   ├── pages/                # One folder per page
 │   ├── routes/
 │   │   └── ProtectedRoute.jsx  # Blocks pages if the role is not allowed
-│   └── utils/                # Helpers (axiosAdmin, constants, formatPrice, URL helpers)
+│   └── utils/                # Helpers (axiosAdmin, constants, formatPrice, savedOrders, URL helpers)
 └── vercel.json               # Sends all paths to index.html (for React Router)
 ```
 
@@ -57,7 +57,7 @@ frontend/
 | ------------------ | ------------------------------------------------------------ |
 | `ItemContext.jsx`  | Gets the product list                                        |
 | `useCartStore.js`  | Cart: create `guestId`, add, remove, change quantity         |
-| `useOrderStore.js` | Purchases, tracking one order by code (`trackOrder`), and guest order tracking |
+| `useOrderStore.js` | Purchases, tracking one order (`trackOrder`), the saved orders (`fetchSavedOrders`, remove, clear all) |
 | `useAuthStore.js`  | Admin login state (token, role, admin ID)                    |
 | `useAdminStore.js` | Admin actions: products, orders (and manual confirm), admins, analytics |
 | `useConfirmStore.js` | `confirmDialog()`: the site's confirm popup (instead of `window.confirm`) |
@@ -224,20 +224,30 @@ The **🎁 My Orders** button on the home page opens `components/trackOrder/Trac
 1. The customer enters the **confirmation code** (from the WhatsApp screen after buying) and their **phone number** with the country code.
    - The code is made uppercase and spaces are removed (`k7p 2xm` → `K7P2XM`). It must be 6 characters with no `0 O 1 I L`, or a yellow hint shows and the button stays disabled.
 2. `trackOrder()` in `useOrderStore.js` sends both to `POST /api/orders/track`.
-3. If found, the same popup shows the order: code, order status, WhatsApp confirm badge, date, items, and total. **Track another order** goes back to the form.
+3. If found, the same popup shows the order: code, order status, WhatsApp confirm badge, date, items, and total. The order is also **saved on this device** (so it shows in "My orders"). Buttons: **See all my orders** and **Track another order**.
 4. If not found, a toast shows the server's message.
 
 > The phone is needed too: someone who only knows a phone number cannot see orders this way.
 
-## 📦 How Guest Order Tracking Works ("My orders" page)
+## 📦 How "My orders" Works (saved on this device)
 
-The full "My orders" page is opened from **Go to My Orders** on the confirm screen after buying.
+There is **no login and no token**. The browser keeps a small list of the customer's orders in `localStorage` (key: `savedOrders`, file `utils/savedOrders.js`):
 
-1. The app uses the number from the checkout form (country code + number) → `POST /api/guest/sessions`.
-2. The backend returns a guest token. It is saved in `localStorage` (key: `guestToken`). The number the user types is **always** checked again, so an old token for another number is never used.
-3. The orders are loaded with `GET /api/guest/orders` and the `x-guest-token` header.
-4. When the "My orders" page opens or is refreshed, it loads the orders again with the saved token (so it also shows the latest status).
-5. If there is no token, or it has expired (**401**), the token is removed and the page shows a message with a button back to the home page.
+```json
+[{ "code": "K7P2XM", "phoneNumber": "+970599123456", "savedAt": "2026-11-26T12:00:00.000Z" }]
+```
+
+1. **Saved automatically** after every purchase (`CompleteOrder.jsx`), and when an order is found in TrackOrder (useful on a new device: the code is in the customer's WhatsApp chat).
+2. Only `code + phoneNumber` is saved, **not** the order data. The newest is first, the same code is never saved twice, and the list keeps at most **50**.
+3. Every time "My orders" opens (or is refreshed), `fetchSavedOrders()` asks `POST /api/orders/track-many` for **fresh data**. More than 20 saved orders → several requests of 20.
+4. Each order shows its date, status, WhatsApp confirm badge, items and price. The status filter and the total work on these orders.
+5. An order the server can't find shows **"Order not found"** with its code (for example, if it was deleted).
+6. 🗑️ on each order and **Clear all** remove orders **from this device only** (the order is **not** cancelled). Both ask first with the confirm dialog.
+7. No saved orders → a message explains how to add one (buy, or 🎁 My Orders + code).
+
+> The old `guestToken` in `localStorage` is removed once when the app loads (guest sessions were removed from the backend).
+
+> **Later:** the saved code + phone can also be used to let the customer **cancel** an order.
 
 ---
 
@@ -249,11 +259,10 @@ The full "My orders" page is opened from **Go to My Orders** on the confirm scre
 | Admins    | `GET /api/admins`, `POST /api/admins`, `PATCH /api/admins/:id/disable`, `PATCH /api/admins/:id/enable` |
 | Dashboard | `GET /api/dashboard/analytics`                                                                |
 | Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`, `POST /api/orders/confirm`              |
-| Track     | `POST /api/orders/track`                                                                      |
+| Track     | `POST /api/orders/track`, `POST /api/orders/track-many`                                       |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |
 | Cart      | `/api/carts/:guestId/...` (see backend README)                                                |
 | Purchase  | `POST /api/orders`, `POST /api/carts/:guestId/checkout`                                       |
-| Guest     | `POST /api/guest/sessions`, `GET /api/guest/orders`                                           |
 | Health    | `GET /health`                                                                                 |
 
 Full details are in the [backend README](../backend/README.md#-api-endpoints).

@@ -6,6 +6,7 @@ import { useOrderStore } from "../../context/useOrderStore";
 import { useNavigate } from "react-router-dom";
 import { getDateLocale } from "../../i18n";
 import { formatPrice } from "../../utils/formatPrice";
+import { getSavedOrders } from "../../utils/savedOrders";
 
 const STATUSES = ["Pending", "Accepted", "Delivered", "Cancelled"];
 
@@ -24,6 +25,11 @@ const CONFIRM_CLASSES = {
   expired: styles.confirmExpired,
 };
 
+/*
+  "طلباتي": الطلبات المحفوظة في هذا المتصفح فقط (utils/savedOrders.js).
+  كل مرة تُفتح الصفحة (أو refresh) نجيب البيانات الجديدة من السيرفر
+  بطلب واحد: POST /api/orders/track-many
+*/
 export default function MyOrders() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -32,44 +38,41 @@ export default function MyOrders() {
 
   const myOrderData = useOrderStore((state) => state.myOrderData);
   const myOrdersLoading = useOrderStore((state) => state.myOrdersLoading);
-  const fetchOrdersByToken = useOrderStore(
-    (state) => state.fetchOrdersByToken,
+  const fetchSavedOrders = useOrderStore((state) => state.fetchSavedOrders);
+  const removeOrderFromDevice = useOrderStore(
+    (state) => state.removeOrderFromDevice,
+  );
+  const clearAllOrdersFromDevice = useOrderStore(
+    (state) => state.clearAllOrdersFromDevice,
   );
 
-  // يُقرأ في كل render: بعد 401 يحذف الـ store التوكن، فتظهر رسالة "أدخل رقمك"
-  const hasToken = !!localStorage.getItem("guestToken");
-
-  // عند فتح الصفحة أو عمل refresh: نجلب الطلبات من جديد بالتوكن المحفوظ
-  // (وهكذا تظهر أيضاً آخر حالة للطلب إذا غيّرها الأدمن)
   useEffect(() => {
-    if (!localStorage.getItem("guestToken")) return;
-
-    fetchOrdersByToken().catch((err) => {
+    fetchSavedOrders().catch((err) => {
       toast.error(err.response?.data?.message || t("myOrders.fetchFailed"));
     });
     // t يتغير مع اللغة؛ لا نريد إعادة الجلب عند تغيير اللغة
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchOrdersByToken]);
+  }, [fetchSavedOrders]);
 
-  const filteredOrders = myOrderData?.filter((order) => {
-    if (!statusFilter) return true;
-
-    return order.status === statusFilter;
+  // الطلبات الموجودة تُفلتر بالحالة؛ "غير موجود" يظهر فقط مع "كل الطلبات"
+  const visible = myOrderData.filter((entry) => {
+    if (entry.status !== "found") return !statusFilter;
+    return !statusFilter || entry.order.status === statusFilter;
   });
 
-  let totalPrice = 0;
-  filteredOrders?.forEach((order) => {
-    totalPrice += order.totalPrice;
-  });
+  const totalPrice = visible.reduce(
+    (sum, entry) => sum + (entry.status === "found" ? entry.order.totalPrice : 0),
+    0,
+  );
 
-  // لا يوجد توكن (أو انتهى): المستخدم يحتاج إدخال رقمه من الصفحة الرئيسية
-  if (!hasToken) {
+  // لا يوجد أي طلب محفوظ في هذا المتصفح
+  if (!myOrdersLoading && getSavedOrders().length === 0) {
     return (
       <div className={styles.myPage}>
         <div className={styles.stateBox}>
-          <div className={styles.stateIcon}>📱</div>
-          <h2 className={styles.stateTitle}>{t("myOrders.enterNumberTitle")}</h2>
-          <p className={styles.stateText}>{t("myOrders.enterNumberText")}</p>
+          <div className={styles.stateIcon}>📦</div>
+          <h2 className={styles.stateTitle}>{t("myOrders.emptyTitle")}</h2>
+          <p className={styles.stateText}>{t("myOrders.emptyText")}</p>
           <button
             type="button"
             className={`btn-global ${styles.BtnBack}`}
@@ -82,7 +85,7 @@ export default function MyOrders() {
     );
   }
 
-  // أول تحميل بعد refresh (لا توجد بيانات بعد)
+  // أول تحميل (لا توجد بيانات بعد)
   if (myOrdersLoading && myOrderData.length === 0) {
     return (
       <div className={styles.myPage}>
@@ -98,71 +101,127 @@ export default function MyOrders() {
     <div className={styles.myPage}>
       <header className={styles.headerSection}>
         <h1 className={styles.titlePage}>{t("myOrders.title")}</h1>
-        <div className={styles.selectWrapper}>
-          <select
-            className={styles.select}
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-            }}
+        <div className={styles.headerActions}>
+          <div className={styles.selectWrapper}>
+            <select
+              className={styles.select}
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">{t("myOrders.allOrders")}</option>
+              {STATUSES.map((status) => (
+                <option key={status} value={status}>
+                  {t(`status.${status}`)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            className={styles.clearAllBtn}
+            onClick={clearAllOrdersFromDevice}
           >
-            <option value="">{t("myOrders.allOrders")}</option>
-            {STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {t(`status.${status}`)}
-              </option>
-            ))}
-          </select>
+            {t("myOrders.clearAll")}
+          </button>
         </div>
       </header>
+
+      <p className={styles.deviceNote}>{t("myOrders.deviceNote")}</p>
 
       <main className={styles.mainSection}>
         <div className={styles.orderCard}>
           <div className={styles.cardBody}>
             <p className={styles.itemsTitle}>{t("myOrders.itemsSummary")}</p>
-            {filteredOrders?.length === 0 && (
+            {visible.length === 0 && (
               <p className={styles.stateText}>{t("myOrders.noneWithStatus")}</p>
             )}
-            {filteredOrders?.map((order) => {
+
+            {visible.map((entry) => {
+              const removeButton = (
+                <button
+                  type="button"
+                  className={styles.removeBtn}
+                  onClick={() => removeOrderFromDevice(entry.code)}
+                  aria-label={t("myOrders.removeButton")}
+                  title={t("myOrders.removeButton")}
+                >
+                  🗑️
+                </button>
+              );
+
+              // الطلب لم يعد موجوداً (أو بيانات محفوظة تالفة)
+              if (entry.status !== "found") {
+                return (
+                  <div
+                    key={entry.code || entry.phoneNumber}
+                    className={`${styles.savedOrder} ${styles.missingOrder}`}
+                  >
+                    <div className={styles.orderTop}>
+                      <strong className={styles.missingTitle}>
+                        ⚠️ {t("myOrders.notFoundTitle")}
+                      </strong>
+                      {removeButton}
+                    </div>
+                    <span className={styles.orderCode} dir="ltr">
+                      {entry.code}
+                    </span>
+                    <p className={styles.missingText}>
+                      {t("myOrders.notFoundText")}
+                    </p>
+                  </div>
+                );
+              }
+
+              const { order } = entry;
               return (
-                <div key={order._id} className={styles.orderCard}>
-                  <span className={styles.spanDate}>
-                    📅{" "}
-                    {new Date(order.createdAt).toLocaleString(getDateLocale(), {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                      hour12: true,
-                    })}
-                  </span>
-                  <span className={styles.spanStatus}>
-                    {t(`status.${order.status}`, order.status)}
-                  </span>
-                  {/* الطلبات القديمة ما فيها confirmation */}
-                  {order.confirmation && (
-                    <span
-                      className={`${styles.confirmBadge} ${
-                        CONFIRM_CLASSES[getConfirmState(order.confirmation)]
-                      }`}
-                    >
-                      {t(
-                        `myOrders.confirm.${getConfirmState(order.confirmation)}`,
-                        { code: order.confirmation.code },
+                <div key={entry.code} className={styles.savedOrder}>
+                  <div className={styles.orderTop}>
+                    <span className={styles.orderDate}>
+                      📅{" "}
+                      {new Date(order.createdAt).toLocaleString(
+                        getDateLocale(),
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        },
                       )}
                     </span>
-                  )}
-                  <ul>
+                    {removeButton}
+                  </div>
+
+                  <div className={styles.badges}>
+                    <span className={styles.orderStatus}>
+                      {t(`status.${order.status}`, order.status)}
+                    </span>
+                    {order.confirmation && (
+                      <span
+                        className={`${styles.confirmBadge} ${
+                          CONFIRM_CLASSES[getConfirmState(order.confirmation)]
+                        }`}
+                      >
+                        {t(
+                          `myOrders.confirm.${getConfirmState(order.confirmation)}`,
+                          { code: order.confirmation.code },
+                        )}
+                      </span>
+                    )}
+                  </div>
+
+                  <ul className={styles.orderItems}>
                     {order.items.map((item) => (
-                      <li key={item._id}>
+                      <li key={item._id || item.itemId}>
                         <span>{item.itemName}</span>
                         <span>{t("myOrders.qty", { count: item.quantity })}</span>
                       </li>
                     ))}
                   </ul>
-                  <span>{formatPrice(order.totalPrice)}</span>
+                  <span className={styles.orderPrice}>
+                    {formatPrice(order.totalPrice)}
+                  </span>
                 </div>
               );
             })}

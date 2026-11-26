@@ -6,6 +6,7 @@ import { ItemContext } from "../../context/ItemContext";
 import { COUNTRY_CODES, REGIONS } from "../../utils/constants";
 import { formatPrice } from "../../utils/formatPrice";
 import WhatsAppConfirm from "../whatsAppConfirm/WhatsAppConfirm";
+import { saveOrder } from "../../utils/savedOrders";
 
 export default function CompleteOrder({
   onClose,
@@ -53,6 +54,11 @@ export default function CompleteOrder({
 
       // نجح الشراء ← ننتقل لخطوة تأكيد واتساب (الفشل: الفورم يبقى مفتوح)
       if (result?.orderId && result?.confirmCode) {
+        // نحفظ الطلب في هذا المتصفح، فيظهر في "طلباتي" بدون كتابة أي شيء
+        saveOrder({
+          code: result.confirmCode,
+          phoneNumber: `${formData.countryCode}${formData.phoneNumber.trim()}`,
+        });
         setConfirmation(result);
       } else if (result) {
         onClose();
@@ -77,11 +83,7 @@ export default function CompleteOrder({
           >
             ❌
           </button>
-          <WhatsAppConfirm
-            confirmation={confirmation}
-            phoneNumber={`${formData.countryCode}${formData.phoneNumber.trim()}`}
-            onClose={onClose}
-          />
+          <WhatsAppConfirm confirmation={confirmation} onClose={onClose} />
         </div>
       </div>
     );
