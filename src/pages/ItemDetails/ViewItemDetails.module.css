@@ -68,30 +68,6 @@
   transform: scale(1.04);
 }
 
-.favorites {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  background: #ffffff;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  transition: all 0.25s ease;
-  user-select: none;
-  z-index: 3;
-}
-
-.favorites:hover {
-  transform: scale(1.12);
-  background-color: #fff1f2;
-}
-
 /* ==========================================
    🖼️ الصور المصغّرة
    ========================================== */
@@ -437,11 +413,6 @@
     width: 44px;
     height: 44px;
     border-radius: 10px;
-  }
-
-  .favorites {
-    top: 12px;
-    left: 12px;
   }
 
   .itemDetails {
