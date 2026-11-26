@@ -7,7 +7,7 @@ import { useOrderStore } from "../../context/useOrderStore";
 import { COUNTRY_CODES } from "../../utils/constants";
 import { getDateLocale } from "../../i18n";
 import { formatPrice } from "../../utils/formatPrice";
-import { saveOrder } from "../../utils/savedOrders";
+import { getSavedOrders, saveOrder } from "../../utils/savedOrders";
 
 // نفس حروف رمز التأكيد في الباك إند (بدون 0 O 1 I L)
 const CODE_REGEX = /^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/;
@@ -35,6 +35,8 @@ export default function TrackOrder({ handleClose }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState(null);
+  // عدد الطلبات المحفوظة في هذا المتصفح (localStorage)، لزر "مشاهدة الطلبات المحفوظة"
+  const [savedCount] = useState(() => getSavedOrders().length);
 
   // حروف كبيرة وبدون مسافات: "k7p 2xm" ← "K7P2XM"
   const cleanCode = code.replace(/\s/g, "").toUpperCase();
@@ -164,6 +166,21 @@ export default function TrackOrder({ handleClose }) {
 
           <h2 className={styles.title}>{t("trackOrder.title")}</h2>
           <p className={styles.subtitle}>{t("trackOrder.subtitle")}</p>
+
+          {/* يظهر فقط إذا يوجد طلبات محفوظة على هذا الجهاز */}
+          {savedCount > 0 && (
+            <>
+              <button
+                type="button"
+                className={styles.savedBtn}
+                onClick={() => navigate("/my-orders")}
+              >
+                📋 {t("trackOrder.viewSaved")}
+                <span className={styles.savedCount}>{savedCount}</span>
+              </button>
+              <p className={styles.divider}>{t("trackOrder.orTrackNew")}</p>
+            </>
+          )}
 
           <label className={styles.fieldLabel} htmlFor="trackCode">
             {t("trackOrder.code")}

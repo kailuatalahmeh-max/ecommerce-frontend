@@ -149,6 +149,8 @@
     },
     "savedNote": "✓ Saved on this device, in My Orders",
     "seeAllOrders": "See all my orders →",
+    "viewSaved": "View orders saved on this device",
+    "orTrackNew": "Or track another order with its code:",
     "searchAgain": "Track another order",
     "close": "Close"
   },

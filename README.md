@@ -221,6 +221,7 @@ formatPrice(9.5);  // "9.50 ₪"
 
 The **🎁 My Orders** button on the home page opens `components/trackOrder/TrackOrder.jsx`:
 
+> 📋 If this device has saved orders, a green button **📋 View orders saved on this device** shows at the top, with the number of saved orders. It opens the "My orders" page. Under it: "Or track another order with its code:". With no saved orders, only the form shows.
 1. The customer enters the **confirmation code** (from the WhatsApp screen after buying) and their **phone number** with the country code.
    - The code is made uppercase and spaces are removed (`k7p 2xm` → `K7P2XM`). It must be 6 characters with no `0 O 1 I L`, or a yellow hint shows and the button stays disabled.
 2. `trackOrder()` in `useOrderStore.js` sends both to `POST /api/orders/track`.
@@ -244,6 +245,7 @@ There is **no login and no token**. The browser keeps a small list of the custom
 5. An order the server can't find shows **"Order not found"** with its code (for example, if it was deleted).
 6. 🗑️ on each order and **Clear all** remove orders **from this device only** (the order is **not** cancelled). Both ask first with the confirm dialog.
 7. No saved orders → a message explains how to add one (buy, or 🎁 My Orders + code).
+8. Orders made **before** this feature are not saved on the device. Enter the code + phone once in 🎁 My Orders to add them.
 
 > The old `guestToken` in `localStorage` is removed once when the app loads (guest sessions were removed from the backend).
 

@@ -191,6 +191,51 @@
   transform: scale(0.98);
 }
 
+/* زر "مشاهدة الطلبات المحفوظة على هذا الجهاز" */
+.savedBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 14px;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.savedBtn:hover {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.6);
+}
+
+.savedBtn:active {
+  transform: scale(0.98);
+}
+
+.savedCount {
+  min-width: 1.6rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: #10b981;
+  color: #04120c;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* "أو تتبّع طلباً آخر" بين الزر والفورم */
+.divider {
+  margin: 0;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
 /* تأثيرات الحركة والأنيميشن الناعمة عند فتح المودال */
 @keyframes fadeInOverlay {
   from {
