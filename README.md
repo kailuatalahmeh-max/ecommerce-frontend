@@ -37,6 +37,7 @@ Main features:
 
 ```text
 frontend/
+├── .env.example              # Example env variables (copy it to .env.development)
 ├── public/                   # Static files (favicon, maintenance page)
 ├── src/
 │   ├── App.jsx               # All page routes
@@ -77,7 +78,13 @@ npm install
 
 ### 2. Environment variables
 
-Create a `.env.development` file (for local work) inside `frontend/`:
+Copy the example file (for local work) inside `frontend/`:
+
+```bash
+cp .env.example .env.development
+```
+
+`.env.example` is in git and has no secrets. `VITE_` values are visible in the browser, so never put a secret there. For production, set the same variable in Vercel → **Environment Variables**. The file:
 
 ```env
 VITE_API_URL=http://localhost:5000

@@ -37,6 +37,7 @@
 
 ```text
 frontend/
+├── .env.example              # مثال لمتغيرات البيئة (انسخه إلى .env.development)
 ├── public/                   # ملفات ثابتة (الأيقونة، صفحة الصيانة)
 ├── src/
 │   ├── App.jsx               # تعريف جميع الصفحات
@@ -77,7 +78,13 @@ npm install
 
 ### 2. إعداد متغيرات البيئة
 
-أنشئ ملف `.env.development` (للتطوير المحلي) داخل `frontend/`:
+انسخ ملف المثال (للتطوير المحلي) داخل `frontend/`:
+
+```bash
+cp .env.example .env.development
+```
+
+ملف `.env.example` موجود في git ولا يحتوي أسراراً. قيم `VITE_` تظهر في المتصفح، لذلك لا تضع فيها أي سر. للإنتاج، ضع نفس المتغير في Vercel ← **Environment Variables**. الملف:
 
 ```env
 VITE_API_URL=http://localhost:5000
