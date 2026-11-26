@@ -10,6 +10,50 @@ export const useAdminStore = create((set, get) => ({
   ordersData: [],
   analyticsData: null,
   analyticsLoading: false,
+  // إعدادات المتجر (super_admin فقط): { whatsappNumber, updatedAt, updatedBy }
+  storeSettings: null,
+  storeSettingsLoading: false,
+
+  // GET /api/store-settings
+  getStoreSettings: () => {
+    set({ storeSettingsLoading: true });
+    return axiosAdmin
+      .get(`${apiUrl}/api/store-settings`)
+      .then((response) => {
+        set({ storeSettings: response.data?.data || null });
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || i18n.t("common.fetchFailed"));
+      })
+      .finally(() => {
+        set({ storeSettingsLoading: false });
+      });
+  },
+
+  // PUT /api/store-settings بعد نافذة التأكيد
+  // يرجع true إذا تم الحفظ
+  saveStoreWhatsApp: async (whatsappNumber) => {
+    let saved = false;
+    await confirmDialog({
+      title: i18n.t("storeSettings.confirmTitle"),
+      message: i18n.t("storeSettings.confirmMessage", { number: whatsappNumber }),
+      confirmText: i18n.t("storeSettings.save"),
+      variant: "primary",
+      onConfirm: async () => {
+        try {
+          const response = await axiosAdmin.put(`${apiUrl}/api/store-settings`, {
+            whatsappNumber,
+          });
+          set({ storeSettings: response.data?.data || null });
+          toast.success(response.data?.message || i18n.t("storeSettings.saved"));
+          saved = true;
+        } catch (err) {
+          toast.error(err.response?.data?.message || i18n.t("common.errorGeneric"));
+        }
+      },
+    });
+    return saved;
+  },
 
   addItem: ({ formInputData, setFormInputData, setItemsData }) => {
     const images = (

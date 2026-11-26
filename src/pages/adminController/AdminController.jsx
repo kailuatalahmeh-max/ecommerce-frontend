@@ -98,6 +98,13 @@ export default function AdminController() {
             <span className={styles.navIcon}>📜</span>
             <span>{t("admin.nav.orders")}</span>
           </Link>
+          {/* super_admin فقط (الصفحة والـ API محميان أيضاً) */}
+          {role === "super_admin" && (
+            <Link to="/admin/store-settings">
+              <span className={styles.navIcon}>⚙️</span>
+              <span>{t("admin.nav.storeSettings")}</span>
+            </Link>
+          )}
         </nav>
         <div className={styles.sidebarFooter}>
           <Link to="/" className={styles.backHomeBtn}>

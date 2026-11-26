@@ -204,7 +204,8 @@
       "createAdmin": "Create admin account",
       "manageAdmins": "Manage admin accounts",
       "addProduct": "Add new product",
-      "orders": "Purchase orders"
+      "orders": "Purchase orders",
+      "storeSettings": "Store settings"
     },
     "backHome": "🏠 Back to the main site",
     "welcome": "Welcome back 👤",
@@ -325,6 +326,24 @@
     "submit": "Log in",
     "fillAll": "Please fill in all fields!",
     "serverError": "Unexpected server error"
+  },
+  "storeSettings": {
+    "title": "Store settings",
+    "subtitle": "Only the super admin can see and change these settings",
+    "whatsappTitle": "Store WhatsApp number",
+    "whatsappText": "Customers send their order confirmation code to this number. Without a number, nobody can buy.",
+    "current": "Current number",
+    "updated": "Changed {{date}} by {{name}}",
+    "noNumber": "There is no store WhatsApp number. All purchases are stopped until you add one.",
+    "addNumber": "Add the WhatsApp number",
+    "newNumber": "Change to a new number",
+    "phoneHint": "Choose the country code and enter 9 digits (for example 059 XXXXXXX)",
+    "sameNumber": "This is already the current number",
+    "willSave": "Will be saved as:",
+    "save": "Save number",
+    "saved": "The store WhatsApp number was saved",
+    "confirmTitle": "Save the store WhatsApp number?",
+    "confirmMessage": "From now on, customers will send their confirmation codes to {{number}}. Make sure WhatsApp works on this number."
   },
   "analytics": {
     "title": "General Analytics",

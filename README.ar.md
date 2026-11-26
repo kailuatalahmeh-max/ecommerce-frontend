@@ -59,7 +59,7 @@ frontend/
 | `useCartStore.js`  | السلة: إنشاء `guestId`، إضافة، حذف، تعديل الكمية          |
 | `useOrderStore.js` | عمليات الشراء، تتبّع طلب واحد (`trackOrder`)، الطلبات المحفوظة (`fetchSavedOrders`، الحذف، حذف الكل)، الإلغاء (`cancelOrder`) |
 | `useAuthStore.js`  | حالة تسجيل دخول الأدمن (التوكن، الصلاحية، معرّف الأدمن)    |
-| `useAdminStore.js` | عمليات الأدمن: المنتجات، الطلبات (والتأكيد اليدوي)، الأدمنز، الإحصائيات |
+| `useAdminStore.js` | عمليات الأدمن: المنتجات، الطلبات (والتأكيد اليدوي)، الأدمنز، الإحصائيات، إعدادات المتجر (`getStoreSettings`، `saveStoreWhatsApp`) |
 | `useConfirmStore.js` | `confirmDialog()`: نافذة التأكيد الخاصة بالموقع (بدل `window.confirm`) |
 
 ---
@@ -105,7 +105,7 @@ npm run dev
 >
 > ⚠️ الـ Backend يسمح بـ CORS origin واحد فقط وهو `FRONTEND_URL`. للتطوير المحلي ضع `FRONTEND_URL=http://localhost:5173` في `backend/.env`، وإلا سيمنع المتصفح الطلبات.
 >
-> ⚠️ الشراء لا يعمل حتى يتم حفظ رقم واتساب المتجر مرة واحدة: `node scripts/storeSettingsSeed.js +970599123456` (من `backend/`). بدونه يرجع الـ API الكود `503`.
+> ⚠️ الشراء لا يعمل حتى يتم حفظ رقم واتساب المتجر مرة واحدة: من صفحة الأدمن **⚙️ إعدادات المتجر** (`super_admin`)، أو `node scripts/storeSettingsSeed.js +970599123456` (من `backend/`). بدونه يرجع الـ API الكود `503`.
 
 ### التجربة على الهاتف (نفس شبكة الـ Wi-Fi)
 
@@ -132,6 +132,7 @@ npm run dev
 | `/admin/management`          | إدارة الأدمن             | `super_admin`                       |
 | `/admin/admins-management`   | حسابات الأدمن            | `super_admin`                       |
 | `/admin/analytics`           | الإحصائيات               | `super_admin`                       |
+| `/admin/store-settings`      | إعدادات المتجر (رقم واتساب) | `super_admin`                    |
 | `*`                          | صفحة غير موجودة (404)    | الجميع                              |
 
 ---
@@ -262,6 +263,19 @@ formatPrice(9.5);  // "9.50 ₪"
 
 ---
 
+## ⚙️ صفحة إعدادات المتجر (`/admin/store-settings`)
+
+`pages/storeSettings/StoreSettings.jsx`، لـ **`super_admin` فقط**: المسار محمي، ورابط القائمة **⚙️ إعدادات المتجر** يظهر فقط لـ `super_admin`، والـ API يرفض باقي الصلاحيات.
+
+1. تعرض رقم واتساب المتجر الحالي، ومتى ومن غيّره. بدون رقم، يظهر تنبيه أصفر أن كل عمليات الشراء متوقفة.
+2. الفورم فيه كود الدولة والرقم. الرقم يُنظَّف مثل السيرفر (المسافات، `-`، وصفر واحد في البداية)، ويجب أن يكون 9 أرقام، وإلا يظهر تنبيه ويبقى زر **حفظ الرقم** معطّلاً.
+3. قبل الحفظ، تعرض كيف سيُحفظ الرقم (`+970599123456`). لا يمكن حفظ نفس الرقم الحالي مرة أخرى.
+4. زر **حفظ الرقم** يسأل أولاً بنافذة التأكيد، ثم `saveStoreWhatsApp()` ترسل `PUT /api/store-settings`.
+
+> الزبائن يرسلون رموز التأكيد لهذا الرقم، لذلك تأكد أن واتساب يعمل عليه.
+
+---
+
 ## 🔌 الـ API المستخدمة
 
 | القسم            | الـ Endpoints                                                                                 |
@@ -269,6 +283,7 @@ formatPrice(9.5);  // "9.50 ₪"
 | تسجيل الدخول     | `POST /api/auth/login`                                                                        |
 | الأدمنز          | `GET /api/admins`، `POST /api/admins`، `PATCH /api/admins/:id/disable`، `PATCH /api/admins/:id/enable` |
 | الإحصائيات       | `GET /api/dashboard/analytics`                                                                |
+| إعدادات المتجر   | `GET /api/store-settings`، `PUT /api/store-settings`                                          |
 | الطلبات (الأدمن) | `GET /api/orders`، `PATCH /api/orders/:orderId`، `POST /api/orders/confirm`                   |
 | تتبّع الطلب      | `POST /api/orders/track`، `POST /api/orders/track-many`، `POST /api/orders/cancel`            |
 | المنتجات         | `GET /api/items`، `POST /api/items`، `PUT /api/items/:id`، `DELETE /api/items/:id`            |

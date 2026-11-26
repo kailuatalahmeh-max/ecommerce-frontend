@@ -14,6 +14,7 @@ import { SuperAdminManagement } from "./pages/superAdminManagement/SuperAdminMan
 import MyOrders from "./pages/myOrders/MyOrders";
 import AdminOrders from "./pages/adminOrders/AdminOrders";
 import AdminAnalytics from "./pages/adminAnalytics/AdminAnalytics";
+import StoreSettings from "./pages/storeSettings/StoreSettings";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import BackButton from "./components/backButton/BackButton";
 import ConfirmDialog from "./components/confirmDialog/ConfirmDialog";
@@ -101,6 +102,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["super_admin"]}>
               <AdminAnalytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/store-settings"
+          element={
+            <ProtectedRoute allowedRoles={["super_admin"]}>
+              <StoreSettings />
             </ProtectedRoute>
           }
         />

@@ -59,7 +59,7 @@ frontend/
 | `useCartStore.js`  | Cart: create `guestId`, add, remove, change quantity         |
 | `useOrderStore.js` | Purchases, tracking one order (`trackOrder`), the saved orders (`fetchSavedOrders`, remove, clear all), cancel (`cancelOrder`) |
 | `useAuthStore.js`  | Admin login state (token, role, admin ID)                    |
-| `useAdminStore.js` | Admin actions: products, orders (and manual confirm), admins, analytics |
+| `useAdminStore.js` | Admin actions: products, orders (and manual confirm), admins, analytics, store settings (`getStoreSettings`, `saveStoreWhatsApp`) |
 | `useConfirmStore.js` | `confirmDialog()`: the site's confirm popup (instead of `window.confirm`) |
 
 ---
@@ -105,7 +105,7 @@ The app runs at `http://localhost:5173` (Vite default).
 >
 > ⚠️ The backend allows only one CORS origin: its `FRONTEND_URL`. For local work, set `FRONTEND_URL=http://localhost:5173` in `backend/.env`, or the browser will block the requests.
 >
-> ⚠️ Buying does not work until the store's WhatsApp number is saved once: `node scripts/storeSettingsSeed.js +970599123456` (from `backend/`). Without it the API returns `503`.
+> ⚠️ Buying does not work until the store's WhatsApp number is saved once: in the admin page **⚙️ Store settings** (`super_admin`), or `node scripts/storeSettingsSeed.js +970599123456` (from `backend/`). Without it the API returns `503`.
 
 ### Test on a phone (same Wi-Fi)
 
@@ -132,6 +132,7 @@ The app runs at `http://localhost:5173` (Vite default).
 | `/admin/management`          | Admin management         | `super_admin`                      |
 | `/admin/admins-management`   | Admin accounts           | `super_admin`                      |
 | `/admin/analytics`           | Analytics                | `super_admin`                      |
+| `/admin/store-settings`      | Store settings (WhatsApp number) | `super_admin`              |
 | `*`                          | Not found (404)          | Everyone                           |
 
 ---
@@ -262,6 +263,19 @@ There is **no login and no token**. The browser keeps a small list of the custom
 
 ---
 
+## ⚙️ Store Settings Page (`/admin/store-settings`)
+
+`pages/storeSettings/StoreSettings.jsx`, for **`super_admin` only**: the route is protected, the menu link **⚙️ Store settings** shows only for `super_admin`, and the API refuses other roles.
+
+1. It shows the current store WhatsApp number, when and by whom it was changed. With no number, a yellow warning says all purchases are stopped.
+2. The form has a country code and a number. The number is cleaned like on the server (spaces, `-`, one leading `0`), and it must be 9 digits, or a hint shows and **Save number** stays disabled.
+3. Before saving, it shows how the number will be saved (`+970599123456`). The same number as now can't be saved again.
+4. **Save number** asks first with the confirm dialog, then `saveStoreWhatsApp()` sends `PUT /api/store-settings`.
+
+> Customers send their confirmation codes to this number, so make sure WhatsApp works on it.
+
+---
+
 ## 🔌 API Calls Used
 
 | Area      | Endpoints                                                                                     |
@@ -269,6 +283,7 @@ There is **no login and no token**. The browser keeps a small list of the custom
 | Auth      | `POST /api/auth/login`                                                                        |
 | Admins    | `GET /api/admins`, `POST /api/admins`, `PATCH /api/admins/:id/disable`, `PATCH /api/admins/:id/enable` |
 | Dashboard | `GET /api/dashboard/analytics`                                                                |
+| Store settings | `GET /api/store-settings`, `PUT /api/store-settings`                                     |
 | Orders (admin) | `GET /api/orders`, `PATCH /api/orders/:orderId`, `POST /api/orders/confirm`              |
 | Track     | `POST /api/orders/track`, `POST /api/orders/track-many`, `POST /api/orders/cancel`            |
 | Items     | `GET /api/items`, `POST /api/items`, `PUT /api/items/:id`, `DELETE /api/items/:id`            |
